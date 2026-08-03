@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#14251a" />
+  <title>TerraByte — Crop intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-background" aria-hidden="true">
+    <div class="photo photo-one"></div><div class="photo photo-two"></div><div class="photo photo-three"></div>
+    <div class="atmosphere"></div>
+  </div>
+
+  <section class="intro" id="intro" aria-label="Welcome animation">
+    <div class="intro-photo intro-photo-a"></div><div class="intro-photo intro-photo-b"></div><div class="intro-photo intro-photo-c"></div>
+    <div class="intro-vignette"></div>
+    <div class="intro-top"><span class="tiny-mark">TB</span><span>Field intelligence, in season</span></div>
+    <div class="intro-copy"><p class="eyebrow">THE GROUND KNOWS</p><h1>Grow with<br><em>clarity.</em></h1><div class="loading-line"><span></span></div><p class="loading-word">READING THE LAND</p></div>
+    <button class="skip-intro" id="skipIntro">Skip intro <span>→</span></button>
+  </section>
+
+  <main class="site-shell">
+    <nav class="nav">
+      <a class="brand" href="#top" aria-label="TerraByte home"><span class="brand-sprout">✦</span> terra<span>byte</span></a>
+      <div class="nav-center"><a href="#planner">Planner</a><a href="#how-it-works">How it works</a></div>
+      <button class="language">EN <span>⌄</span></button>
+    </nav>
+
+    <section class="hero" id="top">
+      <div class="hero-overline"><span></span> A calmer way to plan your season</div>
+      <h1>Let the land<br><i>lead the way.</i></h1>
+      <p>Turn your soil and local weather into a practical crop plan—one that works with the ground beneath your feet.</p>
+      <a class="scroll-cue" href="#planner"><span>↓</span> Start with your field</a>
+      <div class="hero-bottom"><span>01 / 03</span><p>For farmers who grow<br>with intention.</p></div>
+    </section>
+
+    <section class="planner" id="planner">
+      <div class="section-intro">
+        <p class="eyebrow">YOUR FIELD PROFILE</p>
+        <h2>Tell us what<br>your soil is saying.</h2>
+        <p class="section-description">A few field readings are all we need. Nitrogen, phosphorus and potassium are always entered by you; soil pH can be typed in or read from your Soil Health Card.</p>
+        <div class="readings-note"><span>7</span><p>inputs, one clearer<br>planting decision</p></div>
+      </div>
+
+      <form class="soil-card" id="cropForm">
+        <div class="card-heading"><div><span class="step">01 / FIELD READINGS</span><h3>Soil profile</h3></div><span class="field-status"><i></i> Draft</span></div>
+        <div class="nutrient-grid">
+          <label class="input-group"><span>Nitrogen <b>N</b></span><div class="input-wrap"><input id="nitrogen" name="nitrogen" type="number" min="0" placeholder="e.g. 90" required /><small>kg/ha</small></div></label>
+          <label class="input-group"><span>Phosphorus <b>P</b></span><div class="input-wrap"><input id="phosphorus" name="phosphorus" type="number" min="0" placeholder="e.g. 42" required /><small>kg/ha</small></div></label>
+          <label class="input-group"><span>Potassium <b>K</b></span><div class="input-wrap"><input id="potassium" name="potassium" type="number" min="0" placeholder="e.g. 38" required /><small>kg/ha</small></div></label>
+        </div>
+
+        <div class="divider"></div>
+        <div class="ph-heading"><div><span class="step">02 / SOIL REACTION</span><h3>Soil pH</h3></div><div class="method-toggle" role="group" aria-label="Choose pH entry method"><button type="button" class="method active" data-method="manual">Enter manually</button><button type="button" class="method" data-method="scan">Scan health card</button></div></div>
+        <div class="ph-area">
+          <label class="input-group ph-input"><span>pH value</span><div class="input-wrap"><input id="ph" name="ph" type="number" min="0" max="14" step="0.1" placeholder="e.g. 6.5" required /><small>0–14</small></div></label>
+          <div class="ph-guidance"><span class="drop-icon">⌁</span><p><b>Balanced soil starts at pH 6–7.</b><br>We’ll weigh this against each crop’s preferred range.</p></div>
+          <label class="upload-zone" id="uploadZone"><input id="healthCard" type="file" accept="image/*" /><span class="upload-icon">↑</span><span><b>Drop your Soil Health Card</b><small>NPK + pH report · JPG or PNG</small></span><em>Browse</em></label>
+        </div>
+
+        <div class="divider"></div>
+        <div class="weather-heading"><div><span class="step">03 / GROWING CONDITIONS</span><h3>Weather outlook</h3></div><button type="button" class="location-button" id="locationButton"><span>◎</span> Use my location</button></div>
+        <p class="weather-help" id="weatherHelp">Add today’s conditions below, or use your location for a 15-day weather outlook.</p>
+        <div class="weather-grid">
+          <label class="input-group"><span>Temperature</span><div class="input-wrap"><input id="temperature" name="temperature" type="number" step="0.1" placeholder="e.g. 26" required /><small>°C</small></div></label>
+          <label class="input-group"><span>Humidity</span><div class="input-wrap"><input id="humidity" name="humidity" type="number" min="0" max="100" placeholder="e.g. 72" required /><small>%</small></div></label>
+          <label class="input-group"><span>Rainfall</span><div class="input-wrap"><input id="rainfall" name="rainfall" type="number" min="0" step="0.1" placeholder="e.g. 185" required /><small>mm</small></div></label>
+        </div>
+        <div class="forecast" id="forecast"><div><span class="forecast-pin">●</span><p><b>Local outlook</b><small>Enter readings or use your location</small></p></div><div class="forecast-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span class="forecast-days">15 days</span></div>
+        <button class="recommend-button" type="submit"><span>Find my crops</span><span class="button-arrow">↗</span></button>
+        <p class="form-note">Your readings stay on this device. Recommendations are guidance—not a substitute for local agricultural advice.</p>
+      </form>
+    </section>
+
+    <section class="results" id="results" aria-live="polite">
+      <div class="results-head"><div><p class="eyebrow">YOUR FIELD, READ</p><h2>Here’s what wants<br>to grow here.</h2></div><p id="resultSummary">A balanced profile with good moisture potential.</p></div>
+      <div class="recommendations" id="recommendations"></div>
+      <div class="result-footer"><div class="sowing-window"><span class="tiny-label">NEXT SOWING WINDOW</span><p id="sowDate">After harvest + 14–21 days</p><small>Allow time for residue breakdown and a light soil reset.</small></div><div class="rotation-note"><span>↻</span><p><b>Keep your soil moving.</b><br>Rotate crop families to protect nutrients and reduce disease pressure.</p></div></div>
+    </section>
+
+    <section class="how-it-works" id="how-it-works"><p class="eyebrow">SIMPLE BY DESIGN</p><h2>Less guessing.<br>More growing.</h2><div class="steps"><p><span>01</span>Read your field</p><p><span>02</span>See the season</p><p><span>03</span>Grow with confidence</p></div></section>
+    <footer><span class="brand"><span class="brand-sprout">✦</span> terrabyte</span><p>Made for the hands that feed us.</p><span>© 2026</span></footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
