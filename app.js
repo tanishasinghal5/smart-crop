@@ -1,129 +1,68 @@
-const intro = document.querySelector('#intro');
-const skipIntro = document.querySelector('#skipIntro');
-const form = document.querySelector('#cropForm');
-const phMethods = document.querySelectorAll('.method');
-const phArea = document.querySelector('.ph-area');
-const upload = document.querySelector('#healthCard');
-const ph = document.querySelector('#ph');
-const locationButton = document.querySelector('#locationButton');
-const weatherHelp = document.querySelector('#weatherHelp');
-const forecast = document.querySelector('#forecast');
+const translations = {
+  en: {},
+  hi: { plan:'खेत की योजना', dashboard:'डैशबोर्ड', ask:'मीता से पूछें', rooted:'आपके खेत से जुड़ा। आगे के लिए तैयार।', landingIntro:'मिट्टी, मौसम, बाज़ार संकेत और थोड़ी अधिक निश्चितता—एक शांत जगह में।', start:'खेत की योजना शुरू करें', fieldProfile:'खेत की प्रोफ़ाइल', plannerIntro:'अपने रीडिंग का उपयोग करें, मिट्टी स्वास्थ्य कार्ड स्कैन करें या मौसम को काम करने दें।', soilSource:'मिट्टी का स्रोत चुनें', conditions:'बढ़ने की स्थितियाँ', recommendation:'सिफारिशें पाएं', newPlan:'नई खेत योजना', knowField:'अपने खेत को जानें', saved:'इस डिवाइस पर सुरक्षित', soilReadings:'मिट्टी की रीडिंग', soilHint:'अपना खेत डेटा कैसे लाना है चुनें।', manual:'मैन्युअल रूप से भरें', manualHint:'मेरे पास N, P, K और pH मूल्य हैं', scanCard:'मिट्टी स्वास्थ्य कार्ड स्कैन करें', scanHint:'फोटो से N, P, K और pH पढ़ें', dropCard:'अपना मिट्टी स्वास्थ्य कार्ड डालें', ocrHint:'स्पष्ट JPG या PNG—हम N, P, K और pH पढ़ेंगे।', browse:'ब्राउज़ करें', weatherIntake:'मौसम जानकारी', weatherHint:'15-दिन का स्थानीय पूर्वानुमान या अपनी स्थिति जोड़ें।', useLocation:'मेरा स्थान उपयोग करें', weatherAwait:'स्थान की प्रतीक्षा है', weatherAwaitHint:'हम आज और अगले 14 दिन जोड़ेंगे।', seeRecommendations:'मेरी सिफारिशें देखें', privacy:'आपके रीडिंग केवल इस ब्राउज़र में सेव होते हैं।', seasonPlan:'मानसून सीजन योजना', hello:'नमस्ते, अनया।', fieldReady:'आपका खेत तैयार है।', temperature:'तापमान', rainfall:'मिमी अनुमानित बारिश', matches:'फसल मिलान', fieldReading:'खेत की रीडिंग', recommendationTitle:'आपकी अगली फसल के लिए एक छोटी किताब।', turnPage:'पन्ना पलटने के लिए तीरों का उपयोग करें', downloadPdf:'पीडीएफ सारांश डाउनलोड करें', whyItWorks:'यह क्यों काम करता है', weatherTitle:'अगले 15 दिन आपके साथ हैं।', weatherCopy:'पूर्वानुमान हमें केवल आज नहीं, बल्कि फसल की शुरुआती अवधि में ताप, नमी और बारिश को तौलने में मदद करता है।', forecast:'15-दिन का पूर्वानुमान', soilSnapshot:'मिट्टी स्नैपशॉट', inputFactors:'मिलान के पीछे इनपुट कारक।', fieldCompanion:'आपका खेत साथी', askTitle:'मीता से अपने मौसम के बारे में कुछ भी पूछें।', mitaGreeting:'मैं आपकी फसल योजना को सरल शब्दों में समझाने के लिए यहाँ हूँ। नीचे एक सवाल आज़माएँ।', whySuggested:'यह फसल क्यों सुझाई गई?', whenSow:'कब बोना चाहिए?', improveSoil:'मिट्टी कैसे सुधारें?', askPlaceholder:'अपने खेत के बारे में पूछें…', speechHint:'अपना सवाल बोलने के लिए गोल बटन दबाएँ।', footer:'उन हाथों के लिए जो हमारा भविष्य उगाते हैं।' },
+  mr: { plan:'शेताची योजना', dashboard:'डॅशबोर्ड', ask:'मिताला विचारा', rooted:'तुमच्या शेताशी जोडलेले. पुढच्यासाठी तयार.', start:'शेत योजना सुरू करा', fieldProfile:'शेत प्रोफाइल', newPlan:'नवीन शेत योजना', knowField:'तुमचे शेत जाणून घ्या', manual:'स्वतः भरा', scanCard:'माती आरोग्य कार्ड स्कॅन करा', weatherIntake:'हवामान माहिती', useLocation:'माझे स्थान वापरा', seeRecommendations:'माझ्या शिफारसी पहा', seasonPlan:'पावसाळी हंगाम योजना', hello:'नमस्कार, अनया।', fieldReady:'तुमचे शेत तयार आहे।', recommendationTitle:'तुमच्या पुढच्या पिकासाठी छोटी पुस्तिका।', downloadPdf:'पीडीएफ सारांश डाउनलोड करा', askTitle:'मिताला तुमच्या हंगामाबद्दल काहीही विचारा।' },
+  te: { plan:'పొలం ప్రణాళిక', dashboard:'డాష్‌బోర్డ్', ask:'మితాను అడగండి', rooted:'మీ పొలంలో వేళ్ళూనుకున్నది. రేపటికి సిద్ధం.', start:'పొలం ప్రణాళిక ప్రారంభించండి', fieldProfile:'పొలం వివరాలు', newPlan:'కొత్త పొలం ప్రణాళిక', knowField:'మీ పొలాన్ని తెలుసుకోండి', manual:'మాన్యువల్‌గా నమోదు చేయండి', scanCard:'సాయిల్ హెల్త్ కార్డ్ స్కాన్ చేయండి', weatherIntake:'వాతావరణ సమాచారం', useLocation:'నా స్థానాన్ని ఉపయోగించండి', seeRecommendations:'నా సిఫార్సులు చూడండి', seasonPlan:'వర్షాకాల ప్రణాళిక', hello:'నమస్కారం, అనయా.', fieldReady:'మీ పొలం సిద్ధంగా ఉంది.', recommendationTitle:'మీ తదుపరి పంటకు ఒక చిన్న పుస్తకం.', downloadPdf:'పీడీఎఫ్ సారాంశం డౌన్‌లోడ్ చేయండి', askTitle:'మీ సీజన్ గురించి మితాను ఏదైనా అడగండి.' }
+};
 
-function closeIntro() { intro.classList.add('hide'); }
-skipIntro.addEventListener('click', closeIntro);
-setTimeout(closeIntro, 4750);
-
-phMethods.forEach(button => button.addEventListener('click', () => {
-  phMethods.forEach(item => item.classList.toggle('active', item === button));
-  const scanning = button.dataset.method === 'scan';
-  phArea.classList.toggle('scanning', scanning);
-  ph.required = !scanning;
-}));
-
-function getTesseract() {
-  if (window.Tesseract) return Promise.resolve(window.Tesseract);
-  return new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
-    script.onload = () => resolve(window.Tesseract);
-    script.onerror = () => reject(new Error('OCR library unavailable'));
-    document.head.appendChild(script);
-  });
-}
-
-function pHFromText(text) {
-  const match = text.match(/(?:soil\s*)?p\s*\.?\s*h\s*(?:value)?\s*[:=\-]?\s*(1[0-4](?:\.\d+)?|[0-9](?:\.\d+)?)/i);
-  return match ? Number(match[1]) : null;
-}
-
-upload.addEventListener('change', async () => {
-  if (!upload.files.length) return;
-  const label = document.querySelector('.upload-zone b');
-  const help = document.querySelector('.upload-zone small');
-  label.textContent = 'Reading your Soil Health Card…';
-  help.textContent = upload.files[0].name;
-  try {
-    const Tesseract = await getTesseract();
-    const result = await Tesseract.recognize(upload.files[0], 'eng', { logger: () => {} });
-    const extractedPh = pHFromText(result.data.text);
-    if (extractedPh === null) throw new Error('No pH value found');
-    ph.value = extractedPh.toFixed(1);
-    label.textContent = `pH ${ph.value} extracted from your card`;
-    help.textContent = 'Please check the reading before continuing';
-    ph.required = false;
-  } catch {
-    label.textContent = 'We couldn’t read the pH value';
-    help.textContent = 'Please switch to “Enter manually” and add the pH from your card.';
-    ph.required = true;
-  }
-});
-
-function setWeather(location = 'Your field', values = { temperature: 27.4, humidity: 74, rainfall: 164 }, source = 'Daily forecast + 14-day seasonal estimate') {
-  Object.entries(values).forEach(([id, value]) => document.querySelector(`#${id}`).value = value);
-  weatherHelp.textContent = `15-day outlook ready for ${location}. We’ve added today’s conditions and estimated rainfall across the next 14 days.`;
-  forecast.querySelector('b').textContent = location;
-  forecast.querySelector('small').textContent = source;
-  locationButton.innerHTML = '<span>✓</span> Location added';
-}
-
-async function loadLocalForecast(position) {
-  const { latitude, longitude } = position.coords;
-  const query = new URLSearchParams({
-    latitude: latitude.toFixed(4), longitude: longitude.toFixed(4),
-    current: 'temperature_2m,relative_humidity_2m',
-    daily: 'precipitation_sum', forecast_days: '15', timezone: 'auto'
-  });
-  const response = await fetch(`https://api.open-meteo.com/v1/forecast?${query}`);
-  if (!response.ok) throw new Error('Weather service unavailable');
-  const data = await response.json();
-  const totalRainfall = data.daily.precipitation_sum.reduce((total, amount) => total + (amount || 0), 0);
-  setWeather('Your local field', {
-    temperature: Number(data.current.temperature_2m.toFixed(1)),
-    humidity: Math.round(data.current.relative_humidity_2m),
-    rainfall: Number(totalRainfall.toFixed(1))
-  }, 'Live today + 14-day rainfall forecast');
-}
-
-locationButton.addEventListener('click', async () => {
-  locationButton.disabled = true;
-  locationButton.textContent = 'Finding your field…';
-  if (!navigator.geolocation) { setWeather('Sample local outlook', undefined, 'Sample values — location unavailable'); locationButton.disabled = false; return; }
-  navigator.geolocation.getCurrentPosition(async position => {
-    try { await loadLocalForecast(position); }
-    catch { setWeather('Sample local outlook', undefined, 'Sample values — weather service unavailable'); }
-    locationButton.disabled = false;
-  }, () => { setWeather('Sample local outlook', undefined, 'Sample values — location permission unavailable'); locationButton.disabled = false; }, { timeout: 6000, maximumAge: 300000 });
-});
-
-const crops = [
-  { name: 'Rice', image: 'preview (3).webp', minRain: 140, temp: 27, ph: 6.2, tags: ['Warm season', 'Moisture-loving'], copy: 'Strong moisture and warm conditions make this a natural fit for your field.' },
-  { name: 'Maize', image: 'preview (1).webp', minRain: 80, temp: 25, ph: 6.4, tags: ['Versatile', 'Fast growing'], copy: 'Your available nutrients and balanced pH support a vigorous maize crop.' },
-  { name: 'Coffee', image: 'preview (2).webp', minRain: 120, temp: 23, ph: 6.1, tags: ['Perennial', 'High value'], copy: 'A humid outlook and gently acidic soil offer a promising coffee environment.' },
-  { name: 'Millet', image: 'preview.webp', minRain: 45, temp: 28, ph: 6.7, tags: ['Resilient', 'Low water'], copy: 'A resilient choice that keeps your rotation productive under variable rainfall.' },
-  { name: 'Groundnut', image: 'preview (5).webp', minRain: 65, temp: 26, ph: 6.3, tags: ['Soil builder', 'Warm season'], copy: 'Its nutrient needs align well with your field and it helps diversify the soil.' },
-  { name: 'Tomato', image: 'preview (4).webp', minRain: 60, temp: 24, ph: 6.4, tags: ['High value', 'Well drained'], copy: 'Moderate rainfall and a near-neutral pH create a sound starting point for tomatoes.' }
+const defaultField = { nitrogen:90, phosphorus:42, potassium:38, ph:6.5, temperature:27.4, humidity:74, rainfall:164, forecast:null };
+const cropLibrary = [
+  { name:'Groundnut', image:'gowtham-agm-X_YBLZrjH0U-unsplash.jpg', temp:26, rain:75, ph:6.3, price:'₹6,100', unit:'per quintal', notes:['Soil builder','Warm season'], description:'A nutrient-aware choice that can diversify the field and support a healthy rotation.' },
+  { name:'Millet', image:'ikshana-productions-NnSdKhQYVvU-unsplash.jpg', temp:28, rain:55, ph:6.7, price:'₹2,650', unit:'per quintal', notes:['Resilient','Low water'], description:'A resilient option that protects returns through variable rainfall.' },
+  { name:'Coffee', image:'mike-kenneally-TD4DBagg2wE-unsplash.jpg', temp:23, rain:120, ph:6.1, price:'₹12,300', unit:'per quintal', notes:['High value','Perennial'], description:'Worth exploring where elevation and shade conditions support a longer-term crop.' },
+  { name:'Wheat', image:'polina-rytova-1dGMs4hhcVA-unsplash.jpg', temp:21, rain:45, ph:6.7, price:'₹2,425', unit:'per quintal', notes:['Rabi season','Market staple'], description:'Best saved for a cooler, drier sowing window after a short field reset.' },
+  { name:'Maize', image:'katherine-volkovski-Q_MJjEN14uk-unsplash.jpg', temp:25, rain:90, ph:6.4, price:'₹2,300', unit:'per quintal', notes:['Versatile','Fast growing'], description:'Your soil balance and near-neutral pH support a vigorous maize crop.' },
+  { name:'Rice', image:'winston-chen-kXoEdaZ3SFw-unsplash.jpg', temp:27, rain:145, ph:6.2, price:'₹2,420', unit:'per quintal', notes:['Warm season','Moisture-loving'], description:'Warm days and dependable rain make rice a steady field choice.' },
+  { name:'Barley', image:'raphael-rychetsky-li9JfUHQfOY-unsplash.jpg', temp:19, rain:50, ph:6.5, price:'₹1,980', unit:'per quintal', notes:['Cool season','Rotation option'], description:'A cooler-season rotation option for future planning when the weather turns drier.' }
 ];
 
-function scoreCrop(crop, data) {
-  const weather = 100 - Math.min(38, Math.abs(data.temperature - crop.temp) * 4) - Math.min(25, Math.abs(data.rainfall - crop.minRain) * .15);
-  const soil = 100 - Math.min(30, Math.abs(data.ph - crop.ph) * 18) - Math.min(16, Math.abs(data.nitrogen - 75) * .08);
-  const humidity = 100 - Math.min(18, Math.abs(data.humidity - 70) * .55);
-  return Math.max(62, Math.round((weather * .42 + soil * .42 + humidity * .16)));
+function storedField() { try { return { ...defaultField, ...JSON.parse(localStorage.getItem('terraField') || '{}') }; } catch { return defaultField; } }
+function storedProfile() { try { return JSON.parse(localStorage.getItem('terraProfile') || 'null'); } catch { return null; } }
+function historyFor(phone) { try { return JSON.parse(localStorage.getItem(`terraHistory_${phone}`) || '[]'); } catch { return []; } }
+function useLanguage() {
+  const language = localStorage.getItem('terraLanguage') || 'en';
+  document.documentElement.lang = language;
+  document.querySelectorAll('.language-picker').forEach(select => { select.value = language; select.addEventListener('change', () => { localStorage.setItem('terraLanguage', select.value); location.reload(); }); });
+  const strings = translations[language] || {};
+  document.querySelectorAll('[data-i18n]').forEach(element => { if (strings[element.dataset.i18n]) element.textContent = strings[element.dataset.i18n]; });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(element => { if (strings[element.dataset.i18nPlaceholder]) element.placeholder = strings[element.dataset.i18nPlaceholder]; });
 }
+function applyTheme() {
+  if (localStorage.getItem('terraTheme') === 'dark') document.body.classList.add('dark');
+  document.querySelectorAll('.mode-toggle').forEach(button => button.addEventListener('click', () => { document.body.classList.toggle('dark'); localStorage.setItem('terraTheme', document.body.classList.contains('dark') ? 'dark' : 'light'); }));
+}
+function score(crop, field) {
+  const climate = 100 - Math.min(42, Math.abs(field.temperature - crop.temp) * 4.2) - Math.min(24, Math.abs(field.rainfall - crop.rain) * .14);
+  const soil = 100 - Math.min(30, Math.abs(field.ph - crop.ph) * 17) - Math.min(15, Math.abs(field.nitrogen - 78) * .08);
+  return Math.max(61, Math.round(climate * .53 + soil * .47));
+}
+function rankedCrops(field) { return cropLibrary.map(crop => ({ ...crop, confidence:score(crop, field) })); }
+function getTesseract() { if (window.Tesseract) return Promise.resolve(window.Tesseract); return new Promise((resolve,reject) => { const script=document.createElement('script'); script.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'; script.onload=()=>resolve(window.Tesseract); script.onerror=reject; document.head.appendChild(script); }); }
+function fieldValue(text, expressions) { for (const expression of expressions) { const found=text.match(expression); if (found) return Number(found[1]); } return null; }
 
-form.addEventListener('submit', event => {
-  event.preventDefault();
-  const data = Object.fromEntries(new FormData(form));
-  Object.keys(data).forEach(key => data[key] = Number(data[key]));
-  if (!data.ph && ph.value) data.ph = Number(ph.value);
-  if (!data.ph) { alert('Please enter a soil pH value or upload a Soil Health Card.'); return; }
-  const chosen = crops.map(crop => ({...crop, score: scoreCrop(crop, data)})).sort((a, b) => b.score - a.score).slice(0, 3);
-  document.querySelector('#recommendations').innerHTML = chosen.map((crop, index) => `
-    <article class="crop-card" style="--crop-image:url('${crop.image}')"><span class="crop-rank">0${index + 1} / BEST FIT</span><span class="confidence">${crop.score}%</span><h3>${crop.name}</h3><p>${crop.copy}</p><div class="crop-tags">${crop.tags.map(tag => `<span>${tag}</span>`).join('')}</div></article>`).join('');
-  document.querySelector('#resultSummary').textContent = `A ${data.ph < 6 ? 'gently acidic' : data.ph > 7 ? 'slightly alkaline' : 'balanced'} soil profile with ${data.rainfall >= 110 ? 'reliable' : 'measured'} moisture potential.`;
-  const wait = data.rainfall > 140 ? 'After harvest + 14–21 days' : 'After harvest + 10–14 days';
-  document.querySelector('#sowDate').textContent = wait;
-  const results = document.querySelector('#results');
-  results.classList.add('show');
-  setTimeout(() => results.scrollIntoView({ behavior: 'smooth', block: 'start' }), 120);
-});
+function setupPlanner() {
+  const form = document.querySelector('#fieldForm'); if (!form) return;
+  const manual = document.querySelector('.manual-readings'); const drop = document.querySelector('.ocr-drop');
+  document.querySelectorAll('.source-card').forEach(card => card.addEventListener('click', () => { document.querySelectorAll('.source-card').forEach(item=>item.classList.toggle('selected',item===card)); const scanning=card.dataset.source==='card'; form.classList.toggle('ocr-mode',scanning); manual.querySelectorAll('input').forEach(input=>input.required=!scanning); }));
+  const weatherButton = document.querySelector('#weatherButton');
+  weatherButton.addEventListener('click', () => { weatherButton.disabled=true; weatherButton.textContent='Finding field…'; if (!navigator.geolocation) return fallbackWeather('Location unavailable'); navigator.geolocation.getCurrentPosition(loadForecast, () => fallbackWeather('Location permission unavailable'), {timeout:7000,maximumAge:300000}); });
+  async function loadForecast(position) { try { const {latitude,longitude}=position.coords; const params=new URLSearchParams({latitude:latitude.toFixed(4),longitude:longitude.toFixed(4),current:'temperature_2m,relative_humidity_2m',daily:'temperature_2m_max,temperature_2m_min,precipitation_sum',forecast_days:'15',timezone:'auto'}); const response=await fetch(`https://api.open-meteo.com/v1/forecast?${params}`); if(!response.ok) throw Error(); const data=await response.json(); const rainfall=data.daily.precipitation_sum.reduce((sum,n)=>sum+(n||0),0); fillWeather({temperature:+data.current.temperature_2m.toFixed(1),humidity:Math.round(data.current.relative_humidity_2m),rainfall:+rainfall.toFixed(1)},data.daily,'Your local 15-day forecast'); } catch { fallbackWeather('Weather service unavailable'); } }
+  function fallbackWeather(reason) { fillWeather(defaultField,null,`Sample values — ${reason}`); }
+  function fillWeather(values,forecast,label) { ['temperature','humidity','rainfall'].forEach(key=>form.elements[key].value=values[key]); document.querySelector('#weatherLabel').textContent=label; document.querySelector('#weatherStatus').textContent=`Today: ${values.temperature}°C · ${values.humidity}% humidity · ${values.rainfall}mm expected rain`; weatherButton.innerHTML='✓ Forecast added'; weatherButton.disabled=false; form.dataset.forecast=JSON.stringify(forecast||null); }
+  const upload=document.querySelector('#healthCard'); upload.addEventListener('change',async()=>{ if(!upload.files[0])return; const status=document.querySelector('#ocrStatus'); status.textContent='Reading the card…'; try { const tesseract=await getTesseract(); const result=await tesseract.recognize(upload.files[0],'eng',{logger:()=>{}}); const text=result.data.text; const extracted={ nitrogen:fieldValue(text,[/nitrogen\s*(?:\(n\))?\s*[:=-]?\s*(\d+(?:\.\d+)?)/i,/\bN\s*[:=-]\s*(\d+(?:\.\d+)?)/]), phosphorus:fieldValue(text,[/phosph(?:orus|orous)\s*(?:\(p\))?\s*[:=-]?\s*(\d+(?:\.\d+)?)/i,/\bP\s*[:=-]\s*(\d+(?:\.\d+)?)/]), potassium:fieldValue(text,[/potassium\s*(?:\(k\))?\s*[:=-]?\s*(\d+(?:\.\d+)?)/i,/\bK\s*[:=-]\s*(\d+(?:\.\d+)?)/]), ph:fieldValue(text,[/(?:soil\s*)?p\s*\.?\s*h\s*(?:value)?\s*[:=-]?\s*(1[0-4](?:\.\d+)?|[0-9](?:\.\d+)?)/i])}; const count=Object.values(extracted).filter(value=>value!==null).length; if(!count) throw Error(); Object.entries(extracted).forEach(([key,value])=>{if(value!==null)form.elements[key].value=value;}); status.textContent=`Read ${count} field value${count===1?'':'s'} from card. Please check before continuing.`; } catch { status.textContent='Could not read fields. Use a clearer photo or enter values manually.'; } });
+  form.addEventListener('submit',event=>{ event.preventDefault(); const field=Object.fromEntries(new FormData(form)); Object.keys(field).forEach(key=>field[key]=Number(field[key])); field.forecast=JSON.parse(form.dataset.forecast||'null'); localStorage.setItem('terraField',JSON.stringify(field)); const profile=storedProfile(); if(profile?.phone){const history=historyFor(profile.phone);history.unshift({date:new Date().toISOString(),field});localStorage.setItem(`terraHistory_${profile.phone}`,JSON.stringify(history.slice(0,20)));} location.href='dashboard.html'; });
+}
+function forecastBars(field) { const days=field.forecast?.time?.map((_,index)=>({rain:field.forecast.precipitation_sum[index]||0,temp:(field.forecast.temperature_2m_max[index]+field.forecast.temperature_2m_min[index])/2})) || Array.from({length:15},(_,i)=>({rain:[7,12,4,18,9,3,15][i%7],temp:field.temperature+(i%4)-2})); const maxRain=Math.max(...days.map(day=>day.rain),1),minTemp=Math.min(...days.map(day=>day.temp)),maxTemp=Math.max(...days.map(day=>day.temp)); return days.map(day=>`<div class="bar-group"><i style="height:${Math.max(18,((day.temp-minTemp+2)/(maxTemp-minTemp+3))*100)}%"></i><i style="height:${Math.max(8,day.rain/maxRain*100)}%"></i></div>`).join(''); }
+function setupDashboard() {
+  const book=document.querySelector('#flipbook'); if(!book)return; const field=storedField(), crops=rankedCrops(field), profile=storedProfile(); if(profile?.name) document.querySelector('#dashboardGreeting').textContent=`Hello, ${profile.name}.`; document.querySelector('#weatherTemp').textContent=`${Math.round(field.temperature)}°`; document.querySelector('#weatherRain').textContent=Math.round(field.rainfall); document.querySelector('#avgTemp').textContent=`${Math.round(field.temperature)}°C`; document.querySelector('#totalRain').textContent=`${Math.round(field.rainfall)}mm`; document.querySelector('#dashboardSummary').textContent=`Based on your latest field readings and ${Math.round(field.rainfall)}mm expected rainfall across the next 15 days.`; document.querySelector('#forecastColumns').innerHTML=forecastBars(field);
+  [['n',field.nitrogen,140],['p',field.phosphorus,80],['k',field.potassium,100],['ph',field.ph,14]].forEach(([id,value,max])=>{document.querySelector(`#${id}Value`).textContent=value;document.querySelector(`#${id}Meter`).style.setProperty('--value',`${Math.min(100,value/max*100)}%`);});
+  book.innerHTML=crops.map((crop,index)=>`<article class="book-page ${index?'hidden':''}" data-page="${index}" style="--crop-image:url('${crop.image}')"><div class="book-image"></div><div class="book-details"><span class="book-rank">0${index+1} / ${index<3?'FIELD MATCH':'ROTATION OPTION'}</span><div class="confidence-pie" style="--percent:${crop.confidence}"><b>${crop.confidence}%</b><span>CONFIDENCE</span></div><h3>${crop.name}</h3><p>${crop.description}</p><div class="result-factors">${crop.notes.map(note=>`<span>${note}</span>`).join('')}<span>pH ${field.ph}</span></div><div class="market-box"><span>INDICATIVE MANDI PRICE<b>${crop.price}</b>${crop.unit}</span><a target="_blank" rel="noreferrer" href="https://www.data.gov.in/catalog/current-daily-price-various-commodities-various-markets-mandi">Check live price ↗</a></div></div></article>`).join('');
+  let current=0; const pages=[...book.children]; document.querySelector('#pageTotal').textContent=`0${pages.length}`; function turn(direction){current=(current+direction+pages.length)%pages.length;pages.forEach((page,index)=>page.classList.toggle('hidden',index!==current));document.querySelector('#pageCurrent').textContent=`0${current+1}`;} document.querySelector('#previousPage').onclick=()=>turn(-1);document.querySelector('#nextPage').onclick=()=>turn(1);
+  document.querySelector('#downloadSummary').addEventListener('click',()=>printSummary(field,crops)); setupAssistant(crops[0],field);
+}
+function printSummary(field,crops) { const rows=crops.map(c=>`<tr><td>${c.name}</td><td>${c.confidence}%</td><td>${c.price} ${c.unit}</td></tr>`).join(''); const popup=window.open('','_blank'); if(!popup)return; popup.document.write(`<!doctype html><title>TerraByte field summary</title><style>body{font-family:Arial;padding:40px;color:#173020}h1{font-family:Georgia;font-size:42px}table{width:100%;border-collapse:collapse;margin:25px 0}td,th{padding:13px;border-bottom:1px solid #ccd7c8;text-align:left}.note{background:#edf4e9;padding:18px}</style><h1>Field recommendation summary</h1><p>Prepared by TerraByte · ${new Date().toLocaleDateString()}</p><div class="note">Soil: N ${field.nitrogen}, P ${field.phosphorus}, K ${field.potassium}, pH ${field.ph}<br>15-day conditions: ${field.temperature}°C, ${field.humidity}% humidity, ${field.rainfall}mm expected rainfall.</div><h2>Suggested crops</h2><table><tr><th>Crop</th><th>Confidence</th><th>Indicative price</th></tr>${rows}</table><p>Prices are indicative. Check your nearest mandi before making a selling decision.</p>`);popup.document.close();popup.focus();setTimeout(()=>popup.print(),300); }
+function setupAssistant(crop,field) { const form=document.querySelector('#askForm'),input=document.querySelector('#askInput'),history=document.querySelector('#chatHistory'); function respond(question){const q=question.toLowerCase();let answer=`${crop.name} is the current best match at ${crop.confidence}% confidence.`;if(q.includes('why')||q.includes('suggest'))answer=`${crop.name} fits your pH ${field.ph}, ${Math.round(field.temperature)}°C temperature and the ${Math.round(field.rainfall)}mm rainfall outlook. Those are the strongest contributors to its ${crop.confidence}% match.`;if(q.includes('when')||q.includes('sow'))answer=`For ${crop.name}, prepare the land now and sow when the first dependable rainfall arrives. Keep a 14–21 day reset after the previous harvest.`;if(q.includes('soil')||q.includes('improve'))answer=`Your pH of ${field.ph} is workable. Add well-rotted organic matter, use crop rotation, and retest soil before your next season.`;history.insertAdjacentHTML('beforeend',`<div class="farmer-message">${question}</div><div class="mita-message">${answer}</div>`);history.scrollTop=history.scrollHeight;} form.addEventListener('submit',event=>{event.preventDefault();if(input.value.trim()){respond(input.value.trim());input.value='';}});document.querySelectorAll('[data-question]').forEach(button=>button.onclick=()=>respond(button.dataset.question)); const mic=document.querySelector('#micButton'); mic.onclick=()=>{const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;if(!Recognition){document.querySelector('#speechNote').textContent='Speech input is not supported in this browser. You can still type a question.';return;}const recognition=new Recognition();recognition.lang=localStorage.getItem('terraLanguage')==='hi'?'hi-IN':'en-IN';recognition.interimResults=false;document.querySelector('#speechNote').textContent='Listening…';recognition.onresult=event=>{input.value=event.results[0][0].transcript;document.querySelector('#speechNote').textContent='Question captured. Press the arrow to ask Mita.';};recognition.onerror=()=>document.querySelector('#speechNote').textContent='I could not hear that. Please try again or type your question.';recognition.start();}; }
+function setupLogin() { const form=document.querySelector('#loginForm'); if(!form)return; const name=form.elements.name, phone=form.elements.phone, preview=document.querySelector('#historyPreview'); const showHistory=number=>{const entries=historyFor(number); preview.innerHTML=entries.length?`<span>⌁</span><ul>${entries.slice(0,5).map(entry=>`<li><b>${new Date(entry.date).toLocaleDateString()}</b><span>pH ${entry.field.ph} · ${Math.round(entry.field.rainfall)}mm rain</span></li>`).join('')}</ul>`:'<span>⌁</span><p>No saved plans for this number yet. Your first one will appear here.</p>';}; const profile=storedProfile(); if(profile){name.value=profile.name;phone.value=profile.phone;showHistory(profile.phone);} phone.addEventListener('change',()=>showHistory(phone.value.replace(/\D/g,''))); form.addEventListener('submit',event=>{event.preventDefault(); const cleaned=phone.value.replace(/\D/g,''); if(cleaned.length!==10){phone.setCustomValidity('Enter a 10-digit phone number');phone.reportValidity();return;} const profile={name:name.value.trim(),phone:cleaned};localStorage.setItem('terraProfile',JSON.stringify(profile));showHistory(cleaned);window.setTimeout(()=>location.href='planner.html',420);}); }
+const refinements = document.createElement('link'); refinements.rel = 'stylesheet'; refinements.href = 'refinements.css'; document.head.appendChild(refinements); const readability = document.createElement('link'); readability.rel = 'stylesheet'; readability.href = 'readability.css'; document.head.appendChild(readability);
+const profileStyle = document.createElement('style'); profileStyle.textContent = '.history-preview > span { display: none; }'; document.head.appendChild(profileStyle);
+useLanguage();applyTheme();setupPlanner();setupDashboard();setupLogin();
