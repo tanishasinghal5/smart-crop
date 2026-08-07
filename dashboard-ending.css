@@ -1,0 +1,2 @@
+/* Mita is the final, full-screen destination of the dashboard. */
+.dashboard-page .assistant-section{min-height:0;align-items:center;padding-bottom:clamp(62px,9vw,120px)}.dashboard-page .assistant-panel{width:100%}@media(max-width:800px){.dashboard-page .assistant-section{min-height:0;padding-bottom:65px}}

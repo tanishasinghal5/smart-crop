@@ -1,2 +1,101 @@
 /* Larger type and clearer hierarchy for field use. */
-.topbar nav a,.login-link,.language-picker{font-size:12px}.kicker{font-size:12px;letter-spacing:.13em}.landing-intro,.login-copy{font-size:18px;line-height:1.7}.section-heading p,.planner-aside>p:not(.kicker){font-size:18px;line-height:1.7}.planner-aside li{font-size:15px}.planner-aside li span{font-size:12px}.source-card strong{font-size:16px}.source-card small{font-size:13px;line-height:1.45}.reading-grid label{font-size:15px}.reading-grid small{font-size:12px}.reading-grid input{font-size:27px;min-height:42px}.outline-button,.primary-button{font-size:13px}.weather-banner span:not(.forecast-bits){font-size:14px}.weather-banner small,.ocr-drop small,.ocr-drop strong{font-size:12px}.ocr-drop{padding:21px}.saved-status,.privacy-note{font-size:12px;line-height:1.7}.book-rank,.market-box span,.result-factors span{font-size:11px}.book-details>p{font-size:15px;line-height:1.7}.market-box b{font-size:25px}.flip-caption,.text-button{font-size:11px}.weather-explanation-copy>p:not(.kicker),.dashboard-hero>div>p:not(.kicker){font-size:16px;line-height:1.7}.weather-legend,.soil-meters p{font-size:13px}.mita-message,.farmer-message{font-size:14px;line-height:1.6}.question-chips button{font-size:11px;padding:9px}.ask-form input{font-size:14px}.speech-note{font-size:11px}.login-panel label{font-size:14px}.history-preview p,.history-preview li{font-size:13px;line-height:1.55}.history-preview{padding:18px}.confidence-pie{display:flex;flex-direction:column;align-items:center;justify-content:center}.confidence-pie b,.confidence-pie span{display:block;line-height:1;position:relative;z-index:1}.confidence-pie b{margin:0}.confidence-pie span{margin-top:4px}.confidence-pie::after{z-index:0}@media(max-width:800px){.topbar nav a,.login-link,.language-picker{font-size:11px}.section-heading p,.planner-aside>p:not(.kicker),.landing-intro,.login-copy{font-size:17px}.reading-grid input{font-size:25px}}
+.topbar nav a, .login-link, .language-picker, .mode-toggle { font-size: 15px !important; }
+.kicker { font-size: 13px !important; letter-spacing: 0.14em !important; }
+.landing-intro, .login-copy { font-size: 19px !important; line-height: 1.7 !important; }
+.section-heading p, .planner-aside > p:not(.kicker) { font-size: 18px !important; line-height: 1.7 !important; }
+.planner-aside li { font-size: 16px !important; }
+.planner-aside li span { font-size: 13px !important; }
+.source-card strong { font-size: 16px !important; }
+.source-card small { font-size: 13px !important; line-height: 1.45 !important; }
+.reading-grid label { font-size: 15px !important; }
+.reading-grid small { font-size: 13px !important; }
+.reading-grid input { font-size: 27px !important; min-height: 44px !important; }
+.outline-button { font-size: 13px !important; padding: 11px 14px !important; }
+.primary-button { font-size: 14px !important; padding: 18px 24px !important; }
+.weather-banner span:not(.forecast-bits) { font-size: 15px !important; }
+.weather-banner small, .ocr-drop small, .ocr-drop strong, .ocr-drop em { font-size: 13px !important; }
+.ocr-drop { padding: 22px !important; }
+.saved-status, .privacy-note { font-size: 13px !important; line-height: 1.7 !important; }
+.book-rank, .market-box span, .result-factors span { font-size: 13px !important; }
+.book-details > p { font-size: 16px !important; line-height: 1.7 !important; }
+.market-box b { font-size: 25px !important; }
+.market-box a { font-size: 13px !important; }
+.flip-caption, .text-button { font-size: 13px !important; }
+.weather-explanation-copy > p:not(.kicker), .dashboard-hero > div > p:not(.kicker) { font-size: 17px !important; line-height: 1.7 !important; }
+.weather-legend, .soil-meters p { font-size: 14px !important; }
+.mita-message, .farmer-message { font-size: 15px !important; line-height: 1.6 !important; }
+.question-chips button { font-size: 13px !important; padding: 9px 12px !important; }
+.ask-form input { font-size: 15px !important; }
+.speech-note, .ai-language-status { font-size: 13px !important; }
+.login-panel label { font-size: 15px !important; }
+.history-preview p, .history-preview li { font-size: 14px !important; line-height: 1.55 !important; }
+.history-preview { padding: 18px !important; }
+.hero-stats span { font-size: 12px !important; }
+.confidence-pie span { font-size: 10px !important; letter-spacing: 0.05em !important; }
+footer p, footer a { font-size: 13px !important; }
+.calendar-duration { font-size: 14px !important; }
+.calendar-progress span { font-size: 10px !important; }
+.calendar-weather span { font-size: 11px !important; }
+.calendar-weather .weather-advice { font-size: 14px !important; }
+.calendar-weather .weather-advice b { font-size: 11px !important; }
+.calendar-timeline-title span { font-size: 11px !important; }
+.stage-card time { font-size: 12px !important; }
+.stage-card p { font-size: 14px !important; }
+.stage-card small { font-size: 11px !important; }
+.task-list strong { font-size: 14px !important; }
+.task-list small { font-size: 12px !important; }
+.priority { font-size: 10px !important; }
+.farming-tip b { font-size: 11px !important; }
+.farming-tip p { font-size: 14px !important; }
+.reminder-button { font-size: 12px !important; }
+.reminder-note { font-size: 12px !important; }
+.calendar-choice { font-size: 13px !important; }
+.cover-seal span { font-size: 9px !important; }
+.quiet-link { font-size: 13px !important; }
+.landing-bottom { font-size: 13px !important; line-height: 1.6 !important; }
+
+.section-picker { color: inherit; border: 1px solid currentColor; background: transparent; opacity: 0.9; font: 500 13px "DM Mono", monospace !important; padding: 8px 12px; cursor: pointer; border-radius: 4px; }
+.section-picker option { color: #183020; background: #f7f4eb; padding: 6px; font: 500 13px "DM Mono", monospace !important; }
+.dark .section-picker option { color: #e9eee4; background: #173321; }
+
+#hero, #recommendations, #weather, #soil-snapshot, #restore, #cropCalendar, #ask {
+  scroll-margin-top: 105px !important;
+}
+
+.flipbook { height: 560px !important; }
+.book-details { padding: clamp(24px, 3.5vw, 45px) !important; }
+.book-details h3 { margin: 16px 0 10px !important; }
+.calendar-choice { margin-top: 18px !important; padding: 13px 18px !important; font-size: 13px !important; border-radius: 8px !important; }
+
+.ocr-drop-area { display: none; margin-bottom: 22px; flex-direction: column; gap: 12px; }
+.ocr-drop { display: flex !important; width: 100% !important; }
+.ocr-mode .ocr-drop-area { display: flex; }
+.ocr-mode .manual-readings { display: block; }
+.ocr-sample-row { display: flex; gap: 10px; margin-top: 6px; }
+.sample-card-btn { background: #e3efe0; border: 1px solid #719b6e; color: #234c26; font: 500 13px "DM Mono", monospace; padding: 10px 16px; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
+.sample-card-btn:hover { background: #d0e4cc; }
+.ocr-progress-container { background: #eef5ea; border: 1px solid #c2d8bc; padding: 12px 16px; border-radius: 8px; flex-direction: column; gap: 8px; display: none; }
+.ocr-progress-container.active { display: flex; }
+.ocr-progress-bar { height: 8px; background: #cce0c7; border-radius: 4px; overflow: hidden; }
+.ocr-progress-fill { height: 100%; background: #3d8048; width: 0%; transition: width 0.3s ease; }
+.ocr-progress-text { font: 500 13px "DM Mono", monospace; color: #2d5434; }
+.ocr-preview-box { display: none; gap: 14px; align-items: center; background: #fdfbf5; border: 1px solid #dcd3be; padding: 14px; border-radius: 8px; }
+.ocr-preview-box.active { display: flex; }
+.ocr-img-thumb { width: 90px; height: 90px; object-fit: cover; border-radius: 6px; border: 1px solid #b5c7b1; }
+.ocr-extracted-badge { font: 500 14px "DM Sans", sans-serif; color: #24572c; line-height: 1.5; }
+
+.confidence-pie { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.confidence-pie b, .confidence-pie span { display: block; line-height: 1; position: relative; z-index: 1; }
+.confidence-pie b { margin: 0; }
+.confidence-pie span { margin-top: 4px; }
+.confidence-pie::after { z-index: 0; }
+
+@media (max-width: 800px) {
+  .topbar nav a, .login-link, .language-picker { font-size: 13px !important; }
+  .section-heading p, .planner-aside > p:not(.kicker), .landing-intro, .login-copy { font-size: 17px !important; }
+  .reading-grid input { font-size: 25px !important; }
+  .flipbook { height: 680px !important; }
+  .section-picker { font-size: 11px !important; padding: 6px 8px !important; }
+}
+
+
