@@ -16,6 +16,52 @@ const cropLibrary = [
   { name:'Barley', image:'raphael-rychetsky-li9JfUHQfOY-unsplash.jpg', temp:19, rain:50, ph:6.5, price:'₹1,980', unit:'per quintal', notes:['Cool season','Rotation option'], description:'A cooler-season rotation option for future planning when the weather turns drier.' }
 ];
 
+const mlCropLibrary = {
+  rice:{ name:'Rice', image:'winston-chen-kXoEdaZ3SFw-unsplash.jpg', price:'₹2,420', notes:['Warm season','Moisture-loving'], description:'Warm days and dependable rain make rice a steady field choice.' },
+  maize:{ name:'Maize', image:'katherine-volkovski-Q_MJjEN14uk-unsplash.jpg', price:'₹2,300', notes:['Versatile','Fast growing'], description:'Your soil balance and near-neutral pH support a vigorous maize crop.' },
+  wheat:{ name:'Wheat', image:'polina-rytova-1dGMs4hhcVA-unsplash.jpg', price:'₹2,425', notes:['Rabi season','Market staple'], description:'A cooler, drier sowing window suits this dependable market staple.' },
+  coffee:{ name:'Coffee', image:'mike-kenneally-TD4DBagg2wE-unsplash.jpg', price:'₹12,300', notes:['High value','Perennial'], description:'Worth exploring where elevation and shade conditions support a longer-term crop.' },
+  jute:{ name:'Jute', image:'fauzan-saari-lT7n6V9OGgQ-unsplash.jpg.jpeg', price:'₹5,335', notes:['Fibre crop','Rain-fed'], description:'Steady warmth and generous rain favour this hardy fibre crop.' },
+  cotton:{ name:'Cotton', image:'randy-fath-dDc0vuVH_LU-unsplash.jpg', price:'₹7,120', notes:['Cash crop','Warm season'], description:'A warm-season cash crop that rewards well-drained soil and patient management.' },
+  sugarcane:{ name:'Sugarcane', image:'benjamin-davies-Zm2n2O7Fph4-unsplash.jpg', price:'₹355', notes:['Long duration','Water-loving'], description:'A long-duration crop for fields with reliable water through the season.' },
+  chickpea:{ name:'Chickpea', image:'dibakar-roy-Oc1XKN01C7Y-unsplash.jpg.jpeg', price:'₹5,440', notes:['Rabi pulse','Soil builder'], description:'A rabi pulse that fixes nitrogen while giving a dependable harvest.' },
+  kidneybeans:{ name:'Kidney beans', image:'gabriel-jimenez-jin4W1HqgL4-unsplash.jpg', price:'₹8,500', notes:['Pulse','Cool season'], description:'A cool-season pulse that suits mild temperatures and balanced soil.' },
+  pigeonpeas:{ name:'Pigeon pea', image:'penden-wangchuk-K32tIswSJTc-unsplash.jpg.jpeg', price:'₹7,550', notes:['Deep rooted','Soil builder'], description:'Deep roots and nitrogen fixation make this pulse a strong rotation anchor.' },
+  mothbeans:{ name:'Moth beans', image:'dibakar-roy-Oc1XKN01C7Y-unsplash.jpg.jpeg', price:'₹7,000', notes:['Drought hardy','Pulse'], description:'One of the most drought-hardy pulses for hot, dry fields.' },
+  mungbean:{ name:'Mung bean', image:'gabriel-jimenez-jin4W1HqgL4-unsplash.jpg', price:'₹8,680', notes:['Short duration','Soil builder'], description:'A short-duration pulse that builds soil nitrogen between main crops.' },
+  blackgram:{ name:'Black gram', image:'dibakar-roy-Oc1XKN01C7Y-unsplash.jpg.jpeg', price:'₹7,400', notes:['Pulse','Low input'], description:'A low-input pulse that tolerates warm weather and enriches the soil.' },
+  lentil:{ name:'Lentil', image:'dibakar-roy-Oc1XKN01C7Y-unsplash.jpg.jpeg', price:'₹6,700', notes:['Rabi pulse','Cool season'], description:'A cool-season pulse for the rabi window with steady market demand.' },
+  pomegranate:{ name:'Pomegranate', image:'megan-thomas-xMh_ww8HN_Q-unsplash.jpg', price:'₹9,000', notes:['Orchard','High value'], description:'A high-value orchard crop that tolerates dry spells once established.' },
+  banana:{ name:'Banana', image:'rod-long-J-ygvQbilXU-unsplash.jpg.jpeg', price:'₹2,000', notes:['Year-round','Moisture-loving'], description:'Thrives in warm, humid conditions with dependable irrigation.' },
+  mango:{ name:'Mango', image:'megan-thomas-xMh_ww8HN_Q-unsplash.jpg', price:'₹4,500', notes:['Orchard','Perennial'], description:'A perennial orchard investment suited to warm seasons and deep soil.' },
+  grapes:{ name:'Grapes', image:'megan-thomas-xMh_ww8HN_Q-unsplash.jpg', price:'₹6,000', notes:['Orchard','High value'], description:'A high-value vine crop for well-drained soil and managed irrigation.' },
+  watermelon:{ name:'Watermelon', image:'megan-thomas-xMh_ww8HN_Q-unsplash.jpg', price:'₹1,600', notes:['Summer crop','Fast return'], description:'A fast summer crop that likes warmth and light, sandy soil.' },
+  muskmelon:{ name:'Muskmelon', image:'megan-thomas-xMh_ww8HN_Q-unsplash.jpg', price:'₹2,800', notes:['Summer crop','Fast return'], description:'A quick warm-season melon for light soils and steady sun.' },
+  apple:{ name:'Apple', image:'frances-gunn-QcBAZ7VREHQ-unsplash.jpg', price:'₹8,000', notes:['Temperate','Orchard'], description:'A temperate orchard crop for cool climates and chilling winters.' },
+  orange:{ name:'Orange', image:'megan-thomas-xMh_ww8HN_Q-unsplash.jpg', price:'₹4,200', notes:['Citrus','Orchard'], description:'A citrus orchard option for mild winters and well-drained soil.' },
+  papaya:{ name:'Papaya', image:'rod-long-J-ygvQbilXU-unsplash.jpg.jpeg', price:'₹2,200', notes:['Fast fruiting','Warm season'], description:'A fast-fruiting crop for warm, humid fields with good drainage.' },
+  coconut:{ name:'Coconut', image:'fauzan-saari-lT7n6V9OGgQ-unsplash.jpg.jpeg', price:'₹2,750', notes:['Coastal','Perennial'], description:'A long-lived palm for humid, coastal-style conditions.' },
+  soybean:{ name:'Soybean', image:'benjamin-davies-Zm2n2O7Fph4-unsplash.jpg', price:'₹4,890', notes:['Kharif','Soil builder'], description:'A kharif oilseed-pulse that fixes nitrogen while feeding strong demand.' }
+};
+async function fetchMlRecommendations(field) {
+  const endpoint = window.TERRABYTE_RECOMMEND_ENDPOINT || '/api/recommend';
+  const response = await fetch(endpoint, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ N:field.nitrogen, P:field.phosphorus, K:field.potassium, temperature:field.temperature, humidity:field.humidity, ph:field.ph, rainfall:field.rainfall }) });
+  if (!response.ok) throw new Error('Recommendation service unavailable');
+  const data = await response.json();
+  if (!Array.isArray(data.recommendations) || !data.recommendations.length) throw new Error('No recommendations returned');
+  return data.recommendations.slice(0, 3).map(item => {
+    const info = mlCropLibrary[item.crop] || {};
+    return {
+      name: info.name || item.crop.charAt(0).toUpperCase() + item.crop.slice(1),
+      image: info.image || 'benjamin-davies-Zm2n2O7Fph4-unsplash.jpg',
+      price: info.price || '—', unit: 'per quintal',
+      notes: info.notes || ['Model pick'],
+      description: info.description || 'Suggested for your readings by the trained crop model.',
+      confidence: Math.max(1, Math.round(item.probability * 100)),
+      ml: true
+    };
+  });
+}
 function storedField() { try { return { ...defaultField, ...JSON.parse(localStorage.getItem('terraField') || '{}') }; } catch { return defaultField; } }
 function storedProfile() { try { return JSON.parse(localStorage.getItem('terraProfile') || 'null'); } catch { return null; } }
 function historyFor(phone) { try { return JSON.parse(localStorage.getItem(`terraHistory_${phone}`) || '[]'); } catch { return []; } }
@@ -260,11 +306,11 @@ function setupCropCalendar(crop,field) {
   target.querySelectorAll('[data-calendar-task]').forEach(button=>button.onclick=()=>{const task=tasks.find(item=>item.id===button.dataset.calendarTask);task.done=!task.done;saved.tasks=tasks;localStorage.setItem(storageKey,JSON.stringify(saved));setupCropCalendar(crop,field);});
   target.querySelector('#enableCalendarReminders').onclick=async()=>{if(!('Notification' in window)){alert('This browser does not support notifications.');return;}const permission=await Notification.requestPermission();if(permission==='granted'){saved.reminders=true;localStorage.setItem(storageKey,JSON.stringify(saved));scheduleCropTaskReminders(crop,tasks);setupCropCalendar(crop,field);}else alert('Allow notifications in your browser settings to receive task reminders.');}; if(saved.reminders)scheduleCropTaskReminders(crop,tasks);
 }
-function setupDashboard() {
-  const book=document.querySelector('#flipbook'); if(!book)return; const field=storedField(), crops=rankedCrops(field), profile=storedProfile(); if(profile?.name) document.querySelector('#dashboardGreeting').textContent=`Hello, ${profile.name}.`; document.querySelector('#weatherTemp').textContent=`${Math.round(field.temperature)}°`; document.querySelector('#weatherRain').textContent=Math.round(field.rainfall); document.querySelector('#avgTemp').textContent=`${Math.round(field.temperature)}°C`; document.querySelector('#totalRain').textContent=`${Math.round(field.rainfall)}mm`; document.querySelector('#dashboardSummary').textContent=`Based on your latest field readings and ${Math.round(field.rainfall)}mm expected rainfall across the next 15 days.`; document.querySelector('#forecastColumns').innerHTML=forecastBars(field);
+async function setupDashboard() {
+  const book=document.querySelector('#flipbook'); if(!book)return; const field=storedField(), profile=storedProfile(); let crops, mlActive=true; try{ crops=await fetchMlRecommendations(field); }catch{ mlActive=false; crops=rankedCrops(field); } if(profile?.name) document.querySelector('#dashboardGreeting').textContent=`Hello, ${profile.name}.`; document.querySelector('#weatherTemp').textContent=`${Math.round(field.temperature)}°`; document.querySelector('#weatherRain').textContent=Math.round(field.rainfall); document.querySelector('#avgTemp').textContent=`${Math.round(field.temperature)}°C`; document.querySelector('#totalRain').textContent=`${Math.round(field.rainfall)}mm`; document.querySelector('#dashboardSummary').textContent=mlActive?`Matched by our trained crop model from your field readings and ${Math.round(field.rainfall)}mm expected rainfall across the next 15 days.`:`Based on your latest field readings and ${Math.round(field.rainfall)}mm expected rainfall across the next 15 days.`; document.querySelector('#forecastColumns').innerHTML=forecastBars(field);
   [['n',field.nitrogen,140],['p',field.phosphorus,80],['k',field.potassium,100],['ph',field.ph,14]].forEach(([id,value,max])=>{document.querySelector(`#${id}Value`).textContent=value;document.querySelector(`#${id}Meter`).style.setProperty('--value',`${Math.min(100,value/max*100)}%`);});
   const restore=restorationPlan(field); document.querySelector('#restoreSummary').textContent=restore.note; document.querySelector('#restoreGrid').innerHTML=restore.plans.map(plan=>`<article class="restore-card ${plan.healthy?'healthy':''}"><span class="restore-tag">${plan.nutrient}</span><h3>${plan.name}</h3><p>${plan.benefit}</p><span class="restore-use">${plan.timing}</span></article>`).join('') + `<p class="restore-callout">${restore.note}</p>`;
-  book.innerHTML=crops.map((crop,index)=>`<article class="book-page ${index?'hidden':''}" data-page="${index}" style="--crop-image:url('${crop.image}')"><div class="book-image"></div><div class="book-details"><span class="book-rank">0${index+1} / ${index<3?'FIELD MATCH':'ROTATION OPTION'}</span><div class="confidence-pie" style="--percent:${crop.confidence}"><b>${crop.confidence}%</b><span>CONFIDENCE</span></div><h3>${crop.name}</h3><p>${crop.description}</p><div class="result-factors">${crop.notes.map(note=>`<span>${note}</span>`).join('')}<span>pH ${field.ph}</span></div><div class="market-box"><span>INDICATIVE MANDI PRICE<b>${crop.price}</b>${crop.unit}</span><a target="_blank" rel="noreferrer" href="https://www.data.gov.in/catalog/current-daily-price-various-commodities-various-markets-mandi">Check live price ↗</a></div></div></article>`).join('');
+  book.innerHTML=crops.map((crop,index)=>`<article class="book-page ${index?'hidden':''}" data-page="${index}" style="--crop-image:url('${crop.image}')"><div class="book-image"></div><div class="book-details"><span class="book-rank">0${index+1} / ${crop.ml?(index?'MODEL RUNNER-UP':'AI MODEL MATCH'):index<3?'FIELD MATCH':'ROTATION OPTION'}</span><div class="confidence-pie" style="--percent:${crop.confidence}"><b>${crop.confidence}%</b><span>CONFIDENCE</span></div><h3>${crop.name}</h3><p>${crop.description}</p><div class="result-factors">${crop.notes.map(note=>`<span>${note}</span>`).join('')}<span>pH ${field.ph}</span></div><div class="market-box"><span>INDICATIVE MANDI PRICE<b>${crop.price}</b>${crop.unit}</span><a target="_blank" rel="noreferrer" href="https://www.data.gov.in/catalog/current-daily-price-various-commodities-various-markets-mandi">Check live price ↗</a></div></div></article>`).join('');
   const scrollToEl = (el) => {
     if (!el) return;
     const topbar = document.querySelector('.topbar');
