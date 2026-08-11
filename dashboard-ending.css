@@ -1,2 +1,22 @@
 /* Mita is the final, full-screen destination of the dashboard. */
 .dashboard-page .assistant-section{min-height:0;align-items:center;padding-bottom:clamp(62px,9vw,120px)}.dashboard-page .assistant-panel{width:100%}@media(max-width:800px){.dashboard-page .assistant-section{min-height:0;padding-bottom:65px}}
+
+/* Hero and restore jump-links: these markup hooks shipped with no styles, so the
+   button and the link stacked on top of each other. Lay them out as a wrapping row. */
+.hero-nav-actions,.restore-nav-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:24px}
+.hero-nav-btn,.restore-nav-btn{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;cursor:pointer;text-decoration:none;border:1px solid transparent;padding:11px 14px;font:500 9px "DM Mono",monospace;letter-spacing:.06em;text-transform:uppercase}
+.hero-nav-btn{background:#ede2a9;color:#1a3520}
+.hero-nav-btn.secondary{background:transparent;border-color:rgba(255,255,255,.5);color:#fff}
+.hero-nav-btn:hover{background:#f4ecc4}
+.hero-nav-btn.secondary:hover{border-color:#fff;background:rgba(255,255,255,.1)}
+.restore-nav-btn{background:var(--forest);color:#fff}
+.restore-nav-btn.outline{background:transparent;border-color:#8ca684;color:#315c37}
+.restore-nav-btn.outline:hover{background:rgba(49,92,55,.08)}
+@media(max-width:800px){
+  .hero-nav-actions,.restore-nav-bar{gap:8px}
+  .hero-nav-btn,.restore-nav-btn{padding:10px 12px;font-size:8px}
+}
+
+/* A crop with no sourced mandi figure must not look like a priced one. */
+.market-box.unpriced b{color:#9aa694}
+.market-box.unpriced span{color:#8d9a89}

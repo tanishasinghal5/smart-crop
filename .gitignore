@@ -1,0 +1,18 @@
+# Secrets — never commit. .env.example is the tracked template.
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Planner / mandi price cache (generated at runtime, machine-specific)
+.cache/
+mandi_cache.json
+
+# OS / editor
+.DS_Store
+*.swp
