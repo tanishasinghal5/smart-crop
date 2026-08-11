@@ -84,6 +84,18 @@ def recommend():
     except (KeyError, TypeError, ValueError):
         return jsonify(error=f"Required numeric fields: {', '.join(FEATURES)}"), 400
 
+    N, P, K, temperature, humidity, ph, rainfall = values
+    if not (0 <= ph <= 14):
+        return jsonify(error="pH must be between 0 and 14"), 400
+    if not (0 <= humidity <= 100):
+        return jsonify(error="Humidity must be between 0 and 100"), 400
+    if not (0 <= rainfall <= 10000):
+        return jsonify(error="Rainfall must be positive"), 400
+    if not (N >= 0 and P >= 0 and K >= 0):
+        return jsonify(error="Nutrient values must be non-negative"), 400
+    if not (-50 <= temperature <= 60):
+        return jsonify(error="Temperature must be between -50 and 60"), 400
+
     frame = pd.DataFrame([values], columns=FEATURES)
     with warnings.catch_warnings():
         warnings.simplefilter('ignore')
@@ -220,4 +232,4 @@ def chat():
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8000))
-    app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(host='0.0.0.0', port=port, debug=False, ssl_context='adhoc')

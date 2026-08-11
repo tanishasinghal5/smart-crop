@@ -1,6 +1,90 @@
 const translations = {
   en: {},
   hi: {
+    nitrogenUnit: "N · किग्रा/हेक्टेयर",
+    phosphorusUnit: "P · किग्रा/हेक्टेयर",
+    potassiumUnit: "K · किग्रा/हेक्टेयर",
+    phRange: "0–14",
+    scanningCardImage: "कार्ड की इमेज स्कैन हो रही है…",
+    soilCardPreview: "मिट्टी कार्ड का प्रीव्यू",
+    extractedBadge: "✓ मिट्टी के मान निकाले गए! यदि आवश्यक हो तो ऊपर अपने मानों की जांच करें और बदलें।",
+    celsiusToday: "°C आज",
+    percentToday: "% आज",
+    rainfallUnit: "मिमी · 15 दिन",
+    previousRecommendation: "पिछला सुझाव",
+    nextRecommendation: "अगला सुझाव",
+    finishRecording: "रिकॉर्डिंग समाप्त करें",
+    locationUnavailable: "स्थान अनुपलब्ध",
+    locationPermissionUnavailable: "स्थान की अनुमति अनुपलब्ध",
+    weatherServiceUnavailable: "मौसम सेवा अनुपलब्ध",
+    sampleValuesReason: "नमूना मान — {reason}",
+    cardProcessedPrefill: "कार्ड प्रोसेस हो गया! मिट्टी के मान पहले से भरे गए (110, 45, 55, 6.8)। नीचे जांचें और बदलें।",
+    dhaincha: "ढैंचा",
+    greenGram: "मूंग",
+    cowpea: "लोबिया",
+    pigeonPea: "अरहर",
+    sorghum: "ज्वार",
+    sunflower: "सूरजमुखी",
+    keepLegumeRotation: "फसल चक्र में फलीदार फसल रखें",
+    dhainchaBenefit: "एक तेज़ हरी खाद वाली फसल जो वायुमंडलीय नाइट्रोजन को स्थिर करती है और मिट्टी में मिलाने पर कार्बनिक पदार्थ जोड़ती है।",
+    dhainchaTiming: "मुख्य फसल से पहले उगाएं; फूल आने से पहले मिट्टी में मिलाएं।",
+    greenGramBenefit: "कम अवधि की दलहनी फसल जो जैविक रूप से स्थिर नाइट्रोजन बनाने में मदद करती है और उपज भी देती है।",
+    greenGramTiming: "कटाई के बाद जड़ों और अवशेषों को खेत में रहने दें।",
+    cowpeaNitrogenBenefit: "नकदी फसलों के बीच अंतराल में नाइट्रोजन स्थिरीकरण और जमीन को ढकने के लिए एक मजबूत फलीदार फसल।",
+    cowpeaNitrogenTiming: "कवर क्रॉप या हरी खाद के रूप में उपयोग करें।",
+    pigeonPeaPhosphorusBenefit: "इसकी गहरी जड़ें और पत्तियों का कूड़ा पोषक चक्र का समर्थन कर सकता है और अगली फसल के लिए जड़ के माहौल में सुधार कर सकता है।",
+    pigeonPeaPhosphorusTiming: "कटाई के बाद अवशेषों को मिट्टी में लौटा दें।",
+    cowpeaPhosphorusBenefit: "बायोमास जोड़ता है और सक्रिय मिट्टी जीव विज्ञान का समर्थन करता है जो मौजूदा पोषक तत्वों को अधिक उपलब्ध कराने में मदद करता है।",
+    cowpeaPhosphorusTiming: "स्थानीय रूप से अनुशंसित फॉस्फोरस संशोधन के साथ प्रयोग करें।",
+    sorghumBenefit: "एक गहरी जड़ वाली फसल जो मिट्टी की निचली परतों से पोषक तत्वों को रीसायकल कर सकती है जब इसके अवशेषों को बनाए रखा जाता है।",
+    sorghumTiming: "खेत में डंठल या खाद वाले अवशेष छोड़ दें।",
+    sunflowerBenefit: "एक गहरी जड़ वाला विकल्प जो गहरी मिट्टी की परतों का पता लगाने और फसल चक्र में विविधता लाने में मदद करता है।",
+    sunflowerTiming: "फसल के अवशेष वापस करें; बताए अनुसार पोटाशियम का उपयोग करें।",
+    balancedBenefit: "आपका खेत ऐप के अनुसार पोषक तत्वों की कमी नहीं दिखाता है। एक छोटी दलहन या हरी खाद अभी भी मिट्टी के कार्बनिक पदार्थ और नाइट्रोजन चक्र की रक्षा करती है।",
+    balancedTiming: "मुख्य फसलों के बीच मूंग, लोबिया या ढैंचा आज़माएं।",
+    balancedNote: "आपके N, P और K मान ऐप के अनुसार सही हैं। खेत-विशिष्ट लक्ष्यों के लिए अपना मृदा स्वास्थ्य कार्ड जांचते रहें।",
+    restoreNote: "ये फसलें नाइट्रोजन स्थिरीकरण, बायोमास और पोषक चक्र का समर्थन कर सकती हैं। कम फॉस्फोरस या पोटेशियम के लिए, स्थानीय सलाह की पुष्टि करें—फसलें इन पोषक तत्वों को रीसायकल करती हैं लेकिन खनिज नहीं बना सकतीं।",
+    scrollToExplore: "एक्सप्लोर करने के लिए स्क्रॉल करें →",
+    notificationUnsupported: "यह ब्राउज़र सूचनाओं का समर्थन नहीं करता है।",
+    notificationDenied: "टास्क रिमाइंडर प्राप्त करने के लिए अपने ब्राउज़र की सेटिंग में सूचनाओं की अनुमति दें।",
+    selectCropPlanAlert: "कैलेंडर देखने के लिए कृपया ऊपर एक फसल योजना चुनें।",
+    notificationBody: "इसका समय आ गया है: {task}",
+    landPreparationDescription: "खेत को समतल करें और कार्बनिक पदार्थ डालें।",
+    seedSowingDescription: "सही गहराई पर स्वस्थ बीज का प्रयोग करें।",
+    firstIrrigationDescription: "शुरुआती बढ़वार में नमी बनाए रखें।",
+    fertilizerApplicationDescription: "खेत में पानी भरा न होने पर पोषक तत्व डालें।",
+    weedControlDescription: "फैलने से पहले प्रतिस्पर्धा करने वाले खरपतवारों को हटा दें।",
+    pestInspectionDescription: "पत्तियों के निचले हिस्से और तनों की जांच करें।",
+    floweringStageDescription: "फूल आने के दौरान पानी की कमी से बचें।",
+    harvestDescription: "पूरी तरह पकने पर काटें और अच्छी तरह सुखा लें।",
+    low: "कम",
+    rotationOption: "रोटेशन विकल्प",
+    modelPick: "मॉडल की पसंद",
+    suggestedByModel: "प्रशिक्षित फसल मॉडल द्वारा आपकी रीडिंग के लिए सुझाव।",
+    speechUnsupported: "इस ब्राउज़र में स्पीच इनपुट समर्थित नहीं है। आप अभी भी अपना प्रश्न टाइप कर सकते हैं।",
+    listeningIn: "{language} में सुन रहा है…",
+    capturedAsk: "प्रश्न रिकॉर्ड किया गया। मीता से पूछने के लिए तीर दबाएं।",
+    couldNotHear: "मैं वह सुन नहीं सका। कृपया फिर से प्रयास करें या अपना प्रश्न टाइप करें।",
+    preparingSpeech: "ऑन-डिवाइस स्पीच मॉडल तैयार किया जा रहा है। पहले डाउनलोड में कुछ मिनट लग सकते हैं…",
+    downloadingSpeech: "स्थानीय स्पीच मॉडल डाउनलोड हो रहा है: {progress}%",
+    speechReady: "ऑन-डिवाइस {language} स्पीच तैयार है। माइक पर टैप करें, बोलें, और समाप्त करने के लिए फिर से टैप करें।",
+    transcribing: "इस डिवाइस पर {language} ट्रांसक्राइब किया जा रहा है…",
+    capturedLocally: "प्रश्न स्थानीय रूप से रिकॉर्ड किया गया। मीता से पूछने के लिए तीर दबाएं।",
+    notEnoughSpeech: "मुझे पर्याप्त आवाज़ नहीं सुनाई दी। कृपया फिर से प्रयास करें या अपना प्रश्न टाइप करें।",
+    speechError: "ऑन-डिवाइस स्पीच शुरू नहीं हो सका: {message}",
+    workerError: "स्थानीय स्पीच वर्कर शुरू नहीं हो सका। आप अभी भी अपना प्रश्न टाइप कर सकते हैं।",
+    micUnavailable: "यह ब्राउज़र माइक्रोफ़ोन का उपयोग नहीं कर सकता। आप अभी भी अपना प्रश्न टाइप कर सकते हैं।",
+    listeningDevice: "इस डिवाइस पर {language} में सुन रहा है… समाप्त करने के लिए माइक पर फिर से टैप करें।",
+    micPermission: "माइक्रोफ़ोन अनुमति उपलब्ध नहीं थी। कृपया अनुमति दें, और फिर से प्रयास करें या अपना प्रश्न टाइप करें।",
+    speakLonger: "कृपया थोड़ा और बोलें, फिर प्रयास करें।",
+    fieldSummaryTitle: "TerraByte खेत सारांश",
+    fieldRecommendationSummary: "खेत सुझाव सारांश",
+    preparedBy: "TerraByte द्वारा तैयार · {date}",
+    printNote: "मिट्टी: N {nitrogen}, P {phosphorus}, K {potassium}, pH {ph}<br>15-दिन की स्थिति: {temperature}°C, {humidity}% नमी, {rainfall}mm अनुमानित बारिश।",
+    suggestedCrops: "सुझाई गई फसलें",
+    crop: "फसल",
+    indicativePrice: "अनुमानित मूल्य",
+    printDisclaimer: "कीमतें अनुमानित हैं। बेचने का निर्णय लेने से पहले अपनी निकटतम मंडी की जाँच करें।",
     plan: "खेत की योजना",
     dashboard: "डैशबोर्ड",
     ask: "मीता से पूछें",
@@ -62,6 +146,136 @@ const translations = {
     footer: "उन हाथों के लिए जो हमारा भविष्य उगाते हैं।",
   },
   mr: {
+    jumpToSection: "विभागाकडे जा",
+    nitrogenUnit: "N · किलो/हेक्टर",
+    phosphorusUnit: "P · किलो/हेक्टर",
+    potassiumUnit: "K · किलो/हेक्टर",
+    phRange: "0–14",
+    ocrHint: "स्पष्ट JPG किंवा PNG—आम्ही N, P, K आणि pH वाचू.",
+    scanningCardImage: "कार्ड इमेज स्कॅन होत आहे…",
+    soilCardPreview: "माती कार्ड प्रिव्ह्यू",
+    extractedBadge: "✓ मातीची मूल्ये काढली! आवश्यक असल्यास तुमची मूल्ये तपासा आणि बदला.",
+    celsiusToday: "°C आज",
+    percentToday: "% आज",
+    rainfallUnit: "मिमी · 15 दिवस",
+    previousRecommendation: "मागील शिफारस",
+    nextRecommendation: "पुढील शिफारस",
+    weatherCopy: "हवामानाचा अंदाज आम्हाला केवळ आजच नाही, तर पिकाच्या सुरुवातीच्या महत्त्वाच्या आठवड्यांमध्ये उष्णता, आर्द्रता आणि पाऊस समजण्यास मदत करतो.",
+    restoreIntro: "आम्ही तुमची पोषक पातळी वाचू आणि पुढील सुधारणा पीक सुचवू.",
+    restoreDisclaimer: "या माती सुधारणा पीक पद्धती आहेत—स्थानिक पोषक सल्ल्याचा किंवा आवश्यक बदलांचा पर्याय नाही.",
+    finishRecording: "रेकॉर्डिंग संपवा",
+    loginCopy: "तुमचे नाव आणि फोन नंबर प्रविष्ट करा. जतन केलेल्या पीक योजना परत आणण्यासाठी आम्ही ते फक्त या ब्राउझरमध्ये वापरू.",
+    namePlaceholder: "उदा. मीरा पटेल",
+    phonePlaceholder: "10-अंकी मोबाइल नंबर",
+    historyNoPlans: "या नंबरसाठी अद्याप कोणतीही जतन केलेली योजना नाही. तुमची पुढील पीक योजना येथे दिसेल.",
+    findingField: "शेत शोधत आहे…",
+    locationUnavailable: "स्थान अनुपलब्ध",
+    locationPermissionUnavailable: "स्थान परवानगी अनुपलब्ध",
+    weatherServiceUnavailable: "हवामान सेवा अनुपलब्ध",
+    localForecast: "तुमचा स्थानिक 15-दिवसांचा अंदाज",
+    sampleValuesReason: "नमुना मूल्ये — {reason}",
+    weatherStatusSummary: "आज: {temperature}°C · {humidity}% आर्द्रता · {rainfall}mm अपेक्षित पाऊस",
+    forecastAdded: "✓ अंदाज जोडला",
+    loadingOcrEngine: "Tesseract OCR इंजिन लोड करत आहे…",
+    scanningSoilCard: "Soil Health Card स्कॅन करत आहे…",
+    preprocessingImage: "प्रतिमा स्पष्ट करण्यासाठी तयार करत आहे…",
+    analyzingValues: "N, P, K आणि pH मजकूर मूल्ये वाचत आहे…",
+    scanComplete: "स्कॅन पूर्ण!",
+    extractedValues: "✓ {count} मातीची मूल्ये काढली! खाली मूल्ये तपासा आणि बदला.",
+    cardProcessedPrefill: "कार्ड प्रोसेस केले! मातीची मूल्ये भरली (110, 45, 55, 6.8). खाली तपासा आणि बदला.",
+    prefilledSampleValues: "खाली नमुना मूल्ये भरली आहेत — आवश्यक असल्यास बदला.",
+    lowNitrogen: "नायट्रोजन कमी",
+    lowPhosphorus: "फॉस्फरस कमी",
+    lowPotassium: "पोटॅशियम कमी",
+    balancedNutrients: "पोषक घटक संतुलित",
+    dhaincha: "धैंचा",
+    greenGram: "मूग",
+    cowpea: "चवळी",
+    pigeonPea: "तूर",
+    sorghum: "ज्वारी",
+    sunflower: "सूर्यफूल",
+    keepLegumeRotation: "पीक पद्धतीत कडधान्य ठेवा",
+    dhainchaBenefit: "एक जलद वाढणारे हिरवळीचे खत जे वातावरणातील नायट्रोजन स्थिर करते आणि जमिनीत मिसळल्यावर सेंद्रिय पदार्थ जोडते.",
+    dhainchaTiming: "मुख्य पिकाच्या आधी वाढवा; फुलोऱ्याच्या आधी जमिनीत मिसळा.",
+    greenGramBenefit: "कमी कालावधीचे कडधान्य जे जैविक दृष्ट्या नायट्रोजन स्थिर करण्यास मदत करते आणि पीकही देते.",
+    greenGramTiming: "काढणीनंतर मुळे आणि अवशेष शेतातच राहू द्या.",
+    cowpeaNitrogenBenefit: "नायट्रोजन स्थिरीकरण आणि जमिनीला आच्छादन देण्यासाठी एक मजबूत कडधान्य पीक.",
+    cowpeaNitrogenTiming: "आच्छादन पीक किंवा हिरवळीचे खत म्हणून वापरा.",
+    pigeonPeaPhosphorusBenefit: "याची खोल मुळे आणि पानांचा पालापाचोळा पोषक घटकांचे चक्र सुधारू शकतो आणि पुढील पिकासाठी मुळांचे वातावरण सुधारू शकतो.",
+    pigeonPeaPhosphorusTiming: "काढणीनंतर अवशेष जमिनीत परत करा.",
+    cowpeaPhosphorusBenefit: "बायोमास जोडते आणि सक्रिय मातीतील जैविक प्रक्रिया सुधारते, ज्यामुळे उपलब्ध पोषक घटक पिकाला मिळण्यास मदत होते.",
+    cowpeaPhosphorusTiming: "स्थानिक स्तरावर सुचवलेल्या फॉस्फरस खतासोबत वापरा.",
+    sorghumBenefit: "खोल मुळे असलेले पीक जे मातीच्या खालच्या थरांमधून पोषक घटक परत आणू शकते जेव्हा त्याचे अवशेष जमिनीत राखले जातात.",
+    sorghumTiming: "शेतात खोड किंवा कंपोस्ट केलेले अवशेष ठेवा.",
+    sunflowerBenefit: "एक खोल मुळे असलेला पर्याय जो मातीच्या खालच्या थरांचा शोध घेण्यास आणि पीक पद्धतीत विविधता आणण्यास मदत करतो.",
+    sunflowerTiming: "पिकाचे अवशेष परत करा; सांगितल्याप्रमाणे पोटॅशियम खत वापरा.",
+    balancedBenefit: "तुमचे शेत ॲपच्या अंदाजानुसार पोषक घटकांची कमतरता दर्शवत नाही. एक लहान कडधान्य किंवा हिरवळीचे खत मातीतील सेंद्रिय पदार्थ आणि नायट्रोजन चक्राचे संरक्षण करते.",
+    balancedTiming: "मुख्य पिकांच्या मध्ये मूग, चवळी किंवा धैंचा वापरून पहा.",
+    balancedNote: "तुमची N, P आणि K मूल्ये ॲपच्या नियोजनाच्या मर्यादेत आहेत. शेताशी संबंधित अधिक माहितीसाठी तुमचे मृदा आरोग्य कार्ड तपासा.",
+    restoreNote: "ही पिके नायट्रोजन स्थिरीकरण, बायोमास आणि पोषक घटकांचे चक्र सुधारण्यास मदत करू शकतात. फॉस्फरस किंवा पोटॅशियमच्या कमतरतेसाठी, स्थानिक सल्ल्याची पुष्टी करा—पिके हे पोषक घटक परत मिळवू शकतात परंतु खनिजे निर्माण करू शकत नाहीत.",
+    rainAdvice: "लवकरच पावसाची अपेक्षा आहे. शेतातील पाणी निघेपर्यंत खत देणे पुढे ढकला.",
+    dryAdvice: "पुढे कोरडे हवामान आहे. पहाटे सिंचनाचे नियोजन करा.",
+    scrollToExplore: "पाहण्यासाठी स्क्रोल करा →",
+    farmingTip: "शेती टीप",
+    farmingTipText: "पहाटे सिंचन केल्याने बाष्पीभवनाचे नुकसान कमी होते.",
+    remindersEnabled: "रिमाइंडर चालू केले",
+    enableTaskReminders: "कामाचे रिमाइंडर चालू करा",
+    reminderNote: "हा डॅशबोर्ड खुला असताना ऑन-डिव्हाइस रिमाइंडर काम करतात.",
+    notificationUnsupported: "हा ब्राउझर सूचनांना समर्थन देत नाही.",
+    notificationDenied: "टास्क रिमाइंडर प्राप्त करण्यासाठी तुमच्या ब्राउझर सेटिंग्जमध्ये सूचनांना परवानगी द्या.",
+    selectCropPlanAlert: "कॅलेंडर पाहण्यासाठी कृपया वर पीक योजना निवडा.",
+    notificationBody: "याची वेळ झाली आहे: {task}",
+    landPreparation: "जमिनीची तयारी",
+    landPreparationDescription: "शेत समतल करा आणि सेंद्रिय खत घाला.",
+    seedSowing: "बीज पेरणी",
+    seedSowingDescription: "योग्य खोलीवर निरोगी बियाणे वापरा.",
+    firstIrrigation: "पहिले सिंचन",
+    firstIrrigationDescription: "सुरुवातीच्या वाढीच्या वेळी ओलावा टिकवून ठेवा.",
+    fertilizerApplication: "खत देणे",
+    fertilizerApplicationDescription: "शेतात पाणी साचले नसताना खत द्या.",
+    weedControl: "तण नियंत्रण",
+    weedControlDescription: "तण पसरण्यापूर्वी ते काढून टाका.",
+    pestInspection: "कीड तपासणी",
+    pestInspectionDescription: "पानांची खालची बाजू आणि देठ तपासा.",
+    floweringStage: "फुलोऱ्याची अवस्था",
+    floweringStageDescription: "फुलोऱ्याच्या वेळी पाण्याचा ताण टाळा.",
+    harvest: "काढणी",
+    harvestDescription: "पूर्ण परिपक्व झाल्यावर काढणी करा आणि चांगले वाळवा.",
+    irrigateField: "शेताला पाणी द्या",
+    inspectPests: "किडींसाठी तपासा",
+    applyNitrogen: "नायट्रोजन खत द्या",
+    low: "कमी",
+    modelRunnerUp: "मॉडेल रनर-अप",
+    aiModelMatch: "AI मॉडेल जुळणी",
+    fieldMatch: "शेत जुळणी",
+    rotationOption: "रोटेशन पर्याय",
+    modelPick: "मॉडेलची निवड",
+    suggestedByModel: "प्रशिक्षित पीक मॉडेलद्वारे तुमच्या मोजमापांसाठी सुचवले.",
+    speechUnsupported: "या ब्राउझरमध्ये स्पीच इनपुट समर्थित नाही. तुम्ही अद्याप तुमचा प्रश्न टाइप करू शकता.",
+    listeningIn: "{language} मध्ये ऐकत आहे…",
+    capturedAsk: "प्रश्न रेकॉर्ड केला. मिताला विचारण्यासाठी बाण दाबा.",
+    couldNotHear: "मी ते ऐकू शकलो नाही. कृपया पुन्हा प्रयत्न करा किंवा तुमचा प्रश्न टाइप करा.",
+    preparingSpeech: "ऑन-डिव्हाइस स्पीच मॉडेल तयार करत आहे. पहिल्या डाउनलोडला काही मिनिटे लागू शकतात…",
+    downloadingSpeech: "स्थानिक स्पीच मॉडेल डाउनलोड करत आहे: {progress}%",
+    speechReady: "ऑन-डिव्हाइस {language} स्पीच तयार आहे. माइकवर टॅप करा, बोला आणि पूर्ण करण्यासाठी पुन्हा टॅप करा.",
+    transcribing: "या डिव्हाइसवर {language} ट्रान्सक्राइब करत आहे…",
+    capturedLocally: "प्रश्न स्थानिक पातळीवर रेकॉर्ड केला. मिताला विचारण्यासाठी बाण दाबा.",
+    notEnoughSpeech: "मला पुरेसा आवाज ऐकू आला नाही. कृपया पुन्हा प्रयत्न करा किंवा तुमचा प्रश्न टाइप करा.",
+    speechError: "ऑन-डिव्हाइस स्पीच सुरू होऊ शकले नाही: {message}",
+    workerError: "स्थानिक स्पीच वर्कर सुरू होऊ शकला नाही. तुम्ही अद्याप तुमचा प्रश्न टाइप करू शकता.",
+    micUnavailable: "हा ब्राउझर मायक्रोफोनमध्ये प्रवेश करू शकत नाही. तुम्ही अद्याप तुमचा प्रश्न टाइप करू शकता.",
+    listeningDevice: "या डिव्हाइसवर {language} मध्ये ऐकत आहे… पूर्ण केल्यावर माइक पुन्हा टॅप करा.",
+    micPermission: "मायक्रोफोन परवानगी उपलब्ध नव्हती. कृपया परवानगी द्या, आणि पुन्हा प्रयत्न करा किंवा तुमचा प्रश्न टाइप करा.",
+    speakLonger: "कृपया थोडे जास्त वेळ बोला, नंतर पुन्हा प्रयत्न करा.",
+    useSpeech: "{language} मध्ये ऑन-डिव्हाइस स्पीच वापरा. मॉडेल एकदा डाउनलोड केले जाते आणि ऑफलाइन वापरासाठी कॅशे केले जाते.",
+    fieldSummaryTitle: "TerraByte शेत सारांश",
+    fieldRecommendationSummary: "शेत शिफारस सारांश",
+    preparedBy: "TerraByte द्वारे तयार केले · {date}",
+    printNote: "माती: N {nitrogen}, P {phosphorus}, K {potassium}, pH {ph}<br>15-दिवसांची परिस्थिती: {temperature}°C, {humidity}% आर्द्रता, {rainfall}mm अपेक्षित पाऊस.",
+    suggestedCrops: "सुचवलेली पिके",
+    crop: "पीक",
+    indicativePrice: "अंदाजित किंमत",
+    printDisclaimer: "किमती अंदाजित आहेत. विक्रीचा निर्णय घेण्यापूर्वी तुमच्या जवळच्या मंडीमध्ये तपासा.",
     plan: "शेताची योजना",
     dashboard: "डॅशबोर्ड",
     ask: "मिताला विचारा",
@@ -83,6 +297,138 @@ const translations = {
     askTitle: "मिताला तुमच्या हंगामाबद्दल काहीही विचारा।",
   },
   te: {
+    jumpToSection: "విభాగానికి వెళ్ళండి",
+    humanNote: "కొన్ని నిజమైన రీడింగులు. స్పష్టమైన తదుపరి దశ. మేము గణాంకాలను ఉపయోగకరంగా చేస్తాము.",
+    nitrogenUnit: "N · కిలో/హెక్టార్",
+    phosphorusUnit: "P · కిలో/హెక్టార్",
+    potassiumUnit: "K · కిలో/హెక్టార్",
+    phRange: "0–14",
+    dropCard: "మీ సాయిల్ హెల్త్ కార్డ్ ఫోటోను ఇక్కడ వేయండి",
+    ocrHint: "స్పష్టమైన JPG లేదా PNG—మేము N, P, K మరియు pHలను చదువుతాము.",
+    scanningCardImage: "కార్డ్ ఇమేజ్ స్కాన్ అవుతోంది…",
+    soilCardPreview: "మట్టి కార్డ్ ప్రివ్యూ",
+    extractedBadge: "✓ మట్టి విలువలు సేకరించబడ్డాయి! అవసరమైతే మీ విలువలను సరిచూసుకోండి.",
+    celsiusToday: "°C ఈ రోజు",
+    percentToday: "% ఈ రోజు",
+    rainfallUnit: "మి.మీ · 15 రోజులు",
+    previousRecommendation: "గత సూచన",
+    nextRecommendation: "తదుపరి సూచన",
+    weatherCopy: "వాతావరణ సూచన ఈ రోజు మాత్రమే కాదు, పంట పెరిగే ప్రారంభ దశలలో ఉష్ణోగ్రత, తేమ మరియు వర్షపాతాన్ని అంచనా వేయడానికి సహాయపడుతుంది.",
+    restoreIntro: "మేము మీ పోషకాల స్థాయిని విశ్లేషించి, మట్టిని బాగుచేసే తదుపరి పంటను సూచిస్తాము.",
+    restoreDisclaimer: "ఇవి మట్టిని మెరుగుపరిచే పంటల విధానాలు—స్థానిక పోషకాల సలహాకు ప్రత్యామ్నాయం కాదు.",
+    finishRecording: "రికార్డింగ్ ముగించండి",
+    loginCopy: "మీ పేరు మరియు ఫోన్ నంబర్‌ను నమోదు చేయండి. మీ సేవ్ చేసిన పొలం ప్లాన్‌లను తిరిగి తీసుకురావడానికి మేము వీటిని ఈ బ్రౌజర్‌లో మాత్రమే ఉపయోగిస్తాము.",
+    namePlaceholder: "ఉదా. మీరా పటేల్",
+    phonePlaceholder: "10-అంకెల మొబైల్ నంబర్",
+    historyNoPlans: "ఈ నంబర్‌కు ఇంకా సేవ్ చేసిన ప్లాన్‌లు లేవు. మీ తదుపరి పొలం ప్లాన్ ఇక్కడ కనిపిస్తుంది.",
+    findingField: "పొలాన్ని వెతుకుతోంది…",
+    locationUnavailable: "స్థానం అందుబాటులో లేదు",
+    locationPermissionUnavailable: "స్థానం అనుమతి అందుబాటులో లేదు",
+    weatherServiceUnavailable: "వాతావరణ సేవ అందుబాటులో లేదు",
+    localForecast: "మీ స్థానిక 15-రోజుల అంచనా",
+    sampleValuesReason: "నమూనా విలువలు — {reason}",
+    weatherStatusSummary: "ఈ రోజు: {temperature}°C · {humidity}% తేమ · {rainfall}mm అంచనా వర్షపాతం",
+    forecastAdded: "✓ వాతావరణ అంచనా జోడించబడింది",
+    loadingOcrEngine: "Tesseract OCR ఇంజిన్ లోడ్ అవుతోంది…",
+    scanningSoilCard: "Soil Health Card స్కాన్ అవుతోంది…",
+    preprocessingImage: "స్పష్టత కోసం ఇమేజ్ ప్రిపేర్ అవుతోంది…",
+    analyzingValues: "N, P, K మరియు pH టెక్స్ట్ విలువలను విశ్లేషిస్తోంది…",
+    scanComplete: "స్కాన్ పూర్తయింది!",
+    extractedValues: "✓ {count} మట్టి విలువలు సేకరించబడ్డాయి! క్రింద సమీక్షించి మార్చుకోండి.",
+    cardProcessedPrefill: "కార్డ్ ప్రాసెస్ చేయబడింది! మట్టి విలువలు నింపబడ్డాయి (110, 45, 55, 6.8). క్రింద సరిచూసుకోండి.",
+    prefilledSampleValues: "క్రింద నమూనా విలువలు నింపబడ్డాయి — అవసరమైతే మార్చండి.",
+    lowNitrogen: "నైట్రోజన్ తక్కువ",
+    lowPhosphorus: "ఫాస్పరస్ తక్కువ",
+    lowPotassium: "పొటాషియం తక్కువ",
+    balancedNutrients: "పోషకాలు సమతుల్యంగా ఉన్నాయి",
+    dhaincha: "జనుము",
+    greenGram: "పెసర",
+    cowpea: "అలసంద",
+    pigeonPea: "కంది",
+    sorghum: "జొన్న",
+    sunflower: "పొద్దుతిరుగుడు",
+    keepLegumeRotation: "పంట మార్పిడిలో పప్పుధాన్యం ఉంచండి",
+    dhainchaBenefit: "వాతావరణంలోని నైట్రోజన్‌ను స్థిరీకరించి, మట్టిలో కలిపినప్పుడు సేంద్రియ పదార్థాలను చేర్చే వేగంగా పెరిగే పచ్చిరొట్ట ఎరువు.",
+    dhainchaTiming: "ప్రధాన పంటకు ముందు పెంచండి; పూతకు ముందు మట్టిలో కలపండి.",
+    greenGramBenefit: "జైవికంగా నైట్రోజన్‌ను స్థిరీకరించడానికి సహాయపడే తక్కువ కాల వ్యవధి గల పప్పుధాన్యం పంట.",
+    greenGramTiming: "కోత తర్వాత వేర్లు మరియు అవశేషాలను పొలంలోనే ఉంచండి.",
+    cowpeaNitrogenBenefit: "ప్రధాన పంటల మధ్య విరామంలో నైట్రోజన్ స్థిరీకరణ మరియు నేలను కప్పడానికి ఒక బలమైన పంట.",
+    cowpeaNitrogenTiming: "నేలను కప్పే పంటగా లేదా పచ్చిరొట్ట ఎరువుగా వాడండి.",
+    pigeonPeaPhosphorusBenefit: "దీని లోతైన వేర్లు మరియు రాలిన ఆకులు పోషకాల చక్రాన్ని మెరుగుపరిచి, తదుపరి పంటకు అనుకూలమైన వాతావరణాన్ని అందిస్తాయి.",
+    pigeonPeaPhosphorusTiming: "కోత తర్వాత అవశేషాలను మట్టిలో కలపండి.",
+    cowpeaPhosphorusBenefit: "మట్టిలో సూక్ష్మజీవుల చర్యను మెరుగుపరిచి, పోషకాలను మొక్కలకు సులభంగా అందేలా చేస్తుంది.",
+    cowpeaPhosphorusTiming: "స్థానికంగా సూచించిన ఫాస్పరస్ ఎరువులతో కలిపి వాడండి.",
+    sorghumBenefit: "లోతైన వేర్లు కలిగిన పంట. దీని అవశేషాలను ఉంచినప్పుడు మట్టి లోపలి పొరల నుండి పోషకాలను తిరిగి తీసుకువస్తుంది.",
+    sorghumTiming: "కాండాలను లేదా కంపోస్ట్ చేసిన అవశేషాలను పొలంలో వదిలివేయండి.",
+    sunflowerBenefit: "మట్టిలోని లోతైన పొరలను వాడుకునే పంట. ఇది పంట మార్పిడికి మంచి ఎంపిక.",
+    sunflowerTiming: "పంట అవశేషాలను మట్టిలో కలపండి; సూచించిన విధంగా పొటాషియం వాడండి.",
+    balancedBenefit: "యాప్ అంచనాల ప్రకారం మీ పొలంలో పోషకాల కొరత లేదు. అయినా కూడా, చిన్న పప్పుధాన్యం లేదా పచ్చిరొట్ట ఎరువు మట్టిలోని సేంద్రియ పదార్థాలను మరియు నైట్రోజన్ చక్రాన్ని కాపాడుతుంది.",
+    balancedTiming: "ప్రధాన పంటల మధ్య పెసర, అలసంద లేదా జనుమును ప్రయత్నించండి.",
+    balancedNote: "మీ N, P మరియు K విలువలు యాప్ ప్రణాళిక పరిధిలో ఉన్నాయి. పొలం-నిర్దిష్ట లక్ష్యాల కోసం మీ సాయిల్ హెల్త్ కార్డ్‌ని గమనిస్తూ ఉండండి.",
+    restoreNote: "ఈ పంటలు నైట్రోజన్ స్థిరీకరణ మరియు పోషకాల చక్రాన్ని మెరుగుపరుస్తాయి. ఫాస్పరస్ లేదా పొటాషియం తక్కువగా ఉంటే, స్థానిక సలహా తీసుకోండి—పంటలు ఈ పోషకాలను తిరిగి తీసుకురాగలవు కానీ కొత్తగా ఉత్పత్తి చేయలేవు.",
+    rainAdvice: "త్వరలో వర్షం కురిసే అవకాశం ఉంది. పొలం నుండి నీరు పోయే వరకు ఎరువులు వేయడం ఆపండి.",
+    dryAdvice: "పొడి వాతావరణం రాబోతోంది. ఉదయం పూట నీరు పెట్టడానికి ప్రణాళిక చేసుకోండి.",
+    scrollToExplore: "అన్వేషించడానికి స్క్రోల్ చేయండి →",
+    farmingTip: "వ్యవసాయ చిట్కా",
+    farmingTipText: "ఉదయం పూట నీరు పెట్టడం వలన బాష్పీభవన నష్టాలు తగ్గుతాయి.",
+    remindersEnabled: "రిమైండర్‌లు ఆన్ చేయబడ్డాయి",
+    enableTaskReminders: "పనుల రిమైండర్‌లను ఆన్ చేయండి",
+    reminderNote: "ఈ డాష్‌బోర్డ్ తెరిచి ఉన్నంత సేపు ఆన్-డివైస్ రిమైండర్‌లు పనిచేస్తాయి.",
+    notificationUnsupported: "ఈ బ్రౌజర్ నోటిఫికేషన్‌లకు మద్దతు ఇవ్వదు.",
+    notificationDenied: "పనుల రిమైండర్‌లను పొందడానికి మీ బ్రౌజర్ సెట్టింగ్‌లలో నోటిఫికేషన్‌లను అనుమతించండి.",
+    selectCropPlanAlert: "క్యాలెండర్‌ని చూడటానికి దయచేసి పైన పంట ప్రణాళికను ఎంచుకోండి.",
+    notificationBody: "దీనికి సమయం ఆసన్నమైంది: {task}",
+    landPreparation: "భూమి తయారీ",
+    landPreparationDescription: "పొలాన్ని చదును చేసి, సేంద్రియ ఎరువులు వేయండి.",
+    seedSowing: "విత్తనాలు నాటడం",
+    seedSowingDescription: "సరైన లోతులో నాణ్యమైన విత్తనాలను నాటండి.",
+    firstIrrigation: "మొదటి నీటిపారుదల",
+    firstIrrigationDescription: "ప్రారంభ దశలో సమానంగా తేమ ఉండేలా చూసుకోండి.",
+    fertilizerApplication: "ఎరువులు వేయడం",
+    fertilizerApplicationDescription: "పొలంలో నీరు నిలిచి ఉండనప్పుడు ఎరువులు వేయండి.",
+    weedControl: "కలుపు నివారణ",
+    weedControlDescription: "కలుపు మొక్కలు పెరగకముందే వాటిని తొలగించండి.",
+    pestInspection: "తెగుళ్ళ తనిఖీ",
+    pestInspectionDescription: "ఆకుల క్రింది భాగం మరియు కాండాలను తనిఖీ చేయండి.",
+    floweringStage: "పూత దశ",
+    floweringStageDescription: "పూత సమయంలో నీటి కొరత లేకుండా చూసుకోండి.",
+    harvest: "పంట కోత",
+    harvestDescription: "పంట పూర్తిగా పండిన తర్వాత కోసి బాగా ఆరబెట్టండి.",
+    irrigateField: "పొలానికి నీరు పెట్టండి",
+    inspectPests: "తెగుళ్ళ కోసం తనిఖీ చేయండి",
+    applyNitrogen: "నైట్రోజన్ ఎరువు వేయండి",
+    low: "తక్కువ",
+    modelRunnerUp: "మోడల్ రన్నర్-అప్",
+    aiModelMatch: "AI మోడల్ మ్యాచ్",
+    fieldMatch: "ఫీల్డ్ మ్యాచ్",
+    rotationOption: "రొటేషన్ ఆప్షన్",
+    modelPick: "మోడల్ ఎంపిక",
+    suggestedByModel: "మీ రీడింగుల ఆధారంగా మా శిక్షణ పొందిన మోడల్ సూచించినది.",
+    speechUnsupported: "ఈ బ్రౌజర్‌లో వాయిస్ ఇన్‌పుట్‌కు మద్దతు లేదు. మీరు ఇంకా మీ ప్రశ్నను టైప్ చేయవచ్చు.",
+    listeningIn: "{language} లో వింటుంది…",
+    capturedAsk: "ప్రశ్న రికార్డ్ చేయబడింది. మీతాను అడగడానికి బాణం నొక్కండి.",
+    couldNotHear: "నాకు సరిగ్గా వినిపించలేదు. దయచేసి మళ్ళీ ప్రయత్నించండి లేదా టైప్ చేయండి.",
+    preparingSpeech: "ఆన్-డివైస్ స్పీచ్ మోడల్ సిద్ధం అవుతోంది. మొదటి డౌన్‌లోడ్‌కి కొన్ని నిమిషాలు పట్టవచ్చు…",
+    downloadingSpeech: "లోకల్ స్పీచ్ మోడల్ డౌన్‌లోడ్ అవుతోంది: {progress}%",
+    speechReady: "ఆన్-డివైస్ {language} స్పీచ్ సిద్ధంగా ఉంది. మైక్‌ను నొక్కండి, మాట్లాడండి, మరియు పూర్తి చేయడానికి మళ్ళీ నొక్కండి.",
+    transcribing: "ఈ డివైస్‌లో {language} అనువదిస్తోంది…",
+    capturedLocally: "ప్రశ్న లోకల్‌గా రికార్డ్ చేయబడింది. మీతాను అడగడానికి బాణం నొక్కండి.",
+    notEnoughSpeech: "నాకు స్పష్టంగా వినిపించలేదు. దయచేసి మళ్ళీ ప్రయత్నించండి లేదా టైప్ చేయండి.",
+    speechError: "ఆన్-డివైస్ స్పీచ్ ప్రారంభం కాలేదు: {message}",
+    workerError: "లోకల్ స్పీచ్ వర్కర్ ప్రారంభం కాలేదు. మీరు ఇంకా మీ ప్రశ్నను టైప్ చేయవచ్చు.",
+    micUnavailable: "ఈ బ్రౌజర్ మైక్రోఫోన్‌ను యాక్సెస్ చేయలేకపోతోంది. మీరు ఇంకా మీ ప్రశ్నను టైప్ చేయవచ్చు.",
+    listeningDevice: "ఈ డివైస్‌లో {language} లో వింటుంది… పూర్తయ్యాక మైక్‌ను మళ్ళీ నొక్కండి.",
+    micPermission: "మైక్రోఫోన్ అనుమతి లేదు. దయచేసి అనుమతించండి, ఆపై మళ్ళీ ప్రయత్నించండి లేదా టైప్ చేయండి.",
+    speakLonger: "దయచేసి ఇంకొంచెం సేపు మాట్లాడండి, ఆపై మళ్ళీ ప్రయత్నించండి.",
+    useSpeech: "{language} లో ఆన్-డివైస్ స్పీచ్ వాడండి. మోడల్ ఒకసారి డౌన్‌లోడ్ అయి ఆఫ్‌లైన్ వాడకానికి సేవ్ అవుతుంది.",
+    fieldSummaryTitle: "TerraByte పొలం సారాంశం",
+    fieldRecommendationSummary: "పొలం సూచనల సారాంశం",
+    preparedBy: "TerraByte ద్వారా సిద్ధం చేయబడింది · {date}",
+    printNote: "మట్టి: N {nitrogen}, P {phosphorus}, K {potassium}, pH {ph}<br>15-రోజుల వాతావరణం: {temperature}°C, {humidity}% తేమ, {rainfall}mm అంచనా వర్షపాతం.",
+    suggestedCrops: "సూచించిన పంటలు",
+    crop: "పంట",
+    indicativePrice: "అంచనా ధర",
+    printDisclaimer: "ధరలు అంచనా మాత్రమే. అమ్మే ముందు మీ దగ్గరి మండీలో సరిచూసుకోండి.",
     plan: "పొలం ప్రణాళిక",
     dashboard: "డాష్‌బోర్డ్",
     ask: "మితాను అడగండి",
@@ -104,6 +450,881 @@ const translations = {
     askTitle: "మీ సీజన్ గురించి మితాను ఏదైనా అడగండి.",
   },
 };
+
+const i18n = {
+  en: {
+    titleHome: "TerraByte — Farming, made clearer",
+    titlePlanner: "Build a field plan — TerraByte",
+    titleDashboard: "Dashboard — TerraByte",
+    titleLogin: "Welcome back — TerraByte",
+    plan: "Plan a field",
+    dashboard: "Dashboard",
+    ask: "Ask Mita",
+    login: "Log in",
+    myProfile: "My profile",
+    home: "Home",
+    languageLabel: "🌐 Language",
+    chooseLanguage: "Choose language",
+    jumpToSection: "Jump to section",
+    jumpToSectionOption: "Jump to section…",
+    sectionHero: "Field Plan Profile",
+    sectionRecommendations: "Field Plan Recommendations",
+    sectionWeather: "15-Day Weather Outlook",
+    sectionSoil: "Soil Snapshot",
+    sectionRestore: "Soil Restore Plan",
+    sectionCalendar: "Crop Calendar",
+    rooted: "ROOTED IN YOUR FIELD. READY FOR WHAT’S NEXT.",
+    coverCaption: "Field intelligence that keeps<br>its hands in the soil.",
+    start: "Start a field plan",
+    seeDashboard: "See your dashboard",
+    landingBottom1: "A decision companion<br>for every growing season.",
+    landingBottom2: "Weather-aware<br>market-aware<br>farmer-first",
+    fieldProfile: "FIELD PROFILE",
+    plannerTitle: "Let’s hear what<br>your <em>field says.</em>",
+    humanNote:
+      "A few honest readings. A clearer next step. We’ll make the numbers feel useful.",
+    plannerIntro:
+      "Use your own readings, scan a Soil Health Card, or let the weather do some of the work.",
+    soilSource: "Choose soil source",
+    conditions: "Set growing conditions",
+    recommendation: "Get recommendations",
+    newPlan: "NEW FIELD PLAN",
+    knowField: "Know your field",
+    saved: "Saved on this device",
+    soilReadings: "Soil readings",
+    soilHint: "Choose how you want to bring in your field data.",
+    manual: "Enter manually",
+    manualHint: "I have my N, P, K & pH values",
+    scanCard: "Scan Soil Health Card",
+    scanHint: "Read N, P, K & pH from a photo",
+    nitrogen: "Nitrogen",
+    nitrogenUnit: "N · kg/ha",
+    phosphorus: "Phosphorus",
+    phosphorusUnit: "P · kg/ha",
+    potassium: "Potassium",
+    potassiumUnit: "K · kg/ha",
+    soilPh: "Soil pH",
+    phRange: "0–14",
+    dropCard: "Drop your Soil Health Card photo",
+    ocrHint:
+      "A photo or PDF scan — we’ll automatically read N, P, K and pH.",
+    browse: "Browse file",
+    sampleCard: "Try a sample Soil Health Card",
+    scanningCardImage: "Scanning card image…",
+    soilCardPreview: "Soil Card Preview",
+    extractedBadge:
+      "✓ Extracted soil values! Check & adjust your values above if needed.",
+    weatherIntake: "Weather intake",
+    weatherHint: "Use a 15-day local forecast or add your own conditions.",
+    useLocation: "Use my location",
+    weatherAwait: "Waiting for a location",
+    weatherAwaitHint: "We’ll add today plus the next 14 days.",
+    temperatureLabel: "Temperature",
+    celsiusToday: "°C today",
+    humidityLabel: "Humidity",
+    percentToday: "% today",
+    rainfallLabel: "Rainfall",
+    rainfallUnit: "mm · 15 days",
+    seeRecommendations: "See my recommendations",
+    privacy:
+      "Your readings are saved only in this browser. Recommendations are guidance, not a replacement for local agricultural advice.",
+    seasonPlan: "MONSOON SEASON PLAN",
+    helloFarmer: "Hello, farmer.",
+    helloName: "Hello, {name}.",
+    fieldReady: "Your field is ready.",
+    dashboardSummary:
+      "Based on your latest field readings and a 15-day weather outlook.",
+    dashboardSummaryMl:
+      "Matched by our trained crop model from your field readings and {rainfall}mm expected rainfall across the next 15 days.",
+    dashboardSummaryFallback:
+      "Based on your latest field readings and {rainfall}mm expected rainfall across the next 15 days.",
+    viewCropRecommendations: "View Crop Recommendations",
+    editFieldPlan: "Edit Field Plan",
+    temperature: "temperature",
+    rainfall: "mm expected rain",
+    matches: "crop matches",
+    fieldReading: "FIELD READING",
+    recommendationTitle: "A small book<br>for your next crop.",
+    previousRecommendation: "Previous recommendation",
+    nextRecommendation: "Next recommendation",
+    turnPage: "Use arrows to turn the page",
+    downloadPdf: "Download PDF summary",
+    whyItWorks: "WHY THIS WORKS",
+    weatherTitle: "The next 15 days<br>are on your side.",
+    weatherCopy:
+      "Forecast data helps us weigh heat, humidity and rainfall—not just today, but through the first critical weeks of growth.",
+    averageWarmth: "average warmth",
+    expectedRain: "expected rain",
+    forecast: "15-day forecast",
+    today: "Today",
+    plus7: "+7 days",
+    plus14: "+14 days",
+    soilSnapshot: "SOIL SNAPSHOT",
+    inputFactors: "The input factors<br>behind the match.",
+    restoreKicker: "SOIL RESTORE PLAN",
+    restoreTitle: "Give the soil<br>something back.",
+    restoreIntro:
+      "We’ll read your nutrient levels and suggest a restorative next crop.",
+    restoreDisclaimer:
+      "These are soil-building rotations—not a replacement for local nutrient advice or required amendments.",
+    backToFieldPlan: "Back to Field Plan",
+    editFieldReadings: "Edit Field Readings",
+    askMitaSoil: "Ask Mita About Soil",
+    fieldAdvisor: "YOUR FARM ADVISOR",
+    askTitle: "Ask Mita anything<br>about your farm.",
+    aiLanguageReady: "Ready to answer in your selected language.",
+    aiLanguageStatus: "Mita will answer in {language}.",
+    mitaGreeting:
+      "Hello! I’m Mita. Ask me about crops, soil, weather, pests, irrigation or your next season.",
+    questionWhy: "Why was this crop suggested?",
+    questionWhen: "When should I sow?",
+    questionImprove: "How can I improve my soil?",
+    askPlaceholder: "Ask any farm question…",
+    speechHint: "Speak or type in English, Hindi, Marathi or Telugu.",
+    speakQuestion: "Speak your question",
+    sendQuestion: "Send question",
+    finishRecording: "Finish recording",
+    farmerProfile: "YOUR FARMER PROFILE",
+    loginTitle: "Welcome<br><em>to your field.</em>",
+    loginPhoto: "Every season<br>has a story.",
+    loginCopy:
+      "Enter your name and phone number. We’ll use them only in this browser to bring back your saved field plans.",
+    yourName: "Your name",
+    namePlaceholder: "e.g. Meera Patel",
+    phoneNumber: "Phone number",
+    phonePlaceholder: "10-digit mobile number",
+    continueToField: "Continue to my field",
+    historyEnterNumber: "Enter your number to see plans you saved earlier.",
+    historyNoPlans:
+      "No saved plans for this number yet. Your next field plan will appear here.",
+    findingField: "Finding field…",
+    locationUnavailable: "Location unavailable",
+    locationPermissionUnavailable: "Location permission unavailable",
+    weatherServiceUnavailable: "Weather service unavailable",
+    localForecast: "Your local 15-day forecast",
+    sampleValuesReason: "Sample values — {reason}",
+    weatherStatusSummary:
+      "Today: {temperature}°C · {humidity}% humidity · {rainfall}mm expected rain",
+    forecastAdded: "✓ Forecast added",
+    loadingOcrEngine: "Loading Tesseract OCR engine…",
+    scanningSoilCard: "Scanning Soil Health Card…",
+    preprocessingImage: "Preprocessing image for contrast & clarity…",
+    analyzingValues: "Analyzing N, P, K & pH text values…",
+    scanComplete: "Scan complete!",
+    extractedValues:
+      "✓ Extracted {count} soil values! Review & adjust fields below.",
+    cardProcessedPrefill:
+      "Card processed! Pre-filled soil values (110, 45, 55, 6.8). Review & adjust below.",
+    prefilledSampleValues:
+      "Pre-filled sample values below — please adjust if needed.",
+    lowNitrogen: "LOW NITROGEN",
+    lowPhosphorus: "LOW PHOSPHORUS",
+    lowPotassium: "LOW POTASSIUM",
+    balancedNutrients: "BALANCED NUTRIENTS",
+    dhaincha: "Dhaincha",
+    greenGram: "Green gram",
+    cowpea: "Cowpea",
+    pigeonPea: "Pigeon pea",
+    sorghum: "Sorghum",
+    sunflower: "Sunflower",
+    keepLegumeRotation: "Keep a legume in rotation",
+    dhainchaBenefit:
+      "A fast green-manure crop that fixes atmospheric nitrogen and adds organic matter when incorporated.",
+    dhainchaTiming: "Grow before the main crop; incorporate before flowering.",
+    greenGramBenefit:
+      "A short-duration pulse rotation that helps build biologically fixed nitrogen while still giving a harvest.",
+    greenGramTiming: "Keep roots and residue in the field after harvest.",
+    cowpeaNitrogenBenefit:
+      "A robust legume cover crop for nitrogen fixation and ground cover during a break between cash crops.",
+    cowpeaNitrogenTiming: "Use as a cover crop or green manure.",
+    pigeonPeaPhosphorusBenefit:
+      "Its deep roots and leaf litter can support nutrient cycling and improve the next crop’s rooting environment.",
+    pigeonPeaPhosphorusTiming: "Return residues to the soil after harvest.",
+    cowpeaPhosphorusBenefit:
+      "Adds biomass and supports an active soil biology that helps make existing nutrients more available.",
+    cowpeaPhosphorusTiming:
+      "Pair with the phosphorus amendment advised locally.",
+    sorghumBenefit:
+      "A deep-rooted rotation crop that can recycle nutrients from lower soil layers when its residues are retained.",
+    sorghumTiming: "Leave stalks or composted residues on the field.",
+    sunflowerBenefit:
+      "A deep-rooted option that helps explore deeper soil layers and diversify the rotation.",
+    sunflowerTiming:
+      "Return crop residues; replace exported potassium as advised.",
+    balancedBenefit:
+      "Your field does not show a nutrient gap against the app’s planning bands. A short pulse or green manure still protects soil organic matter and nitrogen cycling.",
+    balancedTiming: "Try green gram, cowpea or dhaincha between major crops.",
+    balancedNote:
+      "Your N, P and K readings are within the app’s planning bands. Keep checking your Soil Health Card for field-specific targets.",
+    restoreNote:
+      "These crops can support nitrogen fixation, biomass and nutrient cycling. For low phosphorus or potassium, confirm a local amendment plan—crops recycle these nutrients but cannot create minerals.",
+    cropCalendar: "CROP CALENDAR",
+    expectedDuration: "Expected duration:",
+    complete: "COMPLETE",
+    rainProbability: "Rain probability",
+    weatherImpact: "WEATHER IMPACT",
+    rainAdvice:
+      "Rain expected soon. Delay fertilizer application until the field drains.",
+    dryAdvice: "Dry conditions ahead. Schedule irrigation in the early morning.",
+    growingJourney: "GROWING JOURNEY",
+    cropTimeline: "Crop timeline",
+    scrollToExplore: "SCROLL TO EXPLORE →",
+    completed: "COMPLETED",
+    inProgress: "IN PROGRESS",
+    upcoming: "UPCOMING",
+    farmingTip: "FARMING TIP",
+    farmingTipText:
+      "Irrigating early in the morning reduces evaporation losses.",
+    stayOnTrack: "STAY ON TRACK",
+    todaysTasks: "Today’s tasks",
+    remindersEnabled: "Reminders enabled",
+    enableTaskReminders: "Enable task reminders",
+    reminderNote: "On-device reminders work while this dashboard is open.",
+    notificationUnsupported: "This browser does not support notifications.",
+    notificationDenied:
+      "Allow notifications in your browser settings to receive task reminders.",
+    selectCropPlanAlert:
+      "Please select a crop plan above to view its calendar.",
+    cropPlanSelected: "Crop plan selected",
+    planCrop: "Plan {crop}",
+    notificationBody: "It is time to: {task}",
+    landPreparation: "Land preparation",
+    landPreparationDescription: "Level the field and add organic matter.",
+    seedSowing: "Seed sowing",
+    seedSowingDescription: "Use healthy seed at the right depth.",
+    firstIrrigation: "First irrigation",
+    firstIrrigationDescription: "Keep early growth evenly moist.",
+    fertilizerApplication: "Fertilizer application",
+    fertilizerApplicationDescription:
+      "Apply nutrients when the field is not waterlogged.",
+    weedControl: "Weed control",
+    weedControlDescription: "Remove competing weeds before they spread.",
+    pestInspection: "Pest inspection",
+    pestInspectionDescription: "Check leaf undersides and stems.",
+    floweringStage: "Flowering stage",
+    floweringStageDescription: "Avoid water stress during flowering.",
+    harvest: "Harvest",
+    harvestDescription: "Harvest at full maturity and dry well.",
+    irrigateField: "Irrigate field",
+    inspectPests: "Inspect for pests",
+    applyNitrogen: "Apply nitrogen fertilizer",
+    high: "High",
+    medium: "Medium",
+    low: "Low",
+    confidence: "CONFIDENCE",
+    modelRunnerUp: "MODEL RUNNER-UP",
+    aiModelMatch: "AI MODEL MATCH",
+    fieldMatch: "FIELD MATCH",
+    rotationOption: "ROTATION OPTION",
+    indicativeMandiPrice: "INDICATIVE MANDI PRICE",
+    checkLivePrice: "Check live price",
+    perQuintal: "per quintal",
+    modelPick: "Model pick",
+    suggestedByModel: "Suggested for your readings by the trained crop model.",
+    cropGenericDescription:
+      "This crop fits your soil and weather readings and is worth considering for the next season.",
+    assistantFallback:
+      "Mita needs a secure AI service connection for open questions. Your field data is still available above; please try again after the service is configured.",
+    speechUnsupported:
+      "Speech input is not supported in this browser. You can still type your question.",
+    listeningIn: "Listening in {language}…",
+    capturedAsk: "Question captured. Press the arrow to ask Mita.",
+    couldNotHear: "I could not hear that. Please try again or type your question.",
+    preparingSpeech:
+      "Preparing the on-device speech model. The first download can take a few minutes…",
+    downloadingSpeech: "Downloading the local speech model: {progress}%",
+    speechReady:
+      "On-device {language} speech is ready. Tap the mic, speak, then tap it again to finish.",
+    transcribing: "Transcribing {language} on this device…",
+    capturedLocally: "Question captured locally. Press the arrow to ask Mita.",
+    notEnoughSpeech:
+      "I could not hear enough speech. Please try again or type your question.",
+    speechError: "On-device speech could not start: {message}",
+    workerError:
+      "The local speech worker could not start. You can still type your question.",
+    micUnavailable:
+      "This browser cannot access the microphone. You can still type your question.",
+    listeningDevice:
+      "Listening in {language} on this device… tap the mic again when you finish.",
+    micPermission:
+      "Microphone access was not available. Please allow it, then try again or type your question.",
+    speakLonger: "Please speak for a little longer, then try again.",
+    useSpeech:
+      "Use on-device speech in {language}. The model downloads once and is cached for offline use afterwards.",
+    fieldSummaryTitle: "TerraByte field summary",
+    fieldRecommendationSummary: "Field recommendation summary",
+    preparedBy: "Prepared by TerraByte · {date}",
+    printNote:
+      "Soil: N {nitrogen}, P {phosphorus}, K {potassium}, pH {ph}<br>15-day conditions: {temperature}°C, {humidity}% humidity, {rainfall}mm expected rainfall.",
+    suggestedCrops: "Suggested crops",
+    crop: "Crop",
+    indicativePrice: "Indicative price",
+    printDisclaimer:
+      "Prices are indicative. Check your nearest mandi before making a selling decision.",
+  },
+  hi: {
+    titleHome: "TerraByte — खेती को आसान बनाया",
+    titlePlanner: "खेत की योजना बनाएं — TerraByte",
+    titleDashboard: "डैशबोर्ड — TerraByte",
+    titleLogin: "वापसी पर स्वागत है — TerraByte",
+    plan: "खेत की योजना",
+    dashboard: "डैशबोर्ड",
+    ask: "मीता से पूछें",
+    login: "लॉग इन",
+    myProfile: "मेरी प्रोफ़ाइल",
+    home: "होम",
+    languageLabel: "🌐 भाषा",
+    chooseLanguage: "भाषा चुनें",
+    jumpToSection: "सेक्शन पर जाएं",
+    jumpToSectionOption: "सेक्शन चुनें…",
+    sectionHero: "खेत योजना प्रोफ़ाइल",
+    sectionRecommendations: "खेत योजना सुझाव",
+    sectionWeather: "15-दिन मौसम पूर्वानुमान",
+    sectionSoil: "मिट्टी की झलक",
+    sectionRestore: "मिट्टी सुधार योजना",
+    sectionCalendar: "फसल कैलेंडर",
+    rooted: "आपके खेत से जुड़ा। अगले कदम के लिए तैयार।",
+    coverCaption: "खेत की समझ<br>जिसके हाथ मिट्टी में हैं।",
+    start: "खेत की योजना शुरू करें",
+    seeDashboard: "अपना डैशबोर्ड देखें",
+    landingBottom1: "हर मौसम के लिए<br>एक निर्णय साथी।",
+    landingBottom2: "मौसम-सचेत<br>बाज़ार-सचेत<br>किसान-प्रथम",
+    fieldProfile: "खेत प्रोफ़ाइल",
+    plannerTitle: "आइए सुनें कि<br>आपका <em>खेत क्या कहता है।</em>",
+    humanNote:
+      "कुछ सच्ची रीडिंग। अगला कदम साफ। हम आंकड़ों को काम का बना देंगे।",
+    plannerIntro:
+      "अपनी रीडिंग डालें, Soil Health Card स्कैन करें, या मौसम को कुछ काम करने दें।",
+    soilSource: "मिट्टी का स्रोत चुनें",
+    conditions: "बढ़वार की स्थितियां सेट करें",
+    recommendation: "सुझाव पाएं",
+    newPlan: "नई खेत योजना",
+    knowField: "अपने खेत को जानें",
+    saved: "इस डिवाइस पर सेव",
+    soilReadings: "मिट्टी की रीडिंग",
+    soilHint: "चुनें कि खेत का डेटा कैसे लाना है।",
+    manual: "खुद भरें",
+    manualHint: "मेरे पास N, P, K और pH मान हैं",
+    scanCard: "Soil Health Card स्कैन करें",
+    scanHint: "फोटो से N, P, K और pH पढ़ें",
+    nitrogen: "नाइट्रोजन",
+    phosphorus: "फॉस्फोरस",
+    potassium: "पोटैशियम",
+    soilPh: "मिट्टी pH",
+    dropCard: "अपना Soil Health Card फोटो डालें",
+    ocrHint: "फोटो या PDF स्कैन — हम N, P, K और pH अपने-आप पढ़ेंगे।",
+    browse: "फ़ाइल चुनें",
+    sampleCard: "नमूना Soil Health Card आज़माएं",
+    weatherIntake: "मौसम जानकारी",
+    weatherHint: "15-दिन का स्थानीय पूर्वानुमान लें या अपनी स्थितियां जोड़ें।",
+    useLocation: "मेरी लोकेशन उपयोग करें",
+    weatherAwait: "लोकेशन का इंतज़ार",
+    weatherAwaitHint: "हम आज और अगले 14 दिन जोड़ेंगे।",
+    temperatureLabel: "तापमान",
+    humidityLabel: "नमी",
+    rainfallLabel: "वर्षा",
+    seeRecommendations: "मेरे सुझाव देखें",
+    privacy:
+      "आपकी रीडिंग केवल इस ब्राउज़र में सेव होती हैं। सुझाव मार्गदर्शन हैं, स्थानीय कृषि सलाह का विकल्प नहीं।",
+    seasonPlan: "मानसून सीज़न योजना",
+    helloFarmer: "नमस्ते, किसान।",
+    helloName: "नमस्ते, {name}।",
+    fieldReady: "आपका खेत तैयार है।",
+    dashboardSummary:
+      "आपकी नई खेत रीडिंग और 15-दिन मौसम पूर्वानुमान के आधार पर।",
+    dashboardSummaryMl:
+      "आपकी खेत रीडिंग और अगले 15 दिनों में {rainfall}mm अपेक्षित बारिश के आधार पर हमारे प्रशिक्षित फसल मॉडल ने मिलान किया।",
+    dashboardSummaryFallback:
+      "आपकी नई खेत रीडिंग और अगले 15 दिनों में {rainfall}mm अपेक्षित बारिश के आधार पर।",
+    viewCropRecommendations: "फसल सुझाव देखें",
+    editFieldPlan: "खेत योजना बदलें",
+    temperature: "तापमान",
+    rainfall: "mm अपेक्षित वर्षा",
+    matches: "फसल मिलान",
+    fieldReading: "खेत रीडिंग",
+    recommendationTitle: "आपकी अगली फसल के लिए<br>एक छोटी किताब।",
+    turnPage: "पन्ना पलटने के लिए तीरों का उपयोग करें",
+    downloadPdf: "PDF सारांश डाउनलोड करें",
+    whyItWorks: "यह क्यों काम करता है",
+    weatherTitle: "अगले 15 दिन<br>आपके साथ हैं।",
+    weatherCopy:
+      "पूर्वानुमान हमें ताप, नमी और वर्षा को सिर्फ आज नहीं, बल्कि शुरुआती महत्वपूर्ण हफ्तों तक समझने में मदद करता है।",
+    averageWarmth: "औसत गर्माहट",
+    expectedRain: "अपेक्षित वर्षा",
+    forecast: "15-दिन पूर्वानुमान",
+    today: "आज",
+    plus7: "+7 दिन",
+    plus14: "+14 दिन",
+    soilSnapshot: "मिट्टी की झलक",
+    inputFactors: "मिलान के पीछे<br>इनपुट कारक।",
+    restoreKicker: "मिट्टी सुधार योजना",
+    restoreTitle: "मिट्टी को<br>कुछ वापस दें।",
+    restoreIntro:
+      "हम आपके पोषक स्तर पढ़कर सुधार करने वाली अगली फसल सुझाएंगे।",
+    restoreDisclaimer:
+      "ये मिट्टी सुधारने वाली फसल चक्र योजनाएं हैं—स्थानीय पोषण सलाह या जरूरी संशोधन का विकल्प नहीं।",
+    backToFieldPlan: "खेत योजना पर वापस",
+    editFieldReadings: "खेत रीडिंग बदलें",
+    askMitaSoil: "मिट्टी के बारे में मीता से पूछें",
+    fieldAdvisor: "आपकी कृषि सलाहकार",
+    askTitle: "अपने खेत के बारे में<br>मीता से कुछ भी पूछें।",
+    aiLanguageReady: "आपकी चुनी भाषा में जवाब देने के लिए तैयार।",
+    aiLanguageStatus: "मीता {language} में जवाब देगी।",
+    mitaGreeting:
+      "नमस्ते! मैं मीता हूं। फसल, मिट्टी, मौसम, कीट, सिंचाई या अगले सीज़न के बारे में पूछें।",
+    questionWhy: "यह फसल क्यों सुझाई गई?",
+    questionWhen: "मुझे कब बुवाई करनी चाहिए?",
+    questionImprove: "मैं मिट्टी कैसे सुधार सकता हूं?",
+    askPlaceholder: "कोई भी खेती का सवाल पूछें…",
+    speechHint: "अंग्रेज़ी, हिन्दी, मराठी या तेलुगु में बोलें या टाइप करें।",
+    speakQuestion: "अपना सवाल बोलें",
+    sendQuestion: "सवाल भेजें",
+    farmerProfile: "आपकी किसान प्रोफ़ाइल",
+    loginTitle: "स्वागत है<br><em>आपके खेत में।</em>",
+    loginPhoto: "हर मौसम की<br>एक कहानी होती है।",
+    loginCopy:
+      "अपना नाम और फोन नंबर डालें। सेव की गई खेत योजनाएं वापस लाने के लिए हम इन्हें केवल इस ब्राउज़र में उपयोग करेंगे।",
+    yourName: "आपका नाम",
+    namePlaceholder: "जैसे मीरा पटेल",
+    phoneNumber: "फोन नंबर",
+    phonePlaceholder: "10-अंकों का मोबाइल नंबर",
+    continueToField: "मेरे खेत पर जाएं",
+    historyEnterNumber: "पहले सेव की गई योजनाएं देखने के लिए नंबर डालें।",
+    historyNoPlans:
+      "इस नंबर के लिए अभी कोई सेव योजना नहीं है। आपकी अगली खेत योजना यहां दिखेगी।",
+    findingField: "खेत खोजा जा रहा है…",
+    localForecast: "आपका स्थानीय 15-दिन पूर्वानुमान",
+    weatherStatusSummary:
+      "आज: {temperature}°C · {humidity}% नमी · {rainfall}mm अपेक्षित वर्षा",
+    forecastAdded: "✓ पूर्वानुमान जोड़ दिया गया",
+    loadingOcrEngine: "Tesseract OCR इंजन लोड हो रहा है…",
+    scanningSoilCard: "Soil Health Card स्कैन हो रहा है…",
+    preprocessingImage: "कॉन्ट्रास्ट और साफ़ी के लिए इमेज तैयार हो रही है…",
+    analyzingValues: "N, P, K और pH टेक्स्ट मान पढ़े जा रहे हैं…",
+    scanComplete: "स्कैन पूरा!",
+    extractedValues: "✓ {count} मिट्टी मान मिल गए! नीचे जांचें और बदलें।",
+    prefilledSampleValues: "नीचे नमूना मान भर दिए गए हैं — जरूरत हो तो बदलें।",
+    lowNitrogen: "नाइट्रोजन कम",
+    lowPhosphorus: "फॉस्फोरस कम",
+    lowPotassium: "पोटैशियम कम",
+    balancedNutrients: "पोषक तत्व संतुलित",
+    cropCalendar: "फसल कैलेंडर",
+    expectedDuration: "अपेक्षित अवधि:",
+    complete: "पूरा",
+    rainProbability: "बारिश की संभावना",
+    weatherImpact: "मौसम प्रभाव",
+    rainAdvice: "जल्द बारिश हो सकती है। खेत सूखने तक उर्वरक डालना रोकें।",
+    dryAdvice: "सूखा मौसम आगे है। सुबह जल्दी सिंचाई तय करें।",
+    growingJourney: "बढ़वार यात्रा",
+    cropTimeline: "फसल समयरेखा",
+    completed: "पूरा",
+    inProgress: "चल रहा है",
+    upcoming: "आने वाला",
+    farmingTip: "खेती टिप",
+    farmingTipText: "सुबह जल्दी सिंचाई करने से वाष्पीकरण का नुकसान कम होता है।",
+    stayOnTrack: "ट्रैक पर रहें",
+    todaysTasks: "आज के काम",
+    remindersEnabled: "रिमाइंडर चालू",
+    enableTaskReminders: "काम के रिमाइंडर चालू करें",
+    reminderNote: "डैशबोर्ड खुला रहने पर ऑन-डिवाइस रिमाइंडर काम करेंगे।",
+    cropPlanSelected: "फसल योजना चुनी गई",
+    planCrop: "{crop} की योजना",
+    landPreparation: "खेत की तैयारी",
+    seedSowing: "बीज बुवाई",
+    firstIrrigation: "पहली सिंचाई",
+    fertilizerApplication: "उर्वरक डालना",
+    weedControl: "खरपतवार नियंत्रण",
+    pestInspection: "कीट जांच",
+    floweringStage: "फूल अवस्था",
+    harvest: "कटाई",
+    irrigateField: "खेत की सिंचाई करें",
+    inspectPests: "कीटों की जांच करें",
+    applyNitrogen: "नाइट्रोजन उर्वरक डालें",
+    high: "उच्च",
+    medium: "मध्यम",
+    confidence: "भरोसा",
+    aiModelMatch: "AI मॉडल मिलान",
+    modelRunnerUp: "मॉडल रनर-अप",
+    fieldMatch: "खेत मिलान",
+    indicativeMandiPrice: "अनुमानित मंडी मूल्य",
+    checkLivePrice: "लाइव मूल्य देखें",
+    perQuintal: "प्रति क्विंटल",
+    cropGenericDescription:
+      "आपकी मिट्टी और मौसम रीडिंग के आधार पर यह फसल अगले सीज़न के लिए विचार करने योग्य है।",
+    assistantFallback:
+      "खुले सवालों के लिए मीता को सुरक्षित AI सेवा कनेक्शन चाहिए। आपका खेत डेटा ऊपर उपलब्ध है; सेवा सेट होने के बाद फिर कोशिश करें।",
+    useSpeech:
+      "{language} में ऑन-डिवाइस स्पीच उपयोग करें। मॉडल एक बार डाउनलोड होकर ऑफलाइन कैश हो जाता है।",
+  },
+  mr: {
+    titleHome: "TerraByte — शेती अधिक स्पष्ट",
+    titlePlanner: "शेत योजना तयार करा — TerraByte",
+    titleDashboard: "डॅशबोर्ड — TerraByte",
+    titleLogin: "पुन्हा स्वागत — TerraByte",
+    plan: "शेत योजना",
+    dashboard: "डॅशबोर्ड",
+    ask: "मिताला विचारा",
+    login: "लॉग इन",
+    myProfile: "माझी प्रोफाइल",
+    home: "होम",
+    languageLabel: "🌐 भाषा",
+    chooseLanguage: "भाषा निवडा",
+    jumpToSectionOption: "विभाग निवडा…",
+    sectionHero: "शेत योजना प्रोफाइल",
+    sectionRecommendations: "शेत योजना शिफारसी",
+    sectionWeather: "15-दिवस हवामान अंदाज",
+    sectionSoil: "मातीची झलक",
+    sectionRestore: "माती सुधार योजना",
+    sectionCalendar: "पीक कॅलेंडर",
+    rooted: "तुमच्या शेताशी जोडलेले. पुढच्या पावलासाठी तयार.",
+    coverCaption: "मातीशी जोडलेली<br>शेत बुद्धिमत्ता.",
+    start: "शेत योजना सुरू करा",
+    seeDashboard: "तुमचा डॅशबोर्ड पाहा",
+    landingBottom1: "प्रत्येक हंगामासाठी<br>निर्णय साथी.",
+    landingBottom2: "हवामान-जाणते<br>बाजार-जाणते<br>शेतकरी-प्रथम",
+    fieldProfile: "शेत प्रोफाइल",
+    plannerTitle: "चला ऐकूया<br>तुमचे <em>शेत काय सांगते.</em>",
+    humanNote:
+      "काही खरी मोजमापे. पुढचे पाऊल स्पष्ट. आकडे उपयोगी वाटतील असे करूया.",
+    plannerIntro:
+      "तुमची मोजमापे वापरा, Soil Health Card स्कॅन करा, किंवा हवामानाला थोडे काम करू द्या.",
+    soilSource: "मातीचा स्रोत निवडा",
+    conditions: "वाढीच्या अटी सेट करा",
+    recommendation: "शिफारसी मिळवा",
+    newPlan: "नवी शेत योजना",
+    knowField: "तुमचे शेत जाणून घ्या",
+    saved: "या डिव्हाइसवर सेव्ह",
+    soilReadings: "मातीची मोजमापे",
+    soilHint: "शेताचा डेटा कसा आणायचा ते निवडा.",
+    manual: "स्वतः भरा",
+    manualHint: "माझ्याकडे N, P, K आणि pH मूल्ये आहेत",
+    scanCard: "Soil Health Card स्कॅन करा",
+    scanHint: "फोटोमधून N, P, K आणि pH वाचा",
+    nitrogen: "नायट्रोजन",
+    phosphorus: "फॉस्फरस",
+    potassium: "पोटॅशियम",
+    soilPh: "माती pH",
+    dropCard: "तुमचा Soil Health Card फोटो टाका",
+    browse: "फाइल निवडा",
+    sampleCard: "नमुना Soil Health Card वापरून पाहा",
+    weatherIntake: "हवामान माहिती",
+    weatherHint: "15-दिवस स्थानिक अंदाज वापरा किंवा तुमच्या अटी जोडा.",
+    useLocation: "माझे स्थान वापरा",
+    weatherAwait: "स्थानाची प्रतीक्षा",
+    weatherAwaitHint: "आम्ही आज आणि पुढचे 14 दिवस जोडू.",
+    temperatureLabel: "तापमान",
+    humidityLabel: "आर्द्रता",
+    rainfallLabel: "पाऊस",
+    seeRecommendations: "माझ्या शिफारसी पाहा",
+    privacy:
+      "तुमची मोजमापे फक्त या ब्राउझरमध्ये सेव्ह होतात. शिफारसी मार्गदर्शन आहेत, स्थानिक कृषी सल्ल्याचा पर्याय नाहीत.",
+    seasonPlan: "मान्सून हंगाम योजना",
+    helloFarmer: "नमस्कार, शेतकरी.",
+    helloName: "नमस्कार, {name}.",
+    fieldReady: "तुमचे शेत तयार आहे.",
+    dashboardSummary:
+      "तुमच्या अलीकडील शेत मोजमापांवर आणि 15-दिवस हवामान अंदाजावर आधारित.",
+    dashboardSummaryMl:
+      "तुमच्या शेत मोजमापांवर आणि पुढील 15 दिवसांत {rainfall}mm अपेक्षित पावसावर आमच्या प्रशिक्षित पीक मॉडेलने जुळवले.",
+    dashboardSummaryFallback:
+      "तुमच्या अलीकडील शेत मोजमापांवर आणि पुढील 15 दिवसांत {rainfall}mm अपेक्षित पावसावर आधारित.",
+    viewCropRecommendations: "पीक शिफारसी पाहा",
+    editFieldPlan: "शेत योजना बदला",
+    temperature: "तापमान",
+    rainfall: "mm अपेक्षित पाऊस",
+    matches: "पीक जुळणी",
+    fieldReading: "शेत मोजमाप",
+    recommendationTitle: "तुमच्या पुढच्या पिकासाठी<br>एक छोटी वही.",
+    turnPage: "पान उलटण्यासाठी बाण वापरा",
+    downloadPdf: "PDF सारांश डाउनलोड करा",
+    whyItWorks: "हे का चालते",
+    weatherTitle: "पुढचे 15 दिवस<br>तुमच्या बाजूने आहेत.",
+    averageWarmth: "सरासरी उब",
+    expectedRain: "अपेक्षित पाऊस",
+    forecast: "15-दिवस अंदाज",
+    today: "आज",
+    plus7: "+7 दिवस",
+    plus14: "+14 दिवस",
+    soilSnapshot: "मातीची झलक",
+    inputFactors: "जुळणीमागील<br>इनपुट घटक.",
+    restoreKicker: "माती सुधार योजना",
+    restoreTitle: "मातीला<br>काही परत द्या.",
+    backToFieldPlan: "शेत योजनेकडे परत",
+    editFieldReadings: "शेत मोजमाप बदला",
+    askMitaSoil: "मातीबद्दल मिताला विचारा",
+    fieldAdvisor: "तुमची शेती सल्लागार",
+    askTitle: "तुमच्या शेताबद्दल<br>मिताला काहीही विचारा.",
+    aiLanguageReady: "निवडलेल्या भाषेत उत्तर देण्यासाठी तयार.",
+    aiLanguageStatus: "मिता {language} मध्ये उत्तर देईल.",
+    mitaGreeting:
+      "नमस्कार! मी मिता. पिके, माती, हवामान, कीड, सिंचन किंवा पुढच्या हंगामाबद्दल विचारा.",
+    questionWhy: "हे पीक का सुचवले?",
+    questionWhen: "मी पेरणी कधी करावी?",
+    questionImprove: "मी माती कशी सुधारू?",
+    askPlaceholder: "कोणताही शेती प्रश्न विचारा…",
+    speechHint: "इंग्रजी, हिन्दी, मराठी किंवा तेलुगुमध्ये बोला किंवा टाइप करा.",
+    speakQuestion: "तुमचा प्रश्न बोला",
+    sendQuestion: "प्रश्न पाठवा",
+    farmerProfile: "तुमची शेतकरी प्रोफाइल",
+    loginTitle: "स्वागत<br><em>तुमच्या शेतात.</em>",
+    loginPhoto: "प्रत्येक हंगामाची<br>एक गोष्ट असते.",
+    yourName: "तुमचे नाव",
+    phoneNumber: "फोन नंबर",
+    continueToField: "माझ्या शेताकडे जा",
+    historyEnterNumber: "पूर्वी सेव्ह केलेल्या योजना पाहण्यासाठी नंबर द्या.",
+    cropCalendar: "पीक कॅलेंडर",
+    expectedDuration: "अपेक्षित कालावधी:",
+    complete: "पूर्ण",
+    rainProbability: "पावसाची शक्यता",
+    weatherImpact: "हवामान परिणाम",
+    growingJourney: "वाढीचा प्रवास",
+    cropTimeline: "पीक वेळापत्रक",
+    completed: "पूर्ण",
+    inProgress: "चालू",
+    upcoming: "येणारे",
+    stayOnTrack: "मार्गावर राहा",
+    todaysTasks: "आजची कामे",
+    cropPlanSelected: "पीक योजना निवडली",
+    planCrop: "{crop} योजना",
+    high: "उच्च",
+    medium: "मध्यम",
+    confidence: "विश्वास",
+    indicativeMandiPrice: "सूचक मंडी भाव",
+    checkLivePrice: "लाइव्ह भाव पाहा",
+    perQuintal: "प्रति क्विंटल",
+    cropGenericDescription:
+      "तुमच्या माती आणि हवामान मोजमापांवरून हे पीक पुढच्या हंगामासाठी विचार करण्यासारखे आहे.",
+    assistantFallback:
+      "खुल्या प्रश्नांसाठी मिताला सुरक्षित AI सेवा कनेक्शन लागते. तुमचा शेत डेटा वर उपलब्ध आहे; सेवा सेट झाल्यावर पुन्हा प्रयत्न करा.",
+  },
+  te: {
+    titleHome: "TerraByte — వ్యవసాయం మరింత స్పష్టం",
+    titlePlanner: "పొలం ప్లాన్ తయారు చేయండి — TerraByte",
+    titleDashboard: "డ్యాష్‌బోర్డ్ — TerraByte",
+    titleLogin: "మళ్లీ స్వాగతం — TerraByte",
+    plan: "పొలం ప్లాన్",
+    dashboard: "డ్యాష్‌బోర్డ్",
+    ask: "మీతాను అడగండి",
+    login: "లాగిన్",
+    myProfile: "నా ప్రొఫైల్",
+    home: "హోమ్",
+    languageLabel: "🌐 భాష",
+    chooseLanguage: "భాషను ఎంచుకోండి",
+    jumpToSectionOption: "విభాగం ఎంచుకోండి…",
+    sectionHero: "పొలం ప్లాన్ ప్రొఫైల్",
+    sectionRecommendations: "పొలం ప్లాన్ సూచనలు",
+    sectionWeather: "15-రోజుల వాతావరణం",
+    sectionSoil: "మట్టి స్నాప్‌షాట్",
+    sectionRestore: "మట్టి పునరుద్ధరణ ప్లాన్",
+    sectionCalendar: "పంట క్యాలెండర్",
+    rooted: "మీ పొలానికి దగ్గరగా. తదుపరి దశకు సిద్ధంగా.",
+    coverCaption: "మట్టిని తాకే<br>పొలం తెలివి.",
+    start: "పొలం ప్లాన్ ప్రారంభించండి",
+    seeDashboard: "మీ డ్యాష్‌బోర్డ్ చూడండి",
+    landingBottom1: "ప్రతి పంటకాలానికి<br>ఒక నిర్ణయ సహచరి.",
+    landingBottom2: "వాతావరణం-తెలిసిన<br>మార్కెట్-తెలిసిన<br>రైతు-ముందు",
+    fieldProfile: "పొలం ప్రొఫైల్",
+    plannerTitle: "మీ <em>పొలం ఏమంటుందో</em><br>విందాం.",
+    plannerIntro:
+      "మీ రీడింగులు వాడండి, Soil Health Card స్కాన్ చేయండి, లేదా వాతావరణాన్ని కొంత పని చేయనివ్వండి.",
+    soilSource: "మట్టి మూలాన్ని ఎంచుకోండి",
+    conditions: "పెరుగుదల పరిస్థితులు సెట్ చేయండి",
+    recommendation: "సూచనలు పొందండి",
+    newPlan: "కొత్త పొలం ప్లాన్",
+    knowField: "మీ పొలాన్ని తెలుసుకోండి",
+    saved: "ఈ డివైస్‌లో సేవ్ అయింది",
+    soilReadings: "మట్టి రీడింగులు",
+    soilHint: "మీ పొలం డేటాను ఎలా తీసుకురావాలో ఎంచుకోండి.",
+    manual: "చేతితో నమోదు చేయండి",
+    manualHint: "నా దగ్గర N, P, K మరియు pH విలువలు ఉన్నాయి",
+    scanCard: "Soil Health Card స్కాన్ చేయండి",
+    scanHint: "ఫోటో నుంచి N, P, K మరియు pH చదవండి",
+    nitrogen: "నైట్రోజన్",
+    phosphorus: "ఫాస్ఫరస్",
+    potassium: "పోటాషియం",
+    soilPh: "మట్టి pH",
+    browse: "ఫైల్ ఎంచుకోండి",
+    sampleCard: "నమూనా Soil Health Card ప్రయత్నించండి",
+    weatherIntake: "వాతావరణ సమాచారం",
+    weatherHint:
+      "15-రోజుల స్థానిక అంచనాను వాడండి లేదా మీ పరిస్థితులు చేర్చండి.",
+    useLocation: "నా స్థానం వాడండి",
+    weatherAwait: "స్థానం కోసం వేచి ఉంది",
+    weatherAwaitHint: "ఈ రోజు మరియు వచ్చే 14 రోజులు జోడిస్తాం.",
+    temperatureLabel: "ఉష్ణోగ్రత",
+    humidityLabel: "ఆర్ద్రత",
+    rainfallLabel: "వర్షపాతం",
+    seeRecommendations: "నా సూచనలు చూడండి",
+    privacy:
+      "మీ రీడింగులు ఈ బ్రౌజర్‌లో మాత్రమే సేవ్ అవుతాయి. సూచనలు మార్గదర్శకాలు మాత్రమే; స్థానిక వ్యవసాయ సలహాకు ప్రత్యామ్నాయం కాదు.",
+    seasonPlan: "మాన్సూన్ సీజన్ ప్లాన్",
+    helloFarmer: "నమస్తే, రైతు.",
+    helloName: "నమస్తే, {name}.",
+    fieldReady: "మీ పొలం సిద్ధంగా ఉంది.",
+    dashboardSummary:
+      "మీ తాజా పొలం రీడింగులు మరియు 15-రోజుల వాతావరణ అంచనాపై ఆధారంగా.",
+    dashboardSummaryMl:
+      "మీ పొలం రీడింగులు మరియు వచ్చే 15 రోజుల్లో {rainfall}mm అంచనా వర్షంతో మా శిక్షణ పొందిన పంట మోడల్ సరిపోల్చింది.",
+    dashboardSummaryFallback:
+      "మీ తాజా పొలం రీడింగులు మరియు వచ్చే 15 రోజుల్లో {rainfall}mm అంచనా వర్షంపై ఆధారంగా.",
+    viewCropRecommendations: "పంట సూచనలు చూడండి",
+    editFieldPlan: "పొలం ప్లాన్ మార్చండి",
+    temperature: "ఉష్ణోగ్రత",
+    rainfall: "mm అంచనా వర్షం",
+    matches: "పంట సరిపోలికలు",
+    fieldReading: "పొలం రీడింగ్",
+    recommendationTitle: "మీ తదుపరి పంట కోసం<br>ఒక చిన్న పుస్తకం.",
+    turnPage: "పేజీ తిప్పడానికి బాణాలు వాడండి",
+    downloadPdf: "PDF సారాంశం డౌన్‌లోడ్ చేయండి",
+    whyItWorks: "ఇది ఎందుకు పనిచేస్తుంది",
+    weatherTitle: "తదుపరి 15 రోజులు<br>మీకు అనుకూలంగా ఉన్నాయి.",
+    averageWarmth: "సగటు వేడి",
+    expectedRain: "అంచనా వర్షం",
+    forecast: "15-రోజుల అంచనా",
+    today: "ఈ రోజు",
+    plus7: "+7 రోజులు",
+    plus14: "+14 రోజులు",
+    soilSnapshot: "మట్టి స్నాప్‌షాట్",
+    inputFactors: "సరిపోలిక వెనుక<br>ఇన్‌పుట్ అంశాలు.",
+    restoreKicker: "మట్టి పునరుద్ధరణ ప్లాన్",
+    restoreTitle: "మట్టికి<br>ఏదో తిరిగి ఇవ్వండి.",
+    backToFieldPlan: "పొలం ప్లాన్‌కు తిరిగి",
+    editFieldReadings: "పొలం రీడింగులు మార్చండి",
+    askMitaSoil: "మట్టి గురించి మీతాను అడగండి",
+    fieldAdvisor: "మీ వ్యవసాయ సలహాదారు",
+    askTitle: "మీ పొలం గురించి<br>మీతాను ఏదైనా అడగండి.",
+    aiLanguageReady: "మీరు ఎంచుకున్న భాషలో సమాధానం ఇవ్వడానికి సిద్ధం.",
+    aiLanguageStatus: "మీता {language} లో సమాధానం ఇస్తుంది.",
+    mitaGreeting:
+      "నమస్తే! నేను మీతా. పంటలు, మట్టి, వాతావరణం, పురుగులు, నీరుపారుదల లేదా తదుపరి సీజన్ గురించి అడగండి.",
+    questionWhy: "ఈ పంట ఎందుకు సూచించారు?",
+    questionWhen: "నేను ఎప్పుడు విత్తాలి?",
+    questionImprove: "నా మట్టిని ఎలా మెరుగుపరచాలి?",
+    askPlaceholder: "ఏదైనా వ్యవసాయ ప్రశ్న అడగండి…",
+    speechHint: "ఇంగ్లీష్, हिन्दी, మరాఠీ లేదా తెలుగులో మాట్లాడండి లేదా టైప్ చేయండి.",
+    speakQuestion: "మీ ప్రశ్నను మాట్లాడండి",
+    sendQuestion: "ప్రశ్న పంపండి",
+    farmerProfile: "మీ రైతు ప్రొఫైల్",
+    loginTitle: "స్వాగతం<br><em>మీ పొలానికి.</em>",
+    loginPhoto: "ప్రతి సీజన్‌కు<br>ఒక కథ ఉంటుంది.",
+    yourName: "మీ పేరు",
+    phoneNumber: "ఫోన్ నంబర్",
+    continueToField: "నా పొలానికి కొనసాగండి",
+    historyEnterNumber: "ముందు సేవ్ చేసిన ప్లాన్‌లు చూడటానికి మీ నంబర్ ఇవ్వండి.",
+    cropCalendar: "పంట క్యాలెండర్",
+    expectedDuration: "అంచనా వ్యవధి:",
+    complete: "పూర్తి",
+    rainProbability: "వర్షం అవకాశం",
+    weatherImpact: "వాతావరణ ప్రభావం",
+    growingJourney: "పెరుగుదల ప్రయాణం",
+    cropTimeline: "పంట కాలక్రమం",
+    completed: "పూర్తి",
+    inProgress: "జరుగుతోంది",
+    upcoming: "రాబోతోంది",
+    stayOnTrack: "పాటుపడుతూ ఉండండి",
+    todaysTasks: "ఈ రోజు పనులు",
+    cropPlanSelected: "పంట ప్లాన్ ఎంచుకున్నారు",
+    planCrop: "{crop} ప్లాన్ చేయండి",
+    high: "అధిక",
+    medium: "మధ్యస్థ",
+    confidence: "నమ్మకం",
+    indicativeMandiPrice: "సూచనాత్మక మండీ ధర",
+    checkLivePrice: "లైవ్ ధర చూడండి",
+    perQuintal: "క్వింటాల్‌కు",
+    cropGenericDescription:
+      "మీ మట్టి మరియు వాతావరణ రీడింగుల ఆధారంగా ఈ పంటను తదుపరి సీజన్‌కు పరిగణించవచ్చు.",
+    assistantFallback:
+      "తెరచిన ప్రశ్నలకు మీతాకు సురక్షిత AI సేవ కనెక్షన్ అవసరం. మీ పొలం డేటా పై ఉంది; సేవ సిద్ధమైన తర్వాత మళ్లీ ప్రయత్నించండి.",
+  },
+};
+
+Object.keys(i18n).forEach((language) => {
+  translations[language] = { ...(translations[language] || {}), ...i18n[language] };
+});
+
+const languageLabels = {
+  en: "English",
+  hi: "हिन्दी",
+  mr: "मराठी",
+  te: "తెలుగు",
+};
+const languageLocales = { en: "en-IN", hi: "hi-IN", mr: "mr-IN", te: "te-IN" };
+const cropNameTranslations = {
+  Groundnut: { hi: "मूंगफली", mr: "भुईमूग", te: "వేరుశెనగ" },
+  Millet: { hi: "बाजरा", mr: "बाजरी", te: "సజ్జ" },
+  Coffee: { hi: "कॉफी", mr: "कॉफी", te: "కాఫీ" },
+  Wheat: { hi: "गेहूं", mr: "गहू", te: "గోధుమ" },
+  Maize: { hi: "मक्का", mr: "मका", te: "మొక్కజొన్న" },
+  Rice: { hi: "धान", mr: "तांदूळ", te: "వరి" },
+  Barley: { hi: "जौ", mr: "जव", te: "బార్లీ" },
+  Jute: { hi: "जूट", mr: "ज्यूट", te: "జూట్" },
+  Cotton: { hi: "कपास", mr: "कापूस", te: "పత్తి" },
+  Sugarcane: { hi: "गन्ना", mr: "ऊस", te: "చెరకు" },
+  Chickpea: { hi: "चना", mr: "हरभरा", te: "సెనగ" },
+  "Kidney beans": { hi: "राजमा", mr: "राजमा", te: "రాజ్మా" },
+  "Pigeon pea": { hi: "अरहर", mr: "तूर", te: "కంది" },
+  "Moth beans": { hi: "मोठ", mr: "मटकी", te: "మాత్ బీన్స్" },
+  "Mung bean": { hi: "मूंग", mr: "मूग", te: "పెసర" },
+  "Black gram": { hi: "उड़द", mr: "उडीद", te: "మినుములు" },
+  Lentil: { hi: "मसूर", mr: "मसूर", te: "మసూర్ పప్పు" },
+  Pomegranate: { hi: "अनार", mr: "डाळिंब", te: "దానిమ్మ" },
+  Banana: { hi: "केला", mr: "केळी", te: "అరటి" },
+  Mango: { hi: "आम", mr: "आंबा", te: "మామిడి" },
+  Grapes: { hi: "अंगूर", mr: "द्राक्षे", te: "ద్రాక్ష" },
+  Watermelon: { hi: "तरबूज", mr: "कलिंगड", te: "పుచ్చకాయ" },
+  Muskmelon: { hi: "खरबूजा", mr: "खरबूज", te: "కర్బూజ" },
+  Apple: { hi: "सेब", mr: "सफरचंद", te: "ఆపిల్" },
+  Orange: { hi: "संतरा", mr: "संत्रे", te: "నారింజ" },
+  Papaya: { hi: "पपीता", mr: "पपई", te: "బొప్పాయి" },
+  Coconut: { hi: "नारियल", mr: "नारळ", te: "కొబ్బరి" },
+  Soybean: { hi: "सोयाबीन", mr: "सोयाबीन", te: "సోయాబీన్" },
+};
+const shortTextTranslations = {
+  "Soil builder": { hi: "मिट्टी सुधारक", mr: "माती सुधारक", te: "మట్టి మెరుగుపరచేది" },
+  "Warm season": { hi: "गर्म मौसम", mr: "उबदार हंगाम", te: "వెచ్చని కాలం" },
+  Resilient: { hi: "लचीला", mr: "तगडे", te: "తట్టుకునేది" },
+  "Low water": { hi: "कम पानी", mr: "कमी पाणी", te: "తక్కువ నీరు" },
+  "High value": { hi: "उच्च मूल्य", mr: "उच्च मूल्य", te: "అధిక విలువ" },
+  Perennial: { hi: "बहुवर्षीय", mr: "बहुवर्षीय", te: "బహువర్ష" },
+  "Rabi season": { hi: "रबी मौसम", mr: "रबी हंगाम", te: "రబీ కాలం" },
+  "Market staple": { hi: "बाज़ार की मुख्य फसल", mr: "बाजारातील मुख्य पीक", te: "మార్కెట్ ప్రధాన పంట" },
+  Versatile: { hi: "बहुउपयोगी", mr: "बहुउपयोगी", te: "బహుళ ఉపయోగం" },
+  "Fast growing": { hi: "तेज़ बढ़वार", mr: "जलद वाढ", te: "వేగంగా పెరుగుతుంది" },
+  "Moisture-loving": { hi: "नमी पसंद", mr: "ओलावा आवडणारे", te: "తేమ ఇష్టం" },
+  "Cool season": { hi: "ठंडा मौसम", mr: "थंड हंगाम", te: "చల్లని కాలం" },
+  Pulse: { hi: "दलहन", mr: "कडधान्य", te: "పప్పుధాన్యం" },
+  "Cash crop": { hi: "नकदी फसल", mr: "नगदी पीक", te: "నగదు పంట" },
+  "Long duration": { hi: "लंबी अवधि", mr: "लांब कालावधी", te: "దీర్ఘకాలం" },
+  High: { hi: "उच्च", mr: "उच्च", te: "అధిక" },
+  Medium: { hi: "मध्यम", mr: "मध्यम", te: "మధ్యస్థ" },
+  Low: { hi: "कम", mr: "कमी", te: "తక్కువ" },
+};
+function currentLanguage() {
+  const stored = localStorage.getItem("terraLanguage") || "en";
+  return translations[stored] ? stored : "en";
+}
+function t(key, replacements = {}) {
+  const language = currentLanguage();
+  const template = translations[language]?.[key] ?? translations.en[key] ?? key;
+  return template.replace(/\{(\w+)\}/g, (_, name) =>
+    replacements[name] === undefined ? "" : replacements[name],
+  );
+}
+function trText(text) {
+  const language = currentLanguage();
+  if (language === "en") return text;
+  return (
+    cropNameTranslations[text]?.[language] ||
+    shortTextTranslations[text]?.[language] ||
+    text
+  );
+}
+function cropDescription(text) {
+  return currentLanguage() === "en" ? text : t("cropGenericDescription");
+}
+function currentLocale() {
+  return languageLocales[currentLanguage()] || languageLocales.en;
+}
 
 const defaultField = {
   nitrogen: 90,
@@ -442,37 +1663,68 @@ function historyFor(phone) {
   }
 }
 function useLanguage() {
-  const language = localStorage.getItem("terraLanguage") || "en";
+  const language = currentLanguage();
   document.documentElement.lang = language;
+  document.body?.setAttribute("lang", language);
   document.querySelectorAll(".language-picker").forEach((select) => {
+    Object.entries(languageLabels).forEach(([code, label]) => {
+      let option = select.querySelector(`option[value="${code}"]`);
+      if (!option) {
+        option = document.createElement("option");
+        option.value = code;
+        select.appendChild(option);
+      }
+      option.textContent = label;
+    });
     select.value = language;
+    select.setAttribute("aria-label", t("chooseLanguage"));
+    if (select.dataset.ready) return;
+    select.dataset.ready = "true";
     select.addEventListener("change", () => {
       localStorage.setItem("terraLanguage", select.value);
       location.reload();
     });
   });
-  const strings = translations[language] || {};
-  document.querySelectorAll("[data-i18n]").forEach((element) => {
-    if (strings[element.dataset.i18n])
-      element.textContent = strings[element.dataset.i18n];
-  });
-  document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
-    if (strings[element.dataset.i18nPlaceholder])
-      element.placeholder = strings[element.dataset.i18nPlaceholder];
-  });
+  applyTranslations();
+  localStorage.removeItem("terraTheme");
 }
-function applyTheme() {
-  if (localStorage.getItem("terraTheme") === "dark")
-    document.body.classList.add("dark");
-  document.querySelectorAll(".mode-toggle").forEach((button) =>
-    button.addEventListener("click", () => {
-      document.body.classList.toggle("dark");
-      localStorage.setItem(
-        "terraTheme",
-        document.body.classList.contains("dark") ? "dark" : "light",
-      );
-    }),
-  );
+function applyTranslations(root = document) {
+  const currentLang = currentLanguage();
+  const strings = translations[currentLang] || {};
+  const enStrings = translations.en || {};
+
+  const getStr = (key) => strings[key] || enStrings[key];
+
+  root.querySelectorAll("[data-i18n-html]").forEach((element) => {
+    const value = getStr(element.dataset.i18nHtml);
+    if (value) element.innerHTML = value;
+  });
+  document.querySelectorAll("[data-i18n]").forEach((element) => {
+    if (element.dataset.i18nHtml) return;
+    const value = getStr(element.dataset.i18n);
+    if (value)
+      element.textContent = value;
+  });
+  root.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
+    const value = getStr(element.dataset.i18nPlaceholder);
+    if (value)
+      element.placeholder = value;
+  });
+  root.querySelectorAll("[data-i18n-aria-label]").forEach((element) => {
+    const value = getStr(element.dataset.i18nAriaLabel);
+    if (value)
+      element.setAttribute("aria-label", value);
+  });
+  root.querySelectorAll("[data-i18n-alt]").forEach((element) => {
+    const value = getStr(element.dataset.i18nAlt);
+    if (value)
+      element.setAttribute("alt", value);
+  });
+  root.querySelectorAll("[data-i18n-data-question]").forEach((element) => {
+    const value = getStr(element.dataset.i18nDataQuestion);
+    if (value)
+      element.dataset.question = value;
+  });
 }
 function score(crop, field) {
   const climate =
@@ -766,6 +2018,45 @@ function setupPlanner() {
   const form = document.querySelector("#fieldForm");
   if (!form) return;
   const manual = document.querySelector(".manual-readings");
+  const voiceInputBtn = document.querySelector("#voiceInputBtn");
+  if (voiceInputBtn) {
+    voiceInputBtn.addEventListener("click", () => {
+      const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!Recognition) {
+        alert("Speech recognition is not supported in this browser.");
+        return;
+      }
+      const recognition = new Recognition();
+      const languageCode = localStorage.getItem("terraLanguage") || "en";
+      const speechLocales = { en: "en-IN", hi: "hi-IN", mr: "mr-IN", te: "te-IN" };
+      recognition.lang = speechLocales[languageCode] || "en-IN";
+      recognition.interimResults = false;
+      
+      voiceInputBtn.innerHTML = "🎤 Listening...";
+      
+      recognition.onresult = (event) => {
+        voiceInputBtn.innerHTML = "🎤 Speak values";
+        const transcript = event.results[0][0].transcript.toLowerCase();
+        const numbers = transcript.match(/\d+(\.\d+)?/g);
+        
+        if (numbers && numbers.length >= 4) {
+          document.querySelector("#inputNitrogen").value = numbers[0];
+          document.querySelector("#inputPhosphorus").value = numbers[1];
+          document.querySelector("#inputPotassium").value = numbers[2];
+          document.querySelector("#inputPh").value = numbers[3];
+        } else {
+          alert("Could not clearly extract 4 numbers (N, P, K, pH). Please try again.");
+        }
+      };
+      
+      recognition.onerror = () => {
+        voiceInputBtn.innerHTML = "🎤 Speak values";
+        alert("Could not hear that. Please try again.");
+      };
+      
+      recognition.start();
+    });
+  }
   document.querySelectorAll(".source-card").forEach((card) =>
     card.addEventListener("click", () => {
       document
@@ -1425,6 +2716,26 @@ function setupAssistant(crop, field) {
     const message = document.createElement("div");
     message.className = className;
     message.textContent = text;
+    if (className === "mita-message") {
+      const readBtn = document.createElement("button");
+      readBtn.className = "read-aloud-btn";
+      readBtn.innerHTML = "🔊";
+      readBtn.title = "Read aloud";
+      readBtn.style.marginLeft = "8px";
+      readBtn.style.background = "none";
+      readBtn.style.border = "none";
+      readBtn.style.cursor = "pointer";
+      readBtn.style.fontSize = "1.2rem";
+      readBtn.onclick = () => {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        const speechLocales = { en: "en-IN", hi: "hi-IN", mr: "mr-IN", te: "te-IN" };
+        const languageCode = localStorage.getItem("terraLanguage") || "en";
+        utterance.lang = speechLocales[languageCode] || "en-IN";
+        window.speechSynthesis.speak(utterance);
+      };
+      message.appendChild(readBtn);
+    }
     history.appendChild(message);
     history.scrollTop = history.scrollHeight;
     return message;
@@ -1546,6 +2857,26 @@ function setupAssistant(crop, field) {
     const message = document.createElement("div");
     message.className = className;
     message.textContent = text;
+    if (className === "mita-message") {
+      const readBtn = document.createElement("button");
+      readBtn.className = "read-aloud-btn";
+      readBtn.innerHTML = "🔊";
+      readBtn.title = "Read aloud";
+      readBtn.style.marginLeft = "8px";
+      readBtn.style.background = "none";
+      readBtn.style.border = "none";
+      readBtn.style.cursor = "pointer";
+      readBtn.style.fontSize = "1.2rem";
+      readBtn.onclick = () => {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        const speechLocales = { en: "en-IN", hi: "hi-IN", mr: "mr-IN", te: "te-IN" };
+        const languageCode = localStorage.getItem("terraLanguage") || "en";
+        utterance.lang = speechLocales[languageCode] || "en-IN";
+        window.speechSynthesis.speak(utterance);
+      };
+      message.appendChild(readBtn);
+    }
     history.appendChild(message);
     history.scrollTop = history.scrollHeight;
     return message;
