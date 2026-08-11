@@ -588,7 +588,56 @@ const i18n = {
     loginTitle: "Welcome<br><em>to your field.</em>",
     loginPhoto: "Every season<br>has a story.",
     loginCopy:
-      "Enter your name and phone number. We’ll use them only in this browser to bring back your saved field plans.",
+      "Log in with your phone number and PIN, or create a free account to save your field plans.",
+    loginTab: "Log in",
+    registerTab: "Create account",
+    pin: "PIN",
+    choosePin: "Choose a PIN",
+    confirmPin: "Confirm PIN",
+    newPin: "New PIN",
+    registerButton: "Create my account",
+    forgotPin: "Forgot PIN?",
+    orDivider: "or",
+    skipForNow: "Skip for now",
+    phoneStepTitle: "Add your phone number so your field plans are saved to you.",
+    phoneStepSave: "Save phone number",
+    pinStepTitle: "Set a new PIN for logging in with your phone number.",
+    pinStepSave: "Save new PIN",
+    signedInAs: "Signed in as",
+    changePin: "Change PIN",
+    addPhone: "Add phone number",
+    logout: "Log out",
+    linkGoogleHint: "Link your Google account below to reset a forgotten PIN later.",
+    err_forgot_pin_hint: "Sign in with Google below to reset your PIN.",
+    err_bad_credentials: "Phone number, username or PIN is incorrect.",
+    err_duplicate_phone: "This phone number is already registered. Try logging in.",
+    err_pin_mismatch: "PINs do not match.",
+    err_invalid_phone: "Enter a valid 10-digit phone number.",
+    err_invalid_pin: "PIN must be exactly 4 digits.",
+    err_invalid_username: "Enter your name.",
+    err_google_failed: "Google sign-in failed. Please try again.",
+    err_google_account: "This account signs in with Google.",
+    err_google_unconfigured: "Google sign-in is not available.",
+    err_google_taken: "This Google account is already linked to another profile.",
+    err_not_signed_in: "Please log in again.",
+    err_network: "Could not reach the server. Please try again.",
+    accountDetails: "Account details",
+    emailLabel: "Email",
+    memberSince: "Member since",
+    signInMethods: "Sign-in methods",
+    notSet: "Not set",
+    editProfile: "Edit profile",
+    saveChanges: "Save changes",
+    cancelEdit: "Cancel",
+    security: "Security",
+    setPin: "Set PIN",
+    pinSaved: "PIN saved.",
+    profileSaved: "Profile updated.",
+    deleteProfile: "Delete profile",
+    deleteConfirmMsg:
+      "Delete your profile permanently? Saved plans on this device will also be removed.",
+    savedPlans: "Saved field plans",
+    addPhoneForHistory: "Add a phone number to save your field plans.",
     yourName: "Your name",
     namePlaceholder: "e.g. Meera Patel",
     phoneNumber: "Phone number",
@@ -883,7 +932,56 @@ const i18n = {
     loginTitle: "स्वागत है<br><em>आपके खेत में।</em>",
     loginPhoto: "हर मौसम की<br>एक कहानी होती है।",
     loginCopy:
-      "अपना नाम और फोन नंबर डालें। सेव की गई खेत योजनाएं वापस लाने के लिए हम इन्हें केवल इस ब्राउज़र में उपयोग करेंगे।",
+      "अपने फ़ोन नंबर और पिन से लॉग इन करें, या अपनी खेत योजनाएं सेव करने के लिए मुफ़्त खाता बनाएं।",
+    loginTab: "लॉग इन",
+    registerTab: "खाता बनाएं",
+    pin: "पिन",
+    choosePin: "पिन चुनें",
+    confirmPin: "पिन की पुष्टि करें",
+    newPin: "नया पिन",
+    registerButton: "मेरा खाता बनाएं",
+    forgotPin: "पिन भूल गए?",
+    orDivider: "या",
+    skipForNow: "अभी छोड़ें",
+    phoneStepTitle: "अपना फ़ोन नंबर जोड़ें ताकि आपकी खेत योजनाएं आपसे जुड़ी रहें।",
+    phoneStepSave: "फ़ोन नंबर सेव करें",
+    pinStepTitle: "फ़ोन नंबर से लॉग इन करने के लिए नया पिन सेट करें।",
+    pinStepSave: "नया पिन सेव करें",
+    signedInAs: "साइन इन:",
+    changePin: "पिन बदलें",
+    addPhone: "फ़ोन नंबर जोड़ें",
+    logout: "लॉग आउट",
+    linkGoogleHint: "भूले हुए पिन को बाद में रीसेट करने के लिए नीचे अपना Google खाता जोड़ें।",
+    err_forgot_pin_hint: "पिन रीसेट करने के लिए नीचे Google से साइन इन करें।",
+    err_bad_credentials: "फ़ोन नंबर, नाम या पिन गलत है।",
+    err_duplicate_phone: "यह फ़ोन नंबर पहले से पंजीकृत है। लॉग इन करके देखें।",
+    err_pin_mismatch: "पिन मेल नहीं खाते।",
+    err_invalid_phone: "सही 10 अंकों का फ़ोन नंबर डालें।",
+    err_invalid_pin: "पिन ठीक 4 अंकों का होना चाहिए।",
+    err_invalid_username: "अपना नाम डालें।",
+    err_google_failed: "Google साइन-इन विफल रहा। फिर से प्रयास करें।",
+    err_google_account: "यह खाता Google से साइन इन करता है।",
+    err_google_unconfigured: "Google साइन-इन उपलब्ध नहीं है।",
+    err_google_taken: "यह Google खाता किसी और प्रोफ़ाइल से जुड़ा है।",
+    err_not_signed_in: "कृपया फिर से लॉग इन करें।",
+    err_network: "सर्वर से संपर्क नहीं हो सका। फिर से प्रयास करें।",
+    accountDetails: "खाता विवरण",
+    emailLabel: "ईमेल",
+    memberSince: "सदस्य बने",
+    signInMethods: "साइन-इन तरीके",
+    notSet: "सेट नहीं है",
+    editProfile: "प्रोफ़ाइल संपादित करें",
+    saveChanges: "बदलाव सेव करें",
+    cancelEdit: "रद्द करें",
+    security: "सुरक्षा",
+    setPin: "पिन सेट करें",
+    pinSaved: "पिन सेव हो गया।",
+    profileSaved: "प्रोफ़ाइल अपडेट हो गई।",
+    deleteProfile: "प्रोफ़ाइल हटाएं",
+    deleteConfirmMsg:
+      "प्रोफ़ाइल हमेशा के लिए हटाएं? इस डिवाइस पर सेव योजनाएं भी हट जाएंगी।",
+    savedPlans: "सेव की गई खेत योजनाएं",
+    addPhoneForHistory: "खेत योजनाएं सेव करने के लिए फ़ोन नंबर जोड़ें।",
     yourName: "आपका नाम",
     namePlaceholder: "जैसे मीरा पटेल",
     phoneNumber: "फोन नंबर",
@@ -1072,6 +1170,57 @@ const i18n = {
     phoneNumber: "फोन नंबर",
     continueToField: "माझ्या शेताकडे जा",
     historyEnterNumber: "पूर्वी सेव्ह केलेल्या योजना पाहण्यासाठी नंबर द्या.",
+    loginCopy:
+      "तुमच्या फोन नंबर आणि पिनने लॉग इन करा, किंवा शेत योजना सेव्ह करण्यासाठी मोफत खाते तयार करा.",
+    loginTab: "लॉग इन",
+    registerTab: "खाते तयार करा",
+    pin: "पिन",
+    choosePin: "पिन निवडा",
+    confirmPin: "पिनची खात्री करा",
+    newPin: "नवीन पिन",
+    registerButton: "माझे खाते तयार करा",
+    forgotPin: "पिन विसरलात?",
+    orDivider: "किंवा",
+    skipForNow: "सध्या वगळा",
+    phoneStepTitle: "तुमच्या शेत योजना तुमच्याशी जोडल्या जाण्यासाठी फोन नंबर जोडा.",
+    phoneStepSave: "फोन नंबर सेव्ह करा",
+    pinStepTitle: "फोन नंबरने लॉग इन करण्यासाठी नवीन पिन सेट करा.",
+    pinStepSave: "नवीन पिन सेव्ह करा",
+    signedInAs: "साइन इन:",
+    changePin: "पिन बदला",
+    addPhone: "फोन नंबर जोडा",
+    logout: "लॉग आउट",
+    linkGoogleHint: "विसरलेला पिन नंतर रीसेट करण्यासाठी खाली तुमचे Google खाते जोडा.",
+    err_forgot_pin_hint: "पिन रीसेट करण्यासाठी खाली Google ने साइन इन करा.",
+    err_bad_credentials: "फोन नंबर, नाव किंवा पिन चुकीचा आहे.",
+    err_duplicate_phone: "हा फोन नंबर आधीच नोंदणीकृत आहे. लॉग इन करून पहा.",
+    err_pin_mismatch: "पिन जुळत नाहीत.",
+    err_invalid_phone: "योग्य 10 अंकी फोन नंबर द्या.",
+    err_invalid_pin: "पिन नेमका 4 अंकांचा हवा.",
+    err_invalid_username: "तुमचे नाव द्या.",
+    err_google_failed: "Google साइन-इन अयशस्वी झाले. पुन्हा प्रयत्न करा.",
+    err_google_account: "हे खाते Google ने साइन इन करते.",
+    err_google_unconfigured: "Google साइन-इन उपलब्ध नाही.",
+    err_google_taken: "हे Google खाते दुसऱ्या प्रोफाइलशी जोडलेले आहे.",
+    err_not_signed_in: "कृपया पुन्हा लॉग इन करा.",
+    err_network: "सर्व्हरशी संपर्क होऊ शकला नाही. पुन्हा प्रयत्न करा.",
+    accountDetails: "खाते तपशील",
+    emailLabel: "ईमेल",
+    memberSince: "सदस्य झाल्याची तारीख",
+    signInMethods: "साइन-इन पद्धती",
+    notSet: "सेट नाही",
+    editProfile: "प्रोफाइल संपादित करा",
+    saveChanges: "बदल सेव्ह करा",
+    cancelEdit: "रद्द करा",
+    security: "सुरक्षा",
+    setPin: "पिन सेट करा",
+    pinSaved: "पिन सेव्ह झाला.",
+    profileSaved: "प्रोफाइल अपडेट झाले.",
+    deleteProfile: "प्रोफाइल हटवा",
+    deleteConfirmMsg:
+      "प्रोफाइल कायमचे हटवायचे? या डिव्हाइसवरील सेव्ह योजनाही हटतील.",
+    savedPlans: "सेव्ह केलेल्या शेत योजना",
+    addPhoneForHistory: "शेत योजना सेव्ह करण्यासाठी फोन नंबर जोडा.",
     cropCalendar: "पीक कॅलेंडर",
     expectedDuration: "अपेक्षित कालावधी:",
     complete: "पूर्ण",
@@ -1211,6 +1360,57 @@ const i18n = {
     phoneNumber: "ఫోన్ నంబర్",
     continueToField: "నా పొలానికి కొనసాగండి",
     historyEnterNumber: "ముందు సేవ్ చేసిన ప్లాన్‌లు చూడటానికి మీ నంబర్ ఇవ్వండి.",
+    loginCopy:
+      "మీ ఫోన్ నంబర్ మరియు పిన్‌తో లాగ్ ఇన్ అవ్వండి, లేదా పొలం ప్లాన్‌లు సేవ్ చేయడానికి ఉచిత ఖాతా సృష్టించండి.",
+    loginTab: "లాగ్ ఇన్",
+    registerTab: "ఖాతా సృష్టించండి",
+    pin: "పిన్",
+    choosePin: "పిన్ ఎంచుకోండి",
+    confirmPin: "పిన్ నిర్ధారించండి",
+    newPin: "కొత్త పిన్",
+    registerButton: "నా ఖాతా సృష్టించండి",
+    forgotPin: "పిన్ మర్చిపోయారా?",
+    orDivider: "లేదా",
+    skipForNow: "ప్రస్తుతానికి దాటవేయండి",
+    phoneStepTitle: "మీ పొలం ప్లాన్‌లు మీకు సేవ్ అవ్వడానికి ఫోన్ నంబర్ జోడించండి.",
+    phoneStepSave: "ఫోన్ నంబర్ సేవ్ చేయండి",
+    pinStepTitle: "ఫోన్ నంబర్‌తో లాగ్ ఇన్ కావడానికి కొత్త పిన్ సెట్ చేయండి.",
+    pinStepSave: "కొత్త పిన్ సేవ్ చేయండి",
+    signedInAs: "సైన్ ఇన్:",
+    changePin: "పిన్ మార్చండి",
+    addPhone: "ఫోన్ నంబర్ జోడించండి",
+    logout: "లాగ్ అవుట్",
+    linkGoogleHint: "మర్చిపోయిన పిన్‌ను తర్వాత రీసెట్ చేయడానికి కింద మీ Google ఖాతాను లింక్ చేయండి.",
+    err_forgot_pin_hint: "పిన్ రీసెట్ చేయడానికి కింద Googleతో సైన్ ఇన్ అవ్వండి.",
+    err_bad_credentials: "ఫోన్ నంబర్, పేరు లేదా పిన్ తప్పు.",
+    err_duplicate_phone: "ఈ ఫోన్ నంబర్ ఇప్పటికే నమోదైంది. లాగ్ ఇన్ ప్రయత్నించండి.",
+    err_pin_mismatch: "పిన్‌లు సరిపోలలేదు.",
+    err_invalid_phone: "సరైన 10 అంకెల ఫోన్ నంబర్ ఇవ్వండి.",
+    err_invalid_pin: "పిన్ సరిగ్గా 4 అంకెలు ఉండాలి.",
+    err_invalid_username: "మీ పేరు ఇవ్వండి.",
+    err_google_failed: "Google సైన్-ఇన్ విఫలమైంది. మళ్లీ ప్రయత్నించండి.",
+    err_google_account: "ఈ ఖాతా Googleతో సైన్ ఇన్ అవుతుంది.",
+    err_google_unconfigured: "Google సైన్-ఇన్ అందుబాటులో లేదు.",
+    err_google_taken: "ఈ Google ఖాతా వేరే ప్రొఫైల్‌కి లింక్ అయ్యింది.",
+    err_not_signed_in: "దయచేసి మళ్లీ లాగ్ ఇన్ అవ్వండి.",
+    err_network: "సర్వర్‌ను చేరుకోలేకపోయాం. మళ్లీ ప్రయత్నించండి.",
+    accountDetails: "ఖాతా వివరాలు",
+    emailLabel: "ఇమెయిల్",
+    memberSince: "సభ్యులైన తేదీ",
+    signInMethods: "సైన్-ఇన్ పద్ధతులు",
+    notSet: "సెట్ కాలేదు",
+    editProfile: "ప్రొఫైల్ సవరించండి",
+    saveChanges: "మార్పులు సేవ్ చేయండి",
+    cancelEdit: "రద్దు చేయండి",
+    security: "భద్రత",
+    setPin: "పిన్ సెట్ చేయండి",
+    pinSaved: "పిన్ సేవ్ అయ్యింది.",
+    profileSaved: "ప్రొఫైల్ అప్‌డేట్ అయ్యింది.",
+    deleteProfile: "ప్రొఫైల్ తొలగించండి",
+    deleteConfirmMsg:
+      "ప్రొఫైల్ శాశ్వతంగా తొలగించాలా? ఈ పరికరంలో సేవ్ చేసిన ప్లాన్‌లు కూడా తొలగించబడతాయి.",
+    savedPlans: "సేవ్ చేసిన పొలం ప్లాన్‌లు",
+    addPhoneForHistory: "పొలం ప్లాన్‌లు సేవ్ చేయడానికి ఫోన్ నంబర్ జోడించండి.",
     cropCalendar: "పంట క్యాలెండర్",
     expectedDuration: "అంచనా వ్యవధి:",
     complete: "పూర్తి",
@@ -3073,26 +3273,452 @@ function setupLogin() {
       )
       .join("");
   };
+  const registerForm = document.querySelector("#registerForm");
+  const errorBox = document.querySelector("#authError");
+  const show = (selector, on) => {
+    const element = document.querySelector(selector);
+    if (element) element.hidden = !on;
+  };
+  const showError = (err) => {
+    if (!errorBox) return;
+    const key = err?.code ? `err_${err.code}` : "";
+    const translated = key ? t(key) : "";
+    errorBox.textContent =
+      (translated && translated !== key ? translated : err?.error) ||
+      t("err_network");
+    errorBox.hidden = false;
+  };
+  const clearError = () => {
+    if (errorBox) errorBox.hidden = true;
+  };
+  let pinLength = 4;
+  let currentUser = null;
+  let forgotMode = false;
+  const validPin = (pin) => new RegExp(`^\\d{${pinLength}}$`).test(pin);
+  const finishLogin = (user) => {
+    localStorage.setItem(
+      "terraProfile",
+      JSON.stringify({ name: user.username, phone: user.phone || "" }),
+    );
+    location.href = "planner.html";
+  };
+  const showOnly = (step) => {
+    clearError();
+    ["#authTabs", "#loginForm", "#registerForm", "#phoneStep", "#pinStep"].forEach(
+      (selector) => show(selector, false),
+    );
+    if (step === "forms") {
+      show("#authTabs", true);
+      const active = document.querySelector(".auth-tab.active")?.dataset.tab || "login";
+      show(active === "login" ? "#loginForm" : "#registerForm", true);
+    } else {
+      show(step, true);
+    }
+  };
+  const afterGoogleLogin = (data) => {
+    const user = data.user;
+    currentUser = user;
+    if (forgotMode) {
+      forgotMode = false;
+      showOnly("#pinStep");
+    } else if (data.isNew && !user.phone) {
+      showOnly("#phoneStep");
+    } else {
+      finishLogin(user);
+    }
+  };
+  document.querySelectorAll(".auth-tab").forEach((tab) =>
+    tab.addEventListener("click", () => {
+      document
+        .querySelectorAll(".auth-tab")
+        .forEach((other) => other.classList.toggle("active", other === tab));
+      clearError();
+      show("#loginForm", tab.dataset.tab === "login");
+      show("#registerForm", tab.dataset.tab === "register");
+    }),
+  );
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    clearError();
+    const phone = form.elements["phone"].value.trim();
+    const username = form.elements["username"].value.trim();
+    const pin = form.elements["pin"].value;
+    if (!/^[0-9]{10}$/.test(phone)) return showError({ code: "invalid_phone" });
+    if (!username) return showError({ code: "invalid_username" });
+    if (!validPin(pin)) return showError({ code: "invalid_pin" });
+    try {
+      const data = await authFetch("/login", { phone, username, pin });
+      finishLogin(data.user);
+    } catch (err) {
+      showError(err);
+    }
+  });
+  registerForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    clearError();
+    const phone = registerForm.elements["phone"].value.trim();
+    const username = registerForm.elements["username"].value.trim();
+    const pin = registerForm.elements["pin"].value;
+    const confirmPin = registerForm.elements["confirmPin"].value;
+    if (!/^[0-9]{10}$/.test(phone)) return showError({ code: "invalid_phone" });
+    if (!username) return showError({ code: "invalid_username" });
+    if (!validPin(pin)) return showError({ code: "invalid_pin" });
+    if (pin !== confirmPin) return showError({ code: "pin_mismatch" });
+    try {
+      const data = await authFetch("/register", { phone, username, pin, confirmPin });
+      finishLogin(data.user);
+    } catch (err) {
+      showError(err);
+    }
+  });
+  document.querySelector("#forgotPin")?.addEventListener("click", () => {
+    forgotMode = true;
+    clearError();
+    showError({ code: "forgot_pin_hint" });
+  });
+  document.querySelector("#phoneStep")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    clearError();
+    const phone = document.querySelector("#phoneStepInput").value.trim();
+    if (!/^[0-9]{10}$/.test(phone)) return showError({ code: "invalid_phone" });
+    try {
+      const data = await authFetch("/phone", { phone });
+      finishLogin(data.user);
+    } catch (err) {
+      showError(err);
+    }
+  });
+  document.querySelector("#phoneStepSkip")?.addEventListener("click", () => {
+    if (currentUser) finishLogin(currentUser);
+  });
+  document.querySelector("#pinStep")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    clearError();
+    const pin = document.querySelector("#pinStepPin").value;
+    const confirmPin = document.querySelector("#pinStepConfirm").value;
+    if (!validPin(pin)) return showError({ code: "invalid_pin" });
+    if (pin !== confirmPin) return showError({ code: "pin_mismatch" });
+    try {
+      const data = await authFetch("/pin", { pin, confirmPin });
+      currentUser = data.user;
+      if (!data.user.phone) showOnly("#phoneStep");
+      else finishLogin(data.user);
+    } catch (err) {
+      showError(err);
+    }
+  });
+  document.querySelector("#pinStepSkip")?.addEventListener("click", () => {
+    if (currentUser) finishLogin(currentUser);
+  });
+  const onGoogleCredential = async (response) => {
+    clearError();
+    try {
+      const data = await authFetch("/google", { credential: response.credential });
+      afterGoogleLogin(data);
+    } catch (err) {
+      showError(err);
+    }
+  };
+  const renderGoogleButton = (clientId) => {
+    let attempts = 0;
+    const tryRender = () => {
+      if (window.google?.accounts?.id) {
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: onGoogleCredential,
+        });
+        window.google.accounts.id.renderButton(
+          document.querySelector("#googleButton"),
+          { theme: "outline", size: "large", width: 320 },
+        );
+        show("#authOr", true);
+      } else if (attempts++ < 50) {
+        setTimeout(tryRender, 200);
+      }
+    };
+    tryRender();
+  };
   const profile = storedProfile();
   if (profile) {
-    form.elements["name"].value = profile.name || "";
     form.elements["phone"].value = profile.phone || "";
+    form.elements["username"].value = profile.name || "";
     renderHistory(profile.phone || "");
   }
   form.elements["phone"].addEventListener("input", () =>
     renderHistory(form.elements["phone"].value.trim()),
   );
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const name = form.elements["name"].value.trim();
-    const phone = form.elements["phone"].value.trim();
-    if (!name || !/^[0-9]{10}$/.test(phone)) return;
-    localStorage.setItem("terraProfile", JSON.stringify({ name, phone }));
-    location.href = "planner.html";
+  authFetch("/config")
+    .then((config) => {
+      pinLength = config.pinLength || 4;
+      const placeholder = "•".repeat(pinLength);
+      document
+        .querySelectorAll('input[inputmode="numeric"][type="password"], #pinStepPin, #pinStepConfirm')
+        .forEach((input) => {
+          input.maxLength = pinLength;
+          input.placeholder = placeholder;
+        });
+      if (config.googleClientId) renderGoogleButton(config.googleClientId);
+    })
+    .catch(() => {});
+  authFetch("/me")
+    .then(() => location.replace("profile.html"))
+    .catch(() => {});
+}
+const AUTH_BASE = window.TERRABYTE_AUTH_ENDPOINT || "/api/auth";
+async function authFetch(path, body) {
+  const response = await fetch(
+    `${AUTH_BASE}${path}`,
+    body === undefined
+      ? {}
+      : {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        },
+  );
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw data;
+  return data;
+}
+function setupProfilePage() {
+  if (!document.body.classList.contains("profile-page")) return;
+  const errorBox = document.querySelector("#profileError");
+  const noteBox = document.querySelector("#profileNote");
+  const showMsg = (element, text) => {
+    if (element) {
+      element.textContent = text || "";
+      element.hidden = !text;
+    }
+  };
+  const showError = (err) => {
+    const key = err?.code ? `err_${err.code}` : "";
+    const translated = key ? t(key) : "";
+    showMsg(noteBox, "");
+    showMsg(
+      errorBox,
+      (translated && translated !== key ? translated : err?.error) || t("err_network"),
+    );
+  };
+  const notify = (key) => {
+    showMsg(errorBox, "");
+    showMsg(noteBox, t(key));
+  };
+  const dateLabel = (iso) =>
+    new Intl.DateTimeFormat("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }).format(new Date(iso));
+  let user = null;
+  let pinLength = 4;
+  const renderHistory = () => {
+    const target = document.querySelector("#profileHistory");
+    if (!target) return;
+    if (!user.phone) {
+      target.innerHTML = `<p class="profile-empty">${t("addPhoneForHistory")}</p>`;
+      return;
+    }
+    const history = historyFor(user.phone);
+    if (!history.length) {
+      target.innerHTML = `<p class="profile-empty">${t("historyNoPlans")}</p>`;
+      return;
+    }
+    target.innerHTML = history
+      .map((entry) => {
+        const field = entry.field || {};
+        const parts = [
+          ["N", field.nitrogen],
+          ["P", field.phosphorus],
+          ["K", field.potassium],
+          ["pH", field.ph],
+          ["°C", field.temperature],
+          ["% RH", field.humidity],
+          ["mm", field.rainfall],
+        ]
+          .filter(([, value]) => value !== undefined && value !== null && value !== "")
+          .map(([label, value]) => `<span>${value} ${label}</span>`)
+          .join("");
+        return `<div class="history-entry"><b>${dateLabel(entry.date)}</b>${parts}</div>`;
+      })
+      .join("");
+  };
+  const render = () => {
+    document.querySelector("#profileHeroName").textContent = user.username;
+    document.querySelector("#profileHeroMeta").textContent = [user.phone, user.email]
+      .filter(Boolean)
+      .join(" · ");
+    document.querySelector("#detailName").textContent = user.username;
+    document.querySelector("#detailPhone").textContent = user.phone || t("notSet");
+    document.querySelector("#detailEmail").textContent = user.email || t("notSet");
+    document.querySelector("#detailSince").textContent = user.createdAt
+      ? dateLabel(user.createdAt.replace(" ", "T") + "Z")
+      : "—";
+    document.querySelector("#detailMethods").textContent =
+      [user.hasPin ? t("pin") : null, user.hasGoogle ? "Google" : null]
+        .filter(Boolean)
+        .join(" · ") || t("notSet");
+    document.querySelector("#changePinButton").textContent = user.hasPin
+      ? t("changePin")
+      : t("setPin");
+    localStorage.setItem(
+      "terraProfile",
+      JSON.stringify({ name: user.username, phone: user.phone || "" }),
+    );
+    renderHistory();
+  };
+  const editForm = document.querySelector("#editForm");
+  const detailsList = document.querySelector("#profileDetails");
+  const detailActions = document.querySelector("#detailActions");
+  const closeEdit = () => {
+    editForm.hidden = true;
+    detailsList.hidden = false;
+    detailActions.hidden = false;
+  };
+  document.querySelector("#editStart")?.addEventListener("click", () => {
+    editForm.elements["username"].value = user.username;
+    editForm.elements["phone"].value = user.phone || "";
+    editForm.hidden = false;
+    detailsList.hidden = true;
+    detailActions.hidden = true;
   });
+  document.querySelector("#editCancel")?.addEventListener("click", closeEdit);
+  editForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const username = editForm.elements["username"].value.trim();
+    const phone = editForm.elements["phone"].value.trim();
+    if (!username) return showError({ code: "invalid_username" });
+    if (phone && !/^[0-9]{10}$/.test(phone)) return showError({ code: "invalid_phone" });
+    try {
+      if (username !== user.username) user = (await authFetch("/profile", { username })).user;
+      if (phone && phone !== user.phone) user = (await authFetch("/phone", { phone })).user;
+      render();
+      closeEdit();
+      notify("profileSaved");
+    } catch (err) {
+      showError(err);
+    }
+  });
+  document.querySelector("#changePinForm")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const pin = form.elements["pin"].value;
+    const confirmPin = form.elements["confirmPin"].value;
+    if (!new RegExp(`^\\d{${pinLength}}$`).test(pin)) return showError({ code: "invalid_pin" });
+    if (pin !== confirmPin) return showError({ code: "pin_mismatch" });
+    try {
+      user = (await authFetch("/pin", { pin, confirmPin })).user;
+      form.reset();
+      render();
+      notify("pinSaved");
+    } catch (err) {
+      showError(err);
+    }
+  });
+  document.querySelector("#deleteProfile")?.addEventListener("click", async () => {
+    if (!confirm(t("deleteConfirmMsg"))) return;
+    try {
+      await authFetch("/delete", {});
+      if (user?.phone) localStorage.removeItem(`terraHistory_${user.phone}`);
+      localStorage.removeItem("terraProfile");
+      location.href = "index.html";
+    } catch (err) {
+      showError(err);
+    }
+  });
+  document.querySelector("#profileLogout")?.addEventListener("click", async () => {
+    try {
+      await authFetch("/logout", {});
+    } catch {}
+    localStorage.removeItem("terraProfile");
+    location.href = "login.html";
+  });
+  const onGoogleCredential = async (response) => {
+    try {
+      user = (await authFetch("/google", { credential: response.credential })).user;
+      document.querySelector("#profileGoogleSection").hidden = true;
+      render();
+      notify("profileSaved");
+    } catch (err) {
+      showError(err);
+    }
+  };
+  authFetch("/me")
+    .then(async (data) => {
+      user = data.user;
+      render();
+      try {
+        const config = await authFetch("/config");
+        pinLength = config.pinLength || 4;
+        const placeholder = "•".repeat(pinLength);
+        document
+          .querySelectorAll('#changePinForm input[type="password"]')
+          .forEach((input) => {
+            input.maxLength = pinLength;
+            input.placeholder = placeholder;
+          });
+        if (config.googleClientId && !user.hasGoogle) {
+          document.querySelector("#profileGoogleSection").hidden = false;
+          let attempts = 0;
+          const tryRender = () => {
+            if (window.google?.accounts?.id) {
+              window.google.accounts.id.initialize({
+                client_id: config.googleClientId,
+                callback: onGoogleCredential,
+              });
+              window.google.accounts.id.renderButton(
+                document.querySelector("#profileGoogleButton"),
+                { theme: "outline", size: "large", width: 280 },
+              );
+            } else if (attempts++ < 50) {
+              setTimeout(tryRender, 200);
+            }
+          };
+          tryRender();
+        }
+      } catch {}
+    })
+    .catch(() => location.replace("login.html"));
+}
+function setupAuthNav() {
+  const isAppPage = document.body.classList.contains("app-page");
+  const profileLink = document.querySelector('.top-actions .login-link[href="login.html"], .topbar .login-link[href="login.html"]');
+  authFetch("/me")
+    .then((data) => {
+      const user = data.user;
+      localStorage.setItem(
+        "terraProfile",
+        JSON.stringify({ name: user.username, phone: user.phone || "" }),
+      );
+      if (profileLink && !document.querySelector("#logoutLink")) {
+        profileLink.textContent = t("myProfile");
+        profileLink.dataset.i18n = "myProfile";
+        profileLink.href = "profile.html";
+        const logout = document.createElement("a");
+        logout.id = "logoutLink";
+        logout.className = profileLink.className;
+        logout.href = "#";
+        logout.textContent = t("logout");
+        logout.addEventListener("click", async (event) => {
+          event.preventDefault();
+          try {
+            await authFetch("/logout", {});
+          } catch {}
+          localStorage.removeItem("terraProfile");
+          location.href = "login.html";
+        });
+        profileLink.after(logout);
+      }
+    })
+    .catch(() => {
+      if (isAppPage) {
+        localStorage.removeItem("terraProfile");
+        location.href = "login.html";
+      }
+    });
 }
 useLanguage();
-applyTheme();
 setupPlanner();
 setupDashboard();
 setupLogin();
+setupProfilePage();
+if (!document.body.classList.contains("login-page")) setupAuthNav();

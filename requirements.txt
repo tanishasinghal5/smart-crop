@@ -1,5 +1,7 @@
 flask
 flask-cors
+google-auth
+requests
 joblib
 numpy
 pandas
