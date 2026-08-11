@@ -2039,6 +2039,45 @@ function setupPlanner() {
   const form = document.querySelector("#fieldForm");
   if (!form) return;
   const manual = document.querySelector(".manual-readings");
+  const voiceInputBtn = document.querySelector("#voiceInputBtn");
+  if (voiceInputBtn) {
+    voiceInputBtn.addEventListener("click", () => {
+      const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!Recognition) {
+        alert("Speech recognition is not supported in this browser.");
+        return;
+      }
+      const recognition = new Recognition();
+      const languageCode = localStorage.getItem("terraLanguage") || "en";
+      const speechLocales = { en: "en-IN", hi: "hi-IN", mr: "mr-IN", te: "te-IN" };
+      recognition.lang = speechLocales[languageCode] || "en-IN";
+      recognition.interimResults = false;
+      
+      voiceInputBtn.innerHTML = "🎤 Listening...";
+      
+      recognition.onresult = (event) => {
+        voiceInputBtn.innerHTML = "🎤 Speak values";
+        const transcript = event.results[0][0].transcript.toLowerCase();
+        const numbers = transcript.match(/\d+(\.\d+)?/g);
+        
+        if (numbers && numbers.length >= 4) {
+          document.querySelector("#inputNitrogen").value = numbers[0];
+          document.querySelector("#inputPhosphorus").value = numbers[1];
+          document.querySelector("#inputPotassium").value = numbers[2];
+          document.querySelector("#inputPh").value = numbers[3];
+        } else {
+          alert("Could not clearly extract 4 numbers (N, P, K, pH). Please try again.");
+        }
+      };
+      
+      recognition.onerror = () => {
+        voiceInputBtn.innerHTML = "🎤 Speak values";
+        alert("Could not hear that. Please try again.");
+      };
+      
+      recognition.start();
+    });
+  }
   document.querySelectorAll(".source-card").forEach((card) =>
     card.addEventListener("click", () => {
       document
@@ -2587,6 +2626,26 @@ function setupAssistant(crop, field) {
     const message = document.createElement("div");
     message.className = className;
     message.textContent = text;
+    if (className === "mita-message") {
+      const readBtn = document.createElement("button");
+      readBtn.className = "read-aloud-btn";
+      readBtn.innerHTML = "🔊";
+      readBtn.title = "Read aloud";
+      readBtn.style.marginLeft = "8px";
+      readBtn.style.background = "none";
+      readBtn.style.border = "none";
+      readBtn.style.cursor = "pointer";
+      readBtn.style.fontSize = "1.2rem";
+      readBtn.onclick = () => {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        const speechLocales = { en: "en-IN", hi: "hi-IN", mr: "mr-IN", te: "te-IN" };
+        const languageCode = localStorage.getItem("terraLanguage") || "en";
+        utterance.lang = speechLocales[languageCode] || "en-IN";
+        window.speechSynthesis.speak(utterance);
+      };
+      message.appendChild(readBtn);
+    }
     history.appendChild(message);
     history.scrollTop = history.scrollHeight;
     return message;
@@ -2708,6 +2767,26 @@ function setupAssistant(crop, field) {
     const message = document.createElement("div");
     message.className = className;
     message.textContent = text;
+    if (className === "mita-message") {
+      const readBtn = document.createElement("button");
+      readBtn.className = "read-aloud-btn";
+      readBtn.innerHTML = "🔊";
+      readBtn.title = "Read aloud";
+      readBtn.style.marginLeft = "8px";
+      readBtn.style.background = "none";
+      readBtn.style.border = "none";
+      readBtn.style.cursor = "pointer";
+      readBtn.style.fontSize = "1.2rem";
+      readBtn.onclick = () => {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        const speechLocales = { en: "en-IN", hi: "hi-IN", mr: "mr-IN", te: "te-IN" };
+        const languageCode = localStorage.getItem("terraLanguage") || "en";
+        utterance.lang = speechLocales[languageCode] || "en-IN";
+        window.speechSynthesis.speak(utterance);
+      };
+      message.appendChild(readBtn);
+    }
     history.appendChild(message);
     history.scrollTop = history.scrollHeight;
     return message;
