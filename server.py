@@ -2,11 +2,16 @@
 
 Serves the static frontend and APIs:
   POST /api/recommend    — ML crop recommendation from bundle.pkl
+  POST /api/disease      — leaf disease detection from crop_disease_mobilenetv2.keras
   POST /api/chat         — Mita farm advisor (needs OPENAI_API_KEY + OPENAI_MODEL)
   /api/auth/*            — register/login with phone+username+PIN, Google Sign-In
 
-Run:  python3 server.py   (then open http://localhost:8000)
+Run:  py -3.13 server.py   (then open http://localhost:8000)
+      Disease detection needs tensorflow + pillow, which have no Python 3.14
+      wheels yet — run the server with Python 3.13.
 """
+import io
+import threading
 import json
 import os
 import re
@@ -55,6 +60,54 @@ with warnings.catch_warnings():
     warnings.simplefilter('ignore')
     _bundle = joblib.load(os.path.join(BASE_DIR, 'bundle.pkl'))
 _model = _bundle['model']
+
+# PlantVillage class order as seen at training time (sorted dataset folder
+# names, which is how keras image_dataset_from_directory assigns indices).
+# If the model was trained on a differently ordered dataset, edit this list.
+DISEASE_LABELS = [
+    'Apple___Apple_scab', 'Apple___Black_rot', 'Apple___Cedar_apple_rust',
+    'Apple___healthy', 'Blueberry___healthy',
+    'Cherry_(including_sour)___Powdery_mildew', 'Cherry_(including_sour)___healthy',
+    'Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot', 'Corn_(maize)___Common_rust_',
+    'Corn_(maize)___Northern_Leaf_Blight', 'Corn_(maize)___healthy',
+    'Grape___Black_rot', 'Grape___Esca_(Black_Measles)',
+    'Grape___Leaf_blight_(Isariopsis_Leaf_Spot)', 'Grape___healthy',
+    'Orange___Haunglongbing_(Citrus_greening)', 'Peach___Bacterial_spot',
+    'Peach___healthy', 'Pepper,_bell___Bacterial_spot', 'Pepper,_bell___healthy',
+    'Potato___Early_blight', 'Potato___Late_blight', 'Potato___healthy',
+    'Raspberry___healthy', 'Soybean___healthy', 'Squash___Powdery_mildew',
+    'Strawberry___Leaf_scorch', 'Strawberry___healthy', 'Tomato___Bacterial_spot',
+    'Tomato___Early_blight', 'Tomato___Late_blight', 'Tomato___Leaf_Mold',
+    'Tomato___Septoria_leaf_spot', 'Tomato___Spider_mites Two-spotted_spider_mite',
+    'Tomato___Target_Spot', 'Tomato___Tomato_Yellow_Leaf_Curl_Virus',
+    'Tomato___Tomato_mosaic_virus', 'Tomato___healthy',
+]
+
+DISEASE_MODEL_PATH = os.path.join(BASE_DIR, 'crop_disease_mobilenetv2.keras')
+_disease_model = None
+_disease_model_error = None
+_disease_lock = threading.Lock()
+
+
+def _get_disease_model():
+    """Lazy-load the keras model so server startup stays fast and the rest of
+    the app works even when tensorflow is not installed."""
+    global _disease_model, _disease_model_error
+    with _disease_lock:
+        if _disease_model is None and _disease_model_error is None:
+            try:
+                import keras
+                _disease_model = keras.saving.load_model(DISEASE_MODEL_PATH, compile=False)
+            except Exception as exc:  # noqa: BLE001 — surface any load failure to the API
+                _disease_model_error = f'{type(exc).__name__}: {exc}'
+        return _disease_model
+
+
+def _pretty_disease(label):
+    crop, _, condition = label.partition('___')
+    crop = re.sub(r'\s+', ' ', crop.replace('_', ' ')).strip()
+    condition = re.sub(r'\s+', ' ', condition.replace('_', ' ')).strip() or 'unknown'
+    return crop, condition
 
 app = Flask(__name__, static_folder=BASE_DIR, static_url_path='')
 if CORS:
@@ -310,6 +363,43 @@ def recommend():
         for i in order
     ]
     return jsonify(recommendations=recommendations, model='bundle.pkl')
+
+
+@app.post('/api/disease')
+def disease():
+    photo = request.files.get('photo')
+    if photo is None or not photo.filename:
+        return jsonify(error='Attach a leaf photo as the "photo" form field.'), 400
+
+    model = _get_disease_model()
+    if model is None:
+        return jsonify(error='Disease detection is not available on this server: '
+                             + (_disease_model_error or 'model failed to load'),
+                       code='model_unavailable'), 503
+
+    try:
+        from PIL import Image
+        image = Image.open(io.BytesIO(photo.read()))
+        image = image.convert('RGB').resize((224, 224), Image.BILINEAR)
+    except Exception:
+        return jsonify(error='Could not read that image. Upload a JPG or PNG photo.'), 400
+
+    # Rescaling lives inside the saved model, so raw 0-255 pixels go in as-is.
+    batch = np.asarray(image, dtype=np.float32)[np.newaxis, ...]
+    probabilities = model.predict(batch, verbose=0)[0]
+    order = np.argsort(probabilities)[::-1][:3]
+    predictions = []
+    for i in order:
+        label = DISEASE_LABELS[i] if i < len(DISEASE_LABELS) else f'class_{i}'
+        crop, condition = _pretty_disease(label)
+        predictions.append({
+            'label': label,
+            'crop': crop,
+            'condition': condition,
+            'healthy': condition.lower() == 'healthy',
+            'probability': round(float(probabilities[i]), 4),
+        })
+    return jsonify(predictions=predictions, model='crop_disease_mobilenetv2.keras')
 
 
 @app.post('/api/chat')

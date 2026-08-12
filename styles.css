@@ -41,3 +41,28 @@
 .history-entry b{font:500 13px "DM Mono";color:var(--ink)}
 .history-entry span{font:400 12px "DM Mono";color:var(--muted)}
 .profile-empty{font:400 13px "DM Sans";color:var(--muted)}
+
+/* ===== Disease check page ===== */
+.leaf-drop{display:flex;margin-top:22px;position:relative}
+.leaf-preview{display:none;margin-top:16px}
+.leaf-preview.visible{display:block}
+.leaf-preview img{display:block;max-width:100%;max-height:320px;border:1px solid var(--line)}
+.leaf-remove{display:inline-flex;align-items:center;gap:6px;margin-top:10px;border:1px solid #c09a8e;background:none;color:#a03427;padding:9px 11px;font:500 9px "DM Mono",monospace;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}
+.dark .leaf-remove{color:#e0a183;border-color:#8a5f50}
+.disease-result{display:none;margin:18px 0 4px;padding:16px 18px;background:var(--sage);color:var(--ink);font-size:13px;line-height:1.6}
+.disease-result.visible{display:block}
+.disease-top{display:flex;justify-content:space-between;align-items:baseline;gap:14px}
+.disease-top b{font:500 20px "Fraunces",serif;letter-spacing:-.02em;color:#7a3b2a}
+.disease-top.healthy b{color:#2f5c35}
+.disease-top span{font:500 13px "DM Mono",monospace;color:var(--muted)}
+.disease-meter{height:8px;margin:10px 0 4px;background:rgba(255,255,255,.55);overflow:hidden}
+.disease-meter b{display:block;height:100%;background:#a3572f}
+.disease-top.healthy+.disease-meter b{background:#709562}
+.disease-alts{margin:10px 0 0;font:500 10px "DM Mono",monospace;color:var(--muted)}
+.disease-advice{margin:10px 0 0;font-size:12px;line-height:1.6}
+.dark .disease-top b{color:#e0a183}
+.dark .disease-top.healthy b{color:#a8cf9a}
+.dark .disease-meter{background:rgba(0,0,0,.3)}
+.disease-actions{display:flex;justify-content:flex-end;margin-top:10px}
+.disease-actions a{text-decoration:none}
+.primary-button:disabled{opacity:.45;cursor:not-allowed}

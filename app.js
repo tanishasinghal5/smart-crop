@@ -457,6 +457,33 @@ const i18n = {
     titlePlanner: "Build a field plan — TerraByte",
     titleDashboard: "Dashboard — TerraByte",
     titleLogin: "Welcome back — TerraByte",
+    titleDisease: "Crop disease check — TerraByte",
+    disease: "Disease check",
+    checkDisease: "Check crop disease",
+    diseaseKicker: "CROP HEALTH",
+    diseaseTitle: "Spot leaf trouble<br><em>early.</em>",
+    diseaseNote: "One clear photo can save a season. Let’s look at that leaf together.",
+    diseaseIntro: "Upload a photo of an affected leaf and we’ll help you work out what’s going on and what to do next.",
+    diseaseNewCheck: "NEW CROP CHECK",
+    diseaseHeading: "Check a crop photo",
+    uploadPhoto: "Upload a photo",
+    leafHint: "A close-up of one affected leaf in good daylight works best.",
+    dropLeaf: "Drop a photo of the affected leaf",
+    leafFormats: "A JPG or PNG straight from your phone camera is fine.",
+    leafPreviewAlt: "Leaf photo preview",
+    diseaseResults: "Results",
+    diseaseResultsHint: "What we find in your photo will appear here.",
+    checkPhoto: "Check this photo",
+    removePhoto: "Remove photo",
+    diseaseAnalyzing: "Checking your photo…",
+    diseaseError: "Could not check the photo. Please make sure the server is running and try again.",
+    diseaseHealthyLabel: "looks healthy",
+    diseaseAlsoPossible: "Also possible:",
+    diseaseHealthyAdvice: "No disease signs found in this photo. Keep an eye on new growth and check again if you spot changes.",
+    diseaseSickAdvice: "This looks like {condition}. Remove badly affected leaves, avoid overhead watering, and confirm treatment with your local agri office before spraying.",
+    diseaseLowConfidence: "Not fully sure about this one — try a closer photo of a single leaf in good daylight.",
+    askMitaAboutIt: "Ask Mita about it →",
+    diseasePrivacy: "Your photo stays on this device for now. Results are guidance, not a replacement for local agricultural advice.",
     plan: "Plan a field",
     dashboard: "Dashboard",
     ask: "Ask Mita",
@@ -816,6 +843,33 @@ const i18n = {
     titlePlanner: "खेत की योजना बनाएं — TerraByte",
     titleDashboard: "डैशबोर्ड — TerraByte",
     titleLogin: "वापसी पर स्वागत है — TerraByte",
+    titleDisease: "फसल रोग जांच — TerraByte",
+    disease: "रोग जांच",
+    checkDisease: "फसल रोग जांचें",
+    diseaseKicker: "फसल स्वास्थ्य",
+    diseaseTitle: "पत्तों की परेशानी<br><em>जल्दी पकड़ें।</em>",
+    diseaseNote: "एक साफ फोटो पूरा मौसम बचा सकती है। आइए उस पत्ते को साथ मिलकर देखें।",
+    diseaseIntro: "प्रभावित पत्ते की फोटो अपलोड करें — हम समझने में मदद करेंगे कि क्या हो रहा है और आगे क्या करना है।",
+    diseaseNewCheck: "नई फसल जांच",
+    diseaseHeading: "फसल की फोटो जांचें",
+    uploadPhoto: "फोटो अपलोड करें",
+    leafHint: "अच्छी धूप में एक प्रभावित पत्ते की पास से ली गई फोटो सबसे अच्छी रहती है।",
+    dropLeaf: "प्रभावित पत्ते की फोटो यहां डालें",
+    leafFormats: "फोन कैमरे से ली गई JPG या PNG फोटो चलेगी।",
+    leafPreviewAlt: "पत्ते की फोटो का पूर्वावलोकन",
+    diseaseResults: "परिणाम",
+    diseaseResultsHint: "आपकी फोटो में जो मिलेगा, वह यहां दिखेगा।",
+    checkPhoto: "यह फोटो जांचें",
+    removePhoto: "फोटो हटाएं",
+    diseaseAnalyzing: "आपकी फोटो जांची जा रही है…",
+    diseaseError: "फोटो जांच नहीं हो सकी। कृपया देखें कि सर्वर चल रहा है और फिर से कोशिश करें।",
+    diseaseHealthyLabel: "स्वस्थ दिख रहा है",
+    diseaseAlsoPossible: "यह भी संभव:",
+    diseaseHealthyAdvice: "इस फोटो में रोग के लक्षण नहीं मिले। नई पत्तियों पर नज़र रखें और बदलाव दिखे तो फिर से जांचें।",
+    diseaseSickAdvice: "यह {condition} जैसा दिखता है। ज़्यादा प्रभावित पत्ते हटाएं, ऊपर से पानी देने से बचें, और छिड़काव से पहले स्थानीय कृषि कार्यालय से उपचार की पुष्टि करें।",
+    diseaseLowConfidence: "इस पर पूरा भरोसा नहीं है — अच्छी रोशनी में एक पत्ते की पास से फोटो लेकर फिर कोशिश करें।",
+    askMitaAboutIt: "मीता से इस बारे में पूछें →",
+    diseasePrivacy: "आपकी फोटो अभी इसी डिवाइस पर रहती है। परिणाम केवल मार्गदर्शन हैं, स्थानीय कृषि सलाह का विकल्प नहीं।",
     plan: "खेत की योजना",
     dashboard: "डैशबोर्ड",
     ask: "मीता से पूछें",
@@ -1059,6 +1113,33 @@ const i18n = {
     titlePlanner: "शेत योजना तयार करा — TerraByte",
     titleDashboard: "डॅशबोर्ड — TerraByte",
     titleLogin: "पुन्हा स्वागत — TerraByte",
+    titleDisease: "पीक रोग तपासणी — TerraByte",
+    disease: "रोग तपासणी",
+    checkDisease: "पीक रोग तपासा",
+    diseaseKicker: "पीक आरोग्य",
+    diseaseTitle: "पानांवरील समस्या<br><em>लवकर ओळखा.</em>",
+    diseaseNote: "एक स्पष्ट फोटो संपूर्ण हंगाम वाचवू शकतो. चला ते पान एकत्र पाहूया.",
+    diseaseIntro: "प्रभावित पानाचा फोटो अपलोड करा — काय होत आहे आणि पुढे काय करावे हे समजण्यात आम्ही मदत करू.",
+    diseaseNewCheck: "नवीन पीक तपासणी",
+    diseaseHeading: "पिकाचा फोटो तपासा",
+    uploadPhoto: "फोटो अपलोड करा",
+    leafHint: "चांगल्या उजेडात एका प्रभावित पानाचा जवळून घेतलेला फोटो सर्वोत्तम.",
+    dropLeaf: "प्रभावित पानाचा फोटो येथे टाका",
+    leafFormats: "फोन कॅमेऱ्याने घेतलेला JPG किंवा PNG फोटो चालेल.",
+    leafPreviewAlt: "पानाच्या फोटोचे पूर्वावलोकन",
+    diseaseResults: "निकाल",
+    diseaseResultsHint: "तुमच्या फोटोत जे सापडेल ते येथे दिसेल.",
+    checkPhoto: "हा फोटो तपासा",
+    removePhoto: "फोटो काढा",
+    diseaseAnalyzing: "तुमचा फोटो तपासला जात आहे…",
+    diseaseError: "फोटो तपासता आला नाही. कृपया सर्व्हर सुरू आहे का ते पाहा आणि पुन्हा प्रयत्न करा.",
+    diseaseHealthyLabel: "निरोगी दिसते",
+    diseaseAlsoPossible: "हेही शक्य:",
+    diseaseHealthyAdvice: "या फोटोत रोगाची लक्षणे आढळली नाहीत. नव्या वाढीवर लक्ष ठेवा आणि बदल दिसल्यास पुन्हा तपासा.",
+    diseaseSickAdvice: "हे {condition} सारखे दिसते. जास्त प्रभावित पाने काढा, वरून पाणी देणे टाळा आणि फवारणीपूर्वी स्थानिक कृषी कार्यालयाकडून उपचाराची खात्री करा.",
+    diseaseLowConfidence: "याबद्दल पूर्ण खात्री नाही — चांगल्या उजेडात एका पानाचा जवळून फोटो घेऊन पुन्हा प्रयत्न करा.",
+    askMitaAboutIt: "मिताला याबद्दल विचारा →",
+    diseasePrivacy: "तुमचा फोटो सध्या याच डिव्हाइसवर राहतो. निकाल फक्त मार्गदर्शन आहेत, स्थानिक कृषी सल्ल्याचा पर्याय नाहीत.",
     plan: "शेत योजना",
     dashboard: "डॅशबोर्ड",
     ask: "मिताला विचारा",
@@ -1251,6 +1332,33 @@ const i18n = {
     titlePlanner: "పొలం ప్లాన్ తయారు చేయండి — TerraByte",
     titleDashboard: "డ్యాష్‌బోర్డ్ — TerraByte",
     titleLogin: "మళ్లీ స్వాగతం — TerraByte",
+    titleDisease: "పంట వ్యాధి తనిఖీ — TerraByte",
+    disease: "వ్యాధి తనిఖీ",
+    checkDisease: "పంట వ్యాధిని తనిఖీ చేయండి",
+    diseaseKicker: "పంట ఆరోగ్యం",
+    diseaseTitle: "ఆకు సమస్యను<br><em>ముందుగానే గుర్తించండి.</em>",
+    diseaseNote: "ఒక స్పష్టమైన ఫోటో సీజన్ మొత్తాన్ని కాపాడగలదు. ఆ ఆకును కలిసి చూద్దాం.",
+    diseaseIntro: "ప్రభావిత ఆకు ఫోటోను అప్‌లోడ్ చేయండి — ఏమి జరుగుతుందో, తర్వాత ఏమి చేయాలో అర్థం చేసుకోవడంలో సహాయం చేస్తాం.",
+    diseaseNewCheck: "కొత్త పంట తనిఖీ",
+    diseaseHeading: "పంట ఫోటోను తనిఖీ చేయండి",
+    uploadPhoto: "ఫోటో అప్‌లోడ్ చేయండి",
+    leafHint: "మంచి వెలుతురులో ఒక ప్రభావిత ఆకును దగ్గరగా తీసిన ఫోటో ఉత్తమం.",
+    dropLeaf: "ప్రభావిత ఆకు ఫోటోను ఇక్కడ వేయండి",
+    leafFormats: "ఫోన్ కెమెరాతో తీసిన JPG లేదా PNG ఫోటో సరిపోతుంది.",
+    leafPreviewAlt: "ఆకు ఫోటో ప్రివ్యూ",
+    diseaseResults: "ఫలితాలు",
+    diseaseResultsHint: "మీ ఫోటోలో కనిపించినది ఇక్కడ చూపిస్తాం.",
+    checkPhoto: "ఈ ఫోటోను తనిఖీ చేయండి",
+    removePhoto: "ఫోటోను తీసివేయండి",
+    diseaseAnalyzing: "మీ ఫోటోను తనిఖీ చేస్తున్నాం…",
+    diseaseError: "ఫోటోను తనిఖీ చేయలేకపోయాం. సర్వర్ నడుస్తుందో చూసి మళ్లీ ప్రయత్నించండి.",
+    diseaseHealthyLabel: "ఆరోగ్యంగా ఉంది",
+    diseaseAlsoPossible: "ఇవి కూడా కావచ్చు:",
+    diseaseHealthyAdvice: "ఈ ఫోటోలో వ్యాధి లక్షణాలు కనిపించలేదు. కొత్త పెరుగుదలపై దృష్టి ఉంచండి, మార్పులు కనిపిస్తే మళ్లీ తనిఖీ చేయండి.",
+    diseaseSickAdvice: "ఇది {condition} లా కనిపిస్తుంది. ఎక్కువగా దెబ్బతిన్న ఆకులను తీసివేయండి, పైనుంచి నీళ్లు పోయడం తగ్గించండి, పిచికారీకి ముందు స్థానిక వ్యవసాయ కార్యాలయంతో చికిత్సను నిర్ధారించుకోండి.",
+    diseaseLowConfidence: "దీనిపై పూర్తి నమ్మకం లేదు — మంచి వెలుతురులో ఒక ఆకును దగ్గరగా తీసి మళ్లీ ప్రయత్నించండి.",
+    askMitaAboutIt: "దీని గురించి మీతాను అడగండి →",
+    diseasePrivacy: "మీ ఫోటో ప్రస్తుతానికి ఈ పరికరంలోనే ఉంటుంది. ఫలితాలు మార్గదర్శకం మాత్రమే, స్థానిక వ్యవసాయ సలహాకు ప్రత్యామ్నాయం కాదు.",
     plan: "పొలం ప్లాన్",
     dashboard: "డ్యాష్‌బోర్డ్",
     ask: "మీతాను అడగండి",
@@ -3716,9 +3824,106 @@ function setupAuthNav() {
       }
     });
 }
+function setupDiseasePage() {
+  const input = document.querySelector("#leafPhoto");
+  if (!input) return;
+  const previewBox = document.querySelector("#leafPreview");
+  const previewImage = document.querySelector("#leafImage");
+  const checkButton = document.querySelector("#checkLeafBtn");
+  const resultBox = document.querySelector("#diseaseResult");
+  const showMessage = (text) => {
+    resultBox.textContent = text;
+    resultBox.classList.add("visible");
+  };
+  input.addEventListener("change", () => {
+    const file = input.files?.[0];
+    if (!file) return;
+    if (previewImage.src) URL.revokeObjectURL(previewImage.src);
+    previewImage.src = URL.createObjectURL(file);
+    previewBox.classList.add("visible");
+    checkButton.disabled = false;
+    resultBox.classList.remove("visible");
+    resultBox.textContent = "";
+  });
+  document.querySelector("#removeLeafBtn").addEventListener("click", () => {
+    input.value = "";
+    if (previewImage.src) URL.revokeObjectURL(previewImage.src);
+    previewImage.removeAttribute("src");
+    previewBox.classList.remove("visible");
+    checkButton.disabled = true;
+    resultBox.classList.remove("visible");
+    resultBox.textContent = "";
+  });
+  checkButton.addEventListener("click", async () => {
+    const file = input.files?.[0];
+    if (!file) return;
+    checkButton.disabled = true;
+    showMessage(t("diseaseAnalyzing"));
+    try {
+      const body = new FormData();
+      body.append("photo", file);
+      const response = await fetch("/api/disease", { method: "POST", body });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.predictions?.length)
+        throw new Error(data.error || "request failed");
+      renderDiseaseResult(resultBox, data.predictions);
+      resultBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    } catch {
+      showMessage(t("diseaseError"));
+    } finally {
+      checkButton.disabled = false;
+    }
+  });
+}
+function renderDiseaseResult(resultBox, predictions) {
+  const diseaseName = (prediction) =>
+    `${prediction.crop} — ${prediction.healthy ? t("diseaseHealthyLabel") : prediction.condition}`;
+  const top = predictions[0];
+  const percent = Math.round(top.probability * 100);
+  resultBox.innerHTML = "";
+
+  const heading = document.createElement("div");
+  heading.className = "disease-top" + (top.healthy ? " healthy" : "");
+  const nameEl = document.createElement("b");
+  nameEl.textContent = diseaseName(top);
+  const percentEl = document.createElement("span");
+  percentEl.textContent = `${percent}%`;
+  heading.append(nameEl, percentEl);
+
+  const meter = document.createElement("div");
+  meter.className = "disease-meter";
+  const fill = document.createElement("b");
+  fill.style.width = `${percent}%`;
+  meter.append(fill);
+  resultBox.append(heading, meter);
+
+  const alternates = predictions.slice(1).filter((p) => p.probability >= 0.05);
+  if (alternates.length) {
+    const alts = document.createElement("p");
+    alts.className = "disease-alts";
+    alts.textContent =
+      `${t("diseaseAlsoPossible")} ` +
+      alternates
+        .map((p) => `${diseaseName(p)} (${Math.round(p.probability * 100)}%)`)
+        .join(", ");
+    resultBox.append(alts);
+  }
+
+  const advice = document.createElement("p");
+  advice.className = "disease-advice";
+  advice.textContent =
+    top.probability < 0.5
+      ? t("diseaseLowConfidence")
+      : top.healthy
+        ? t("diseaseHealthyAdvice")
+        : t("diseaseSickAdvice", { condition: top.condition });
+  resultBox.append(advice);
+  resultBox.classList.add("visible");
+}
 useLanguage();
 setupPlanner();
 setupDashboard();
 setupLogin();
 setupProfilePage();
+setupDiseasePage();
 if (!document.body.classList.contains("login-page")) setupAuthNav();
