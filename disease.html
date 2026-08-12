@@ -2,7 +2,7 @@
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Crop disease check — TerraByte</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css"></head>
 <body class="app-page disease-page">
-  <header class="topbar"><a href="index.html" class="logo dark-logo"><b>✦</b> terra<span>byte</span></a><nav><a href="planner.html" data-i18n="plan">Plan a field</a><a href="dashboard.html" data-i18n="dashboard">Dashboard</a><a class="active" href="disease.html" data-i18n="disease">Disease check</a><a href="dashboard.html#ask" data-i18n="ask">Ask Mita</a></nav><div class="top-actions"><a class="login-link" href="login.html" data-i18n="myProfile">My profile</a><select class="language-picker" aria-label="Choose language"><option value="en">EN</option><option value="hi">हिंदी</option><option value="mr">मराठी</option><option value="te">తెలుగు</option></select><button class="mode-toggle" aria-label="Switch colour mode">◐</button></div></header>
+  <header class="topbar"><a href="index.html" class="logo dark-logo"><b>✦</b> terra<span>byte</span></a><nav><a href="planner.html" data-i18n="plan">Plan a field</a><a href="dashboard.html" data-i18n="dashboard">Dashboard</a><a class="active" href="disease.html" data-i18n="disease">Disease check</a></nav><div class="top-actions"><a class="login-link" href="login.html" data-i18n="myProfile">My profile</a><select class="language-picker" aria-label="Choose language"><option value="en">EN</option><option value="hi">हिंदी</option><option value="mr">मराठी</option><option value="te">తెలుగు</option></select><button class="mode-toggle" aria-label="Switch colour mode">◐</button></div></header>
   <main class="planner-page">
     <aside class="planner-aside"><p class="kicker" data-i18n="diseaseKicker">CROP HEALTH</p><h1 data-i18n-html="diseaseTitle">Spot leaf trouble<br><em>early.</em></h1><p class="human-note" data-i18n="diseaseNote">One clear photo can save a season. Let’s look at that leaf together.</p><p data-i18n="diseaseIntro">Upload a photo of an affected leaf and we’ll help you work out what’s going on and what to do next.</p></aside>
     <section class="field-workspace"><div class="page-title"><div><p class="kicker" data-i18n="diseaseNewCheck">NEW CROP CHECK</p><h2 data-i18n="diseaseHeading">Check a crop photo</h2></div></div>
@@ -13,9 +13,9 @@
       <section class="form-section"><div class="section-heading"><span>02</span><div><h3 data-i18n="diseaseResults">Results</h3><p data-i18n="diseaseResultsHint">What we find in your photo will appear here.</p></div></div>
         <button class="primary-button full-button" id="checkLeafBtn" type="button" disabled><span data-i18n="checkPhoto">Check this photo</span><span>↗</span></button>
         <div class="disease-result" id="diseaseResult" aria-live="polite"></div>
-        <div class="disease-actions"><a class="text-button" href="dashboard.html#ask" data-i18n="askMitaAboutIt">Ask Mita about it →</a></div>
+        <div class="disease-actions"></div>
         <p class="privacy-note" data-i18n="diseasePrivacy">Your photo stays on this device for now. Results are guidance, not a replacement for local agricultural advice.</p>
       </section>
     </section>
-  </main><script src="app.js"></script>
+  </main><script src="app.js"></script><script src="krishi_sahayak/frontend/widget.js"></script>
 </body></html>

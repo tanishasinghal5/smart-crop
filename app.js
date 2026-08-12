@@ -3831,7 +3831,6 @@ function setupAuthNav() {
     .catch(() => {
       if (isAppPage) {
         localStorage.removeItem("terraProfile");
-        location.href = "login.html";
       }
     });
 }
