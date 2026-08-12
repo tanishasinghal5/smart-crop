@@ -75,3 +75,22 @@
 .market-box .mandi-note{font:400 9px "DM Sans";color:#768271;max-width:230px}
 .market-box .mandi-meta{align-items:end;text-align:right;gap:6px}
 .market-box .mandi-asof{font:400 8px "DM Mono";color:#768271;letter-spacing:.04em}
+
+/* ===== Place search (weather intake) ===== */
+.place-search{position:relative;margin:18px 0 0}
+.place-search input{width:100%;box-sizing:border-box;border:1px solid var(--line);background:var(--paper);padding:12px 14px;font:500 14px "DM Sans";color:var(--ink);outline:none}
+.place-search input:focus{border-color:#8ca684}
+.place-status{margin:8px 0 0;font:400 11px "DM Mono";color:var(--muted)}
+.place-status[hidden]{display:none}
+.place-results{list-style:none;margin:8px 0 0;padding:0;border:1px solid var(--line);background:var(--paper);box-shadow:var(--shadow)}
+.place-results[hidden]{display:none}
+.place-results li+li{border-top:1px dashed var(--line)}
+.place-results button{display:block;width:100%;text-align:left;border:0;background:none;padding:11px 14px;cursor:pointer}
+.place-results button:hover,.place-results button:focus-visible{background:var(--sage)}
+.place-results b{display:block;font:500 14px "DM Sans";color:var(--ink)}
+.place-results small{font:400 10px "DM Mono";color:var(--muted)}
+.weather-credit{display:block;margin-top:4px;font:400 8px "DM Mono";color:var(--muted);letter-spacing:.04em}
+.dark .place-search input{background:transparent;color:var(--cream)}
+.dark .place-results{background:#1d3527}
+.dark .place-results button:hover,.dark .place-results button:focus-visible{background:#254333}
+.dark .place-results b{color:var(--cream)}

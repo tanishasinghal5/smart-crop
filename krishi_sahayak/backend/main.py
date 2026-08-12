@@ -17,6 +17,10 @@ from langchain_core.prompts import ChatPromptTemplate
 
 load_dotenv()
 
+# langchain-google-genai reads GOOGLE_API_KEY; our .env uses GEMINI_API_KEY
+if os.environ.get("GEMINI_API_KEY") and not os.environ.get("GOOGLE_API_KEY"):
+    os.environ["GOOGLE_API_KEY"] = os.environ["GEMINI_API_KEY"]
+
 app = FastAPI(title="Krishi Sahayak API")
 
 # CORS setup

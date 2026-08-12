@@ -622,16 +622,30 @@ const i18n = {
     extractedBadge:
       "✓ Extracted soil values! Check & adjust your values above if needed.",
     weatherIntake: "Weather intake",
-    weatherHint: "Use a 15-day local forecast or add your own conditions.",
+    weatherHint:
+      "Search your village or use GPS — we’ll fetch live weather and this season’s rainfall.",
     useLocation: "Use my location",
     weatherAwait: "Waiting for a location",
-    weatherAwaitHint: "We’ll add today plus the next 14 days.",
+    weatherAwaitHint: "We’ll fetch today’s weather plus rainfall for this season.",
     temperatureLabel: "Temperature",
     celsiusToday: "°C today",
     humidityLabel: "Humidity",
     percentToday: "% today",
     rainfallLabel: "Rainfall",
-    rainfallUnit: "mm · 15 days",
+    rainfallUnit: "mm · season",
+    placeSearchPlaceholder: "Search village, town or district",
+    placeSearching: "Searching…",
+    placeNoMatch:
+      "No match found. Try the nearest larger town or your district name.",
+    placeOffline: "Offline — showing major districts only.",
+    fetchingWeather: "Fetching weather…",
+    seasonRainSummary:
+      "Today: {temperature}°C · {humidity}% humidity · {rainfall}mm rain this {season} season",
+    next7Days: "{mm}mm rain expected in the next 7 days",
+    limitedRainHistory: "Limited rainfall records for this season so far",
+    seasonKharif: "Kharif",
+    seasonRabi: "Rabi",
+    seasonZaid: "Zaid",
     seeRecommendations: "See my recommendations",
     privacy:
       "Your readings are saved only in this browser. Recommendations are guidance, not a replacement for local agricultural advice.",
@@ -1079,13 +1093,28 @@ const i18n = {
     browse: "फ़ाइल चुनें",
     sampleCard: "नमूना Soil Health Card आज़माएं",
     weatherIntake: "मौसम जानकारी",
-    weatherHint: "15-दिन का स्थानीय पूर्वानुमान लें या अपनी स्थितियां जोड़ें।",
+    weatherHint:
+      "गाँव खोजें या GPS उपयोग करें — हम ताज़ा मौसम और इस सीज़न की वर्षा लाएँगे।",
     useLocation: "मेरी लोकेशन उपयोग करें",
     weatherAwait: "लोकेशन का इंतज़ार",
-    weatherAwaitHint: "हम आज और अगले 14 दिन जोड़ेंगे।",
+    weatherAwaitHint: "हम आज का मौसम और इस सीज़न की वर्षा जोड़ेंगे।",
     temperatureLabel: "तापमान",
     humidityLabel: "नमी",
     rainfallLabel: "वर्षा",
+    rainfallUnit: "मिमी · सीज़न",
+    placeSearchPlaceholder: "गाँव, कस्बा या ज़िला खोजें",
+    placeSearching: "खोज रहे हैं…",
+    placeNoMatch:
+      "कोई मेल नहीं मिला। पास के बड़े शहर या अपने ज़िले का नाम आज़माएँ।",
+    placeOffline: "ऑफ़लाइन — केवल प्रमुख ज़िले दिखा रहे हैं।",
+    fetchingWeather: "मौसम की जानकारी ला रहे हैं…",
+    seasonRainSummary:
+      "आज: {temperature}°C · {humidity}% नमी · इस {season} सीज़न में {rainfall}mm वर्षा",
+    next7Days: "अगले 7 दिनों में {mm}mm वर्षा की संभावना",
+    limitedRainHistory: "इस सीज़न के वर्षा रिकॉर्ड अभी सीमित हैं",
+    seasonKharif: "ख़रीफ़",
+    seasonRabi: "रबी",
+    seasonZaid: "ज़ायद",
     seeRecommendations: "मेरे सुझाव देखें",
     privacy:
       "आपकी रीडिंग केवल इस ब्राउज़र में सेव होती हैं। सुझाव मार्गदर्शन हैं, स्थानीय कृषि सलाह का विकल्प नहीं।",
@@ -1427,12 +1456,27 @@ const i18n = {
     browse: "फाइल निवडा",
     sampleCard: "नमुना Soil Health Card वापरून पाहा",
     weatherIntake: "हवामान माहिती",
-    weatherHint: "15-दिवस स्थानिक अंदाज वापरा किंवा तुमच्या अटी जोडा.",
+    weatherHint:
+      "गाव शोधा किंवा GPS वापरा — आम्ही ताजे हवामान आणि या हंगामातील पाऊस आणू.",
     useLocation: "माझे स्थान वापरा",
     weatherAwait: "स्थानाची प्रतीक्षा",
-    weatherAwaitHint: "आम्ही आज आणि पुढचे 14 दिवस जोडू.",
+    weatherAwaitHint: "आम्ही आजचे हवामान आणि या हंगामातील पाऊस जोडू.",
     temperatureLabel: "तापमान",
     humidityLabel: "आर्द्रता",
+    rainfallUnit: "मिमी · हंगाम",
+    placeSearchPlaceholder: "गाव, शहर किंवा जिल्हा शोधा",
+    placeSearching: "शोधत आहे…",
+    placeNoMatch:
+      "जुळणी सापडली नाही. जवळचे मोठे शहर किंवा जिल्ह्याचे नाव वापरून पाहा.",
+    placeOffline: "ऑफलाइन — फक्त प्रमुख जिल्हे दाखवत आहोत.",
+    fetchingWeather: "हवामान माहिती आणत आहोत…",
+    seasonRainSummary:
+      "आज: {temperature}°C · {humidity}% आर्द्रता · या {season} हंगामात {rainfall}mm पाऊस",
+    next7Days: "पुढील 7 दिवसांत {mm}mm पावसाची शक्यता",
+    limitedRainHistory: "या हंगामाच्या पावसाच्या नोंदी अजून मर्यादित आहेत",
+    seasonKharif: "खरीप",
+    seasonRabi: "रब्बी",
+    seasonZaid: "झायद",
     rainfallLabel: "पाऊस",
     seeRecommendations: "माझ्या शिफारसी पाहा",
     privacy:
@@ -1724,12 +1768,26 @@ const i18n = {
     sampleCard: "నమూనా Soil Health Card ప్రయత్నించండి",
     weatherIntake: "వాతావరణ సమాచారం",
     weatherHint:
-      "15-రోజుల స్థానిక అంచనాను వాడండి లేదా మీ పరిస్థితులు చేర్చండి.",
+      "గ్రామం వెతకండి లేదా GPS వాడండి — తాజా వాతావరణం మరియు ఈ సీజన్ వర్షపాతం తెస్తాం.",
     useLocation: "నా స్థానం వాడండి",
     weatherAwait: "స్థానం కోసం వేచి ఉంది",
-    weatherAwaitHint: "ఈ రోజు మరియు వచ్చే 14 రోజులు జోడిస్తాం.",
+    weatherAwaitHint: "ఈ రోజు వాతావరణం మరియు ఈ సీజన్ వర్షపాతం జోడిస్తాం.",
     temperatureLabel: "ఉష్ణోగ్రత",
     humidityLabel: "ఆర్ద్రత",
+    rainfallUnit: "మి.మీ · సీజన్",
+    placeSearchPlaceholder: "గ్రామం, పట్టణం లేదా జిల్లా వెతకండి",
+    placeSearching: "వెతుకుతోంది…",
+    placeNoMatch:
+      "సరిపోలిక దొరకలేదు. దగ్గరి పెద్ద పట్టణం లేదా మీ జిల్లా పేరు ప్రయత్నించండి.",
+    placeOffline: "ఆఫ్‌లైన్ — ప్రధాన జిల్లాలు మాత్రమే చూపుతున్నాం.",
+    fetchingWeather: "వాతావరణ సమాచారం తెస్తున్నాం…",
+    seasonRainSummary:
+      "నేడు: {temperature}°C · {humidity}% తేమ · ఈ {season} సీజన్‌లో {rainfall}mm వర్షం",
+    next7Days: "రాబోయే 7 రోజుల్లో {mm}mm వర్షం అంచనా",
+    limitedRainHistory: "ఈ సీజన్ వర్ష రికార్డులు ఇంకా పరిమితం",
+    seasonKharif: "ఖరీఫ్",
+    seasonRabi: "రబీ",
+    seasonZaid: "జైద్",
     rainfallLabel: "వర్షపాతం",
     seeRecommendations: "నా సూచనలు చూడండి",
     privacy:
@@ -2723,6 +2781,232 @@ function generateSampleSoilCardDataUrl() {
   return canvas.toDataURL("image/jpeg");
 }
 
+// ===== Place search + seasonal climate (ported from LocationClimate.tsx) =====
+// Keyless APIs: Open-Meteo (geocoding/forecast/archive) + BigDataCloud (reverse).
+const GEO_URL = "https://geocoding-api.open-meteo.com/v1/search";
+const FORECAST_URL = "https://api.open-meteo.com/v1/forecast";
+const ARCHIVE_URL = "https://archive-api.open-meteo.com/v1/archive";
+const REVERSE_URL = "https://api.bigdatacloud.net/data/reverse-geocode-client";
+const CLIMATE_TTL_MS = 3 * 60 * 60 * 1000;
+const GEO_TTL_MS = 30 * 24 * 60 * 60 * 1000;
+
+function tbCacheGet(key, ttl) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    const { t, v } = JSON.parse(raw);
+    if (Date.now() - t > ttl) {
+      localStorage.removeItem(key);
+      return null;
+    }
+    return v;
+  } catch {
+    return null;
+  }
+}
+function tbCacheSet(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify({ t: Date.now(), v: value }));
+  } catch {
+    /* private mode or quota — caching is optional */
+  }
+}
+
+// Small offline set so search still works with no network.
+const OFFLINE_PLACES = [
+  ["Nashik", "Maharashtra", 19.997, 73.791],
+  ["Pune", "Maharashtra", 18.52, 73.857],
+  ["Nagpur", "Maharashtra", 21.146, 79.088],
+  ["Kolhapur", "Maharashtra", 16.705, 74.243],
+  ["Aurangabad", "Maharashtra", 19.877, 75.343],
+  ["Ludhiana", "Punjab", 30.901, 75.857],
+  ["Amritsar", "Punjab", 31.634, 74.872],
+  ["Hisar", "Haryana", 29.153, 75.721],
+  ["Lucknow", "Uttar Pradesh", 26.847, 80.947],
+  ["Varanasi", "Uttar Pradesh", 25.318, 82.973],
+  ["Meerut", "Uttar Pradesh", 28.984, 77.706],
+  ["Patna", "Bihar", 25.594, 85.138],
+  ["Bardhaman", "West Bengal", 23.255, 87.856],
+  ["Guntur", "Andhra Pradesh", 16.306, 80.437],
+  ["Warangal", "Telangana", 17.978, 79.594],
+  ["Belagavi", "Karnataka", 15.849, 74.498],
+  ["Mysuru", "Karnataka", 12.295, 76.639],
+  ["Coimbatore", "Tamil Nadu", 11.017, 76.956],
+  ["Thanjavur", "Tamil Nadu", 10.787, 79.138],
+  ["Thrissur", "Kerala", 10.527, 76.214],
+  ["Rajkot", "Gujarat", 22.303, 70.802],
+  ["Junagadh", "Gujarat", 21.522, 70.458],
+  ["Kota", "Rajasthan", 25.213, 75.865],
+  ["Sri Ganganagar", "Rajasthan", 29.924, 73.88],
+  ["Indore", "Madhya Pradesh", 22.72, 75.858],
+  ["Jabalpur", "Madhya Pradesh", 23.181, 79.987],
+  ["Raipur", "Chhattisgarh", 21.251, 81.63],
+  ["Cuttack", "Odisha", 20.463, 85.883],
+  ["Guwahati", "Assam", 26.145, 91.736],
+  ["Shimla", "Himachal Pradesh", 31.104, 77.173],
+  ["Srinagar", "Jammu and Kashmir", 34.084, 74.797],
+  ["Dehradun", "Uttarakhand", 30.317, 78.032],
+].map(([name, state, lat, lng]) => ({
+  name,
+  state,
+  district: "",
+  lat,
+  lng,
+  label: `${name}, ${state}`,
+  source: "offline",
+}));
+
+async function searchPlaces(query, limit = 8, signal) {
+  const q = query.trim();
+  if (q.length < 2) return [];
+  const cacheKey = `terraGeo:${q.toLowerCase()}`;
+  const hit = tbCacheGet(cacheKey, GEO_TTL_MS);
+  if (hit) return hit;
+  const url =
+    `${GEO_URL}?name=${encodeURIComponent(q)}&count=${limit}` +
+    `&language=en&format=json&countryCode=IN`;
+  const response = await fetch(url, { signal });
+  if (!response.ok) throw Error(`Geocoding failed: ${response.status}`);
+  const data = await response.json();
+  if (!data.results || !data.results.length) return [];
+  const places = data.results.map((r) => ({
+    name: r.name,
+    state: r.admin1 || "",
+    district: r.admin2 || "",
+    lat: r.latitude,
+    lng: r.longitude,
+    label: [r.name, r.admin2, r.admin1].filter(Boolean).join(", "),
+    source: "search",
+  }));
+  tbCacheSet(cacheKey, places);
+  return places;
+}
+
+function searchOffline(query, limit = 8) {
+  const needle = query.trim().toLowerCase();
+  if (needle.length < 2) return [];
+  return OFFLINE_PLACES.filter((p) =>
+    p.label.toLowerCase().includes(needle),
+  ).slice(0, limit);
+}
+
+async function reverseGeocode(lat, lng) {
+  const fallback = {
+    name: "Your location",
+    state: "",
+    district: "",
+    lat,
+    lng,
+    label: `${lat.toFixed(3)}, ${lng.toFixed(3)}`,
+    source: "gps",
+  };
+  try {
+    const response = await fetch(
+      `${REVERSE_URL}?latitude=${lat}&longitude=${lng}&localityLanguage=en`,
+    );
+    if (!response.ok) return fallback;
+    const d = await response.json();
+    const admins = d.localityInfo?.administrative || [];
+    const district =
+      admins.find((a) => a.adminLevel === 5)?.name ||
+      admins.find((a) => a.adminLevel === 6)?.name ||
+      d.city ||
+      "";
+    const name = d.locality || d.city || district || "Your location";
+    const state = d.principalSubdivision || "";
+    return {
+      ...fallback,
+      name,
+      state,
+      district,
+      label: [name, state].filter(Boolean).join(", ") || fallback.label,
+    };
+  } catch {
+    // A failed name lookup must never block the reading — coords are enough.
+    return fallback;
+  }
+}
+
+// Monsoon onset moves north over June — a fixed 1 June over-counts kharif
+// rainfall by up to a month in the north. Linear-by-latitude approximation.
+function seasonFor(today, lat) {
+  const month = today.getMonth() + 1;
+  const year = today.getFullYear();
+  const onsetOffsetDays = Math.round(
+    Math.max(0, Math.min(30, (lat - 8) * 1.15)),
+  );
+  if (month >= 6 && month <= 9) {
+    const start = new Date(year, 5, 1);
+    start.setDate(start.getDate() + onsetOffsetDays);
+    return { season: "kharif", start };
+  }
+  if (month >= 10 || month <= 2) {
+    return { season: "rabi", start: new Date(month >= 10 ? year : year - 1, 9, 1) };
+  }
+  return { season: "zaid", start: new Date(year, 2, 1) };
+}
+
+function toISODate(date) {
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+// The model expects CUMULATIVE seasonal rainfall (mm), which only the archive
+// endpoint has. The archive lags ~5 days, so the gap is bridged with the
+// first forecast days. The 15-day daily forecast is kept for the dashboard bars.
+async function fetchClimate(place) {
+  const today = new Date();
+  const { season, start } = seasonFor(today, place.lat);
+  const archiveEnd = new Date(today);
+  archiveEnd.setDate(archiveEnd.getDate() - 5);
+  const useArchive = archiveEnd.getTime() > start.getTime();
+  const base = `latitude=${place.lat.toFixed(4)}&longitude=${place.lng.toFixed(4)}`;
+  const forecastReq = fetch(
+    `${FORECAST_URL}?${base}&current=temperature_2m,relative_humidity_2m` +
+      `&daily=temperature_2m_max,temperature_2m_min,precipitation_sum` +
+      `&forecast_days=15&timezone=auto`,
+  ).then((r) => {
+    if (!r.ok) throw Error(`Forecast failed: ${r.status}`);
+    return r.json();
+  });
+  const archiveReq = useArchive
+    ? fetch(
+        `${ARCHIVE_URL}?${base}&start_date=${toISODate(start)}` +
+          `&end_date=${toISODate(archiveEnd)}&daily=precipitation_sum&timezone=auto`,
+      )
+        .then((r) => (r.ok ? r.json() : null))
+        .catch(() => null)
+    : Promise.resolve(null);
+  const [forecast, archive] = await Promise.all([forecastReq, archiveReq]);
+  const archiveDaily = archive?.daily?.precipitation_sum || [];
+  const seasonRain = archiveDaily.reduce((sum, n) => sum + (n || 0), 0);
+  const forecastDaily = forecast?.daily?.precipitation_sum || [];
+  const bridge = forecastDaily
+    .slice(0, 5)
+    .reduce((sum, n) => sum + (n || 0), 0);
+  const next7 = forecastDaily.slice(0, 7).reduce((sum, n) => sum + (n || 0), 0);
+  return {
+    temperature: +(forecast?.current?.temperature_2m ?? 0).toFixed(1),
+    humidity: Math.round(forecast?.current?.relative_humidity_2m ?? 0),
+    rainfall: Math.round(seasonRain + bridge),
+    season,
+    seasonStart: toISODate(start),
+    daysOfData: archiveDaily.length,
+    forecastRainMm: Math.round(next7),
+    daily: forecast?.daily || null,
+    source: useArchive && archiveDaily.length ? "api" : "partial",
+  };
+}
+
+async function getClimateCached(place) {
+  const key = `terraClimate:${place.lat.toFixed(2)},${place.lng.toFixed(2)}`;
+  const hit = tbCacheGet(key, CLIMATE_TTL_MS);
+  if (hit) return hit;
+  const fresh = await fetchClimate(place);
+  tbCacheSet(key, fresh);
+  return fresh;
+}
+
 function setupPlanner() {
   const form = document.querySelector("#fieldForm");
   if (!form) return;
@@ -2776,63 +3060,145 @@ function setupPlanner() {
     }),
   );
   const weatherButton = document.querySelector("#weatherButton");
+  const weatherLabel = document.querySelector("#weatherLabel");
+  const weatherStatus = document.querySelector("#weatherStatus");
+  const placeInput = document.querySelector("#placeInput");
+  const placeResults = document.querySelector("#placeResults");
+  const placeStatus = document.querySelector("#placeStatus");
+
   weatherButton.addEventListener("click", () => {
     weatherButton.disabled = true;
-    weatherButton.textContent = "Finding field…";
-    if (!navigator.geolocation) return fallbackWeather("Location unavailable");
+    weatherButton.textContent = t("findingField");
+    if (!navigator.geolocation)
+      return fallbackWeather(t("locationUnavailable"));
     navigator.geolocation.getCurrentPosition(
-      loadForecast,
-      () => fallbackWeather("Location permission unavailable"),
-      { timeout: 7000, maximumAge: 300000 },
+      async ({ coords }) => {
+        const place = await reverseGeocode(coords.latitude, coords.longitude);
+        selectPlace(place);
+      },
+      () => fallbackWeather(t("locationPermissionUnavailable")),
+      { timeout: 10000, maximumAge: 300000 },
     );
   });
-  async function loadForecast(position) {
+
+  function setPlaceStatus(text) {
+    placeStatus.hidden = !text;
+    placeStatus.textContent = text || "";
+  }
+  function renderPlaceResults(places) {
+    placeResults.innerHTML = "";
+    placeResults.hidden = !places.length;
+    places.forEach((place) => {
+      const item = document.createElement("li");
+      const button = document.createElement("button");
+      button.type = "button";
+      const title = document.createElement("b");
+      title.textContent = place.name;
+      const meta = document.createElement("small");
+      meta.textContent = [place.district, place.state]
+        .filter(Boolean)
+        .join(" · ");
+      button.append(title, meta);
+      button.addEventListener("click", () => selectPlace(place));
+      item.append(button);
+      placeResults.append(item);
+    });
+  }
+
+  let placeDebounce = null;
+  let placeAbort = null;
+  if (placeInput) {
+    placeInput.addEventListener("input", () => {
+      clearTimeout(placeDebounce);
+      if (placeAbort) placeAbort.abort();
+      const query = placeInput.value.trim();
+      if (query.length < 2) {
+        renderPlaceResults([]);
+        setPlaceStatus("");
+        return;
+      }
+      setPlaceStatus(t("placeSearching"));
+      placeDebounce = setTimeout(async () => {
+        placeAbort = new AbortController();
+        try {
+          const found = await searchPlaces(query, 8, placeAbort.signal);
+          renderPlaceResults(found);
+          setPlaceStatus(found.length ? "" : t("placeNoMatch"));
+        } catch (error) {
+          if (error?.name === "AbortError") return;
+          const local = searchOffline(query);
+          renderPlaceResults(local);
+          setPlaceStatus(local.length ? t("placeOffline") : t("placeNoMatch"));
+        }
+      }, 300);
+    });
+    document.addEventListener("click", (event) => {
+      if (!event.target.closest("#placeSearch")) renderPlaceResults([]);
+    });
+  }
+
+  async function selectPlace(place) {
+    renderPlaceResults([]);
+    setPlaceStatus("");
+    if (placeInput) placeInput.value = "";
+    tbCacheSet("terraPlace", place);
+    weatherButton.disabled = true;
+    weatherLabel.removeAttribute("data-i18n");
+    weatherStatus.removeAttribute("data-i18n");
+    weatherLabel.textContent = place.label;
+    weatherStatus.textContent = t("fetchingWeather");
     try {
-      const { latitude, longitude } = position.coords;
-      const params = new URLSearchParams({
-        latitude: latitude.toFixed(4),
-        longitude: longitude.toFixed(4),
-        current: "temperature_2m,relative_humidity_2m",
-        daily: "temperature_2m_max,temperature_2m_min,precipitation_sum",
-        forecast_days: "15",
-        timezone: "auto",
+      const climate = await getClimateCached(place);
+      const seasonKey = {
+        kharif: "seasonKharif",
+        rabi: "seasonRabi",
+        zaid: "seasonZaid",
+      }[climate.season];
+      let status = t("seasonRainSummary", {
+        temperature: climate.temperature,
+        humidity: climate.humidity,
+        rainfall: climate.rainfall,
+        season: t(seasonKey),
       });
-      const response = await fetch(
-        `https://api.open-meteo.com/v1/forecast?${params}`,
-      );
-      if (!response.ok) throw Error();
-      const data = await response.json();
-      const rainfall = data.daily.precipitation_sum.reduce(
-        (sum, n) => sum + (n || 0),
-        0,
-      );
+      if (climate.forecastRainMm > 0)
+        status += " · " + t("next7Days", { mm: climate.forecastRainMm });
+      if (climate.source === "partial")
+        status += " · " + t("limitedRainHistory");
       fillWeather(
         {
-          temperature: +data.current.temperature_2m.toFixed(1),
-          humidity: Math.round(data.current.relative_humidity_2m),
-          rainfall: +rainfall.toFixed(1),
+          temperature: climate.temperature,
+          humidity: climate.humidity,
+          rainfall: climate.rainfall,
         },
-        data.daily,
-        "Your local 15-day forecast",
+        climate.daily,
+        place.label,
+        status,
       );
     } catch {
-      fallbackWeather("Weather service unavailable");
+      fallbackWeather(t("weatherServiceUnavailable"));
     }
   }
+
   function fallbackWeather(reason) {
-    fillWeather(defaultField, null, `Sample values — ${reason}`);
+    fillWeather(defaultField, null, t("sampleValuesReason", { reason }));
   }
-  function fillWeather(values, forecast, label) {
+  function fillWeather(values, forecast, label, statusText) {
     ["temperature", "humidity", "rainfall"].forEach(
       (key) => (form.elements[key].value = values[key]),
     );
-    document.querySelector("#weatherLabel").textContent = label;
-    document.querySelector("#weatherStatus").textContent =
-      `Today: ${values.temperature}°C · ${values.humidity}% humidity · ${values.rainfall}mm expected rain`;
-    weatherButton.innerHTML = "✓ Forecast added";
+    weatherLabel.removeAttribute("data-i18n");
+    weatherStatus.removeAttribute("data-i18n");
+    weatherLabel.textContent = label;
+    weatherStatus.textContent =
+      statusText || t("weatherStatusSummary", values);
+    weatherButton.innerHTML = t("forecastAdded");
     weatherButton.disabled = false;
     form.dataset.forecast = JSON.stringify(forecast || null);
   }
+
+  // A returning farmer keeps their place — prefill silently from cache.
+  const savedPlace = tbCacheGet("terraPlace", GEO_TTL_MS);
+  if (savedPlace) selectPlace(savedPlace);
 
   const upload = document.querySelector("#healthCard");
   const sampleBtn = document.querySelector("#trySampleCard");
