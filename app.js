@@ -457,6 +457,33 @@ const i18n = {
     titlePlanner: "Build a field plan — TerraByte",
     titleDashboard: "Dashboard — TerraByte",
     titleLogin: "Welcome back — TerraByte",
+    titleDisease: "Crop disease check — TerraByte",
+    disease: "Disease check",
+    checkDisease: "Check crop disease",
+    diseaseKicker: "CROP HEALTH",
+    diseaseTitle: "Spot leaf trouble<br><em>early.</em>",
+    diseaseNote: "One clear photo can save a season. Let’s look at that leaf together.",
+    diseaseIntro: "Upload a photo of an affected leaf and we’ll help you work out what’s going on and what to do next.",
+    diseaseNewCheck: "NEW CROP CHECK",
+    diseaseHeading: "Check a crop photo",
+    uploadPhoto: "Upload a photo",
+    leafHint: "A close-up of one affected leaf in good daylight works best.",
+    dropLeaf: "Drop a photo of the affected leaf",
+    leafFormats: "A JPG or PNG straight from your phone camera is fine.",
+    leafPreviewAlt: "Leaf photo preview",
+    diseaseResults: "Results",
+    diseaseResultsHint: "What we find in your photo will appear here.",
+    checkPhoto: "Check this photo",
+    removePhoto: "Remove photo",
+    diseaseAnalyzing: "Checking your photo…",
+    diseaseError: "Could not check the photo. Please make sure the server is running and try again.",
+    diseaseHealthyLabel: "looks healthy",
+    diseaseAlsoPossible: "Also possible:",
+    diseaseHealthyAdvice: "No disease signs found in this photo. Keep an eye on new growth and check again if you spot changes.",
+    diseaseSickAdvice: "This looks like {condition}. Remove badly affected leaves, avoid overhead watering, and confirm treatment with your local agri office before spraying.",
+    diseaseLowConfidence: "Not fully sure about this one — try a closer photo of a single leaf in good daylight.",
+    askMitaAboutIt: "Ask Mita about it →",
+    diseasePrivacy: "Your photo stays on this device for now. Results are guidance, not a replacement for local agricultural advice.",
     plan: "Plan a field",
     dashboard: "Dashboard",
     ask: "Ask Mita",
@@ -588,7 +615,56 @@ const i18n = {
     loginTitle: "Welcome<br><em>to your field.</em>",
     loginPhoto: "Every season<br>has a story.",
     loginCopy:
-      "Enter your name and phone number. We’ll use them only in this browser to bring back your saved field plans.",
+      "Log in with your phone number and PIN, or create a free account to save your field plans.",
+    loginTab: "Log in",
+    registerTab: "Create account",
+    pin: "PIN",
+    choosePin: "Choose a PIN",
+    confirmPin: "Confirm PIN",
+    newPin: "New PIN",
+    registerButton: "Create my account",
+    forgotPin: "Forgot PIN?",
+    orDivider: "or",
+    skipForNow: "Skip for now",
+    phoneStepTitle: "Add your phone number so your field plans are saved to you.",
+    phoneStepSave: "Save phone number",
+    pinStepTitle: "Set a new PIN for logging in with your phone number.",
+    pinStepSave: "Save new PIN",
+    signedInAs: "Signed in as",
+    changePin: "Change PIN",
+    addPhone: "Add phone number",
+    logout: "Log out",
+    linkGoogleHint: "Link your Google account below to reset a forgotten PIN later.",
+    err_forgot_pin_hint: "Sign in with Google below to reset your PIN.",
+    err_bad_credentials: "Phone number, username or PIN is incorrect.",
+    err_duplicate_phone: "This phone number is already registered. Try logging in.",
+    err_pin_mismatch: "PINs do not match.",
+    err_invalid_phone: "Enter a valid 10-digit phone number.",
+    err_invalid_pin: "PIN must be exactly 4 digits.",
+    err_invalid_username: "Enter your name.",
+    err_google_failed: "Google sign-in failed. Please try again.",
+    err_google_account: "This account signs in with Google.",
+    err_google_unconfigured: "Google sign-in is not available.",
+    err_google_taken: "This Google account is already linked to another profile.",
+    err_not_signed_in: "Please log in again.",
+    err_network: "Could not reach the server. Please try again.",
+    accountDetails: "Account details",
+    emailLabel: "Email",
+    memberSince: "Member since",
+    signInMethods: "Sign-in methods",
+    notSet: "Not set",
+    editProfile: "Edit profile",
+    saveChanges: "Save changes",
+    cancelEdit: "Cancel",
+    security: "Security",
+    setPin: "Set PIN",
+    pinSaved: "PIN saved.",
+    profileSaved: "Profile updated.",
+    deleteProfile: "Delete profile",
+    deleteConfirmMsg:
+      "Delete your profile permanently? Saved plans on this device will also be removed.",
+    savedPlans: "Saved field plans",
+    addPhoneForHistory: "Add a phone number to save your field plans.",
     yourName: "Your name",
     namePlaceholder: "e.g. Meera Patel",
     phoneNumber: "Phone number",
@@ -767,6 +843,33 @@ const i18n = {
     titlePlanner: "खेत की योजना बनाएं — TerraByte",
     titleDashboard: "डैशबोर्ड — TerraByte",
     titleLogin: "वापसी पर स्वागत है — TerraByte",
+    titleDisease: "फसल रोग जांच — TerraByte",
+    disease: "रोग जांच",
+    checkDisease: "फसल रोग जांचें",
+    diseaseKicker: "फसल स्वास्थ्य",
+    diseaseTitle: "पत्तों की परेशानी<br><em>जल्दी पकड़ें।</em>",
+    diseaseNote: "एक साफ फोटो पूरा मौसम बचा सकती है। आइए उस पत्ते को साथ मिलकर देखें।",
+    diseaseIntro: "प्रभावित पत्ते की फोटो अपलोड करें — हम समझने में मदद करेंगे कि क्या हो रहा है और आगे क्या करना है।",
+    diseaseNewCheck: "नई फसल जांच",
+    diseaseHeading: "फसल की फोटो जांचें",
+    uploadPhoto: "फोटो अपलोड करें",
+    leafHint: "अच्छी धूप में एक प्रभावित पत्ते की पास से ली गई फोटो सबसे अच्छी रहती है।",
+    dropLeaf: "प्रभावित पत्ते की फोटो यहां डालें",
+    leafFormats: "फोन कैमरे से ली गई JPG या PNG फोटो चलेगी।",
+    leafPreviewAlt: "पत्ते की फोटो का पूर्वावलोकन",
+    diseaseResults: "परिणाम",
+    diseaseResultsHint: "आपकी फोटो में जो मिलेगा, वह यहां दिखेगा।",
+    checkPhoto: "यह फोटो जांचें",
+    removePhoto: "फोटो हटाएं",
+    diseaseAnalyzing: "आपकी फोटो जांची जा रही है…",
+    diseaseError: "फोटो जांच नहीं हो सकी। कृपया देखें कि सर्वर चल रहा है और फिर से कोशिश करें।",
+    diseaseHealthyLabel: "स्वस्थ दिख रहा है",
+    diseaseAlsoPossible: "यह भी संभव:",
+    diseaseHealthyAdvice: "इस फोटो में रोग के लक्षण नहीं मिले। नई पत्तियों पर नज़र रखें और बदलाव दिखे तो फिर से जांचें।",
+    diseaseSickAdvice: "यह {condition} जैसा दिखता है। ज़्यादा प्रभावित पत्ते हटाएं, ऊपर से पानी देने से बचें, और छिड़काव से पहले स्थानीय कृषि कार्यालय से उपचार की पुष्टि करें।",
+    diseaseLowConfidence: "इस पर पूरा भरोसा नहीं है — अच्छी रोशनी में एक पत्ते की पास से फोटो लेकर फिर कोशिश करें।",
+    askMitaAboutIt: "मीता से इस बारे में पूछें →",
+    diseasePrivacy: "आपकी फोटो अभी इसी डिवाइस पर रहती है। परिणाम केवल मार्गदर्शन हैं, स्थानीय कृषि सलाह का विकल्प नहीं।",
     plan: "खेत की योजना",
     dashboard: "डैशबोर्ड",
     ask: "मीता से पूछें",
@@ -883,7 +986,56 @@ const i18n = {
     loginTitle: "स्वागत है<br><em>आपके खेत में।</em>",
     loginPhoto: "हर मौसम की<br>एक कहानी होती है।",
     loginCopy:
-      "अपना नाम और फोन नंबर डालें। सेव की गई खेत योजनाएं वापस लाने के लिए हम इन्हें केवल इस ब्राउज़र में उपयोग करेंगे।",
+      "अपने फ़ोन नंबर और पिन से लॉग इन करें, या अपनी खेत योजनाएं सेव करने के लिए मुफ़्त खाता बनाएं।",
+    loginTab: "लॉग इन",
+    registerTab: "खाता बनाएं",
+    pin: "पिन",
+    choosePin: "पिन चुनें",
+    confirmPin: "पिन की पुष्टि करें",
+    newPin: "नया पिन",
+    registerButton: "मेरा खाता बनाएं",
+    forgotPin: "पिन भूल गए?",
+    orDivider: "या",
+    skipForNow: "अभी छोड़ें",
+    phoneStepTitle: "अपना फ़ोन नंबर जोड़ें ताकि आपकी खेत योजनाएं आपसे जुड़ी रहें।",
+    phoneStepSave: "फ़ोन नंबर सेव करें",
+    pinStepTitle: "फ़ोन नंबर से लॉग इन करने के लिए नया पिन सेट करें।",
+    pinStepSave: "नया पिन सेव करें",
+    signedInAs: "साइन इन:",
+    changePin: "पिन बदलें",
+    addPhone: "फ़ोन नंबर जोड़ें",
+    logout: "लॉग आउट",
+    linkGoogleHint: "भूले हुए पिन को बाद में रीसेट करने के लिए नीचे अपना Google खाता जोड़ें।",
+    err_forgot_pin_hint: "पिन रीसेट करने के लिए नीचे Google से साइन इन करें।",
+    err_bad_credentials: "फ़ोन नंबर, नाम या पिन गलत है।",
+    err_duplicate_phone: "यह फ़ोन नंबर पहले से पंजीकृत है। लॉग इन करके देखें।",
+    err_pin_mismatch: "पिन मेल नहीं खाते।",
+    err_invalid_phone: "सही 10 अंकों का फ़ोन नंबर डालें।",
+    err_invalid_pin: "पिन ठीक 4 अंकों का होना चाहिए।",
+    err_invalid_username: "अपना नाम डालें।",
+    err_google_failed: "Google साइन-इन विफल रहा। फिर से प्रयास करें।",
+    err_google_account: "यह खाता Google से साइन इन करता है।",
+    err_google_unconfigured: "Google साइन-इन उपलब्ध नहीं है।",
+    err_google_taken: "यह Google खाता किसी और प्रोफ़ाइल से जुड़ा है।",
+    err_not_signed_in: "कृपया फिर से लॉग इन करें।",
+    err_network: "सर्वर से संपर्क नहीं हो सका। फिर से प्रयास करें।",
+    accountDetails: "खाता विवरण",
+    emailLabel: "ईमेल",
+    memberSince: "सदस्य बने",
+    signInMethods: "साइन-इन तरीके",
+    notSet: "सेट नहीं है",
+    editProfile: "प्रोफ़ाइल संपादित करें",
+    saveChanges: "बदलाव सेव करें",
+    cancelEdit: "रद्द करें",
+    security: "सुरक्षा",
+    setPin: "पिन सेट करें",
+    pinSaved: "पिन सेव हो गया।",
+    profileSaved: "प्रोफ़ाइल अपडेट हो गई।",
+    deleteProfile: "प्रोफ़ाइल हटाएं",
+    deleteConfirmMsg:
+      "प्रोफ़ाइल हमेशा के लिए हटाएं? इस डिवाइस पर सेव योजनाएं भी हट जाएंगी।",
+    savedPlans: "सेव की गई खेत योजनाएं",
+    addPhoneForHistory: "खेत योजनाएं सेव करने के लिए फ़ोन नंबर जोड़ें।",
     yourName: "आपका नाम",
     namePlaceholder: "जैसे मीरा पटेल",
     phoneNumber: "फोन नंबर",
@@ -961,6 +1113,33 @@ const i18n = {
     titlePlanner: "शेत योजना तयार करा — TerraByte",
     titleDashboard: "डॅशबोर्ड — TerraByte",
     titleLogin: "पुन्हा स्वागत — TerraByte",
+    titleDisease: "पीक रोग तपासणी — TerraByte",
+    disease: "रोग तपासणी",
+    checkDisease: "पीक रोग तपासा",
+    diseaseKicker: "पीक आरोग्य",
+    diseaseTitle: "पानांवरील समस्या<br><em>लवकर ओळखा.</em>",
+    diseaseNote: "एक स्पष्ट फोटो संपूर्ण हंगाम वाचवू शकतो. चला ते पान एकत्र पाहूया.",
+    diseaseIntro: "प्रभावित पानाचा फोटो अपलोड करा — काय होत आहे आणि पुढे काय करावे हे समजण्यात आम्ही मदत करू.",
+    diseaseNewCheck: "नवीन पीक तपासणी",
+    diseaseHeading: "पिकाचा फोटो तपासा",
+    uploadPhoto: "फोटो अपलोड करा",
+    leafHint: "चांगल्या उजेडात एका प्रभावित पानाचा जवळून घेतलेला फोटो सर्वोत्तम.",
+    dropLeaf: "प्रभावित पानाचा फोटो येथे टाका",
+    leafFormats: "फोन कॅमेऱ्याने घेतलेला JPG किंवा PNG फोटो चालेल.",
+    leafPreviewAlt: "पानाच्या फोटोचे पूर्वावलोकन",
+    diseaseResults: "निकाल",
+    diseaseResultsHint: "तुमच्या फोटोत जे सापडेल ते येथे दिसेल.",
+    checkPhoto: "हा फोटो तपासा",
+    removePhoto: "फोटो काढा",
+    diseaseAnalyzing: "तुमचा फोटो तपासला जात आहे…",
+    diseaseError: "फोटो तपासता आला नाही. कृपया सर्व्हर सुरू आहे का ते पाहा आणि पुन्हा प्रयत्न करा.",
+    diseaseHealthyLabel: "निरोगी दिसते",
+    diseaseAlsoPossible: "हेही शक्य:",
+    diseaseHealthyAdvice: "या फोटोत रोगाची लक्षणे आढळली नाहीत. नव्या वाढीवर लक्ष ठेवा आणि बदल दिसल्यास पुन्हा तपासा.",
+    diseaseSickAdvice: "हे {condition} सारखे दिसते. जास्त प्रभावित पाने काढा, वरून पाणी देणे टाळा आणि फवारणीपूर्वी स्थानिक कृषी कार्यालयाकडून उपचाराची खात्री करा.",
+    diseaseLowConfidence: "याबद्दल पूर्ण खात्री नाही — चांगल्या उजेडात एका पानाचा जवळून फोटो घेऊन पुन्हा प्रयत्न करा.",
+    askMitaAboutIt: "मिताला याबद्दल विचारा →",
+    diseasePrivacy: "तुमचा फोटो सध्या याच डिव्हाइसवर राहतो. निकाल फक्त मार्गदर्शन आहेत, स्थानिक कृषी सल्ल्याचा पर्याय नाहीत.",
     plan: "शेत योजना",
     dashboard: "डॅशबोर्ड",
     ask: "मिताला विचारा",
@@ -1072,6 +1251,57 @@ const i18n = {
     phoneNumber: "फोन नंबर",
     continueToField: "माझ्या शेताकडे जा",
     historyEnterNumber: "पूर्वी सेव्ह केलेल्या योजना पाहण्यासाठी नंबर द्या.",
+    loginCopy:
+      "तुमच्या फोन नंबर आणि पिनने लॉग इन करा, किंवा शेत योजना सेव्ह करण्यासाठी मोफत खाते तयार करा.",
+    loginTab: "लॉग इन",
+    registerTab: "खाते तयार करा",
+    pin: "पिन",
+    choosePin: "पिन निवडा",
+    confirmPin: "पिनची खात्री करा",
+    newPin: "नवीन पिन",
+    registerButton: "माझे खाते तयार करा",
+    forgotPin: "पिन विसरलात?",
+    orDivider: "किंवा",
+    skipForNow: "सध्या वगळा",
+    phoneStepTitle: "तुमच्या शेत योजना तुमच्याशी जोडल्या जाण्यासाठी फोन नंबर जोडा.",
+    phoneStepSave: "फोन नंबर सेव्ह करा",
+    pinStepTitle: "फोन नंबरने लॉग इन करण्यासाठी नवीन पिन सेट करा.",
+    pinStepSave: "नवीन पिन सेव्ह करा",
+    signedInAs: "साइन इन:",
+    changePin: "पिन बदला",
+    addPhone: "फोन नंबर जोडा",
+    logout: "लॉग आउट",
+    linkGoogleHint: "विसरलेला पिन नंतर रीसेट करण्यासाठी खाली तुमचे Google खाते जोडा.",
+    err_forgot_pin_hint: "पिन रीसेट करण्यासाठी खाली Google ने साइन इन करा.",
+    err_bad_credentials: "फोन नंबर, नाव किंवा पिन चुकीचा आहे.",
+    err_duplicate_phone: "हा फोन नंबर आधीच नोंदणीकृत आहे. लॉग इन करून पहा.",
+    err_pin_mismatch: "पिन जुळत नाहीत.",
+    err_invalid_phone: "योग्य 10 अंकी फोन नंबर द्या.",
+    err_invalid_pin: "पिन नेमका 4 अंकांचा हवा.",
+    err_invalid_username: "तुमचे नाव द्या.",
+    err_google_failed: "Google साइन-इन अयशस्वी झाले. पुन्हा प्रयत्न करा.",
+    err_google_account: "हे खाते Google ने साइन इन करते.",
+    err_google_unconfigured: "Google साइन-इन उपलब्ध नाही.",
+    err_google_taken: "हे Google खाते दुसऱ्या प्रोफाइलशी जोडलेले आहे.",
+    err_not_signed_in: "कृपया पुन्हा लॉग इन करा.",
+    err_network: "सर्व्हरशी संपर्क होऊ शकला नाही. पुन्हा प्रयत्न करा.",
+    accountDetails: "खाते तपशील",
+    emailLabel: "ईमेल",
+    memberSince: "सदस्य झाल्याची तारीख",
+    signInMethods: "साइन-इन पद्धती",
+    notSet: "सेट नाही",
+    editProfile: "प्रोफाइल संपादित करा",
+    saveChanges: "बदल सेव्ह करा",
+    cancelEdit: "रद्द करा",
+    security: "सुरक्षा",
+    setPin: "पिन सेट करा",
+    pinSaved: "पिन सेव्ह झाला.",
+    profileSaved: "प्रोफाइल अपडेट झाले.",
+    deleteProfile: "प्रोफाइल हटवा",
+    deleteConfirmMsg:
+      "प्रोफाइल कायमचे हटवायचे? या डिव्हाइसवरील सेव्ह योजनाही हटतील.",
+    savedPlans: "सेव्ह केलेल्या शेत योजना",
+    addPhoneForHistory: "शेत योजना सेव्ह करण्यासाठी फोन नंबर जोडा.",
     cropCalendar: "पीक कॅलेंडर",
     expectedDuration: "अपेक्षित कालावधी:",
     complete: "पूर्ण",
@@ -1102,6 +1332,33 @@ const i18n = {
     titlePlanner: "పొలం ప్లాన్ తయారు చేయండి — TerraByte",
     titleDashboard: "డ్యాష్‌బోర్డ్ — TerraByte",
     titleLogin: "మళ్లీ స్వాగతం — TerraByte",
+    titleDisease: "పంట వ్యాధి తనిఖీ — TerraByte",
+    disease: "వ్యాధి తనిఖీ",
+    checkDisease: "పంట వ్యాధిని తనిఖీ చేయండి",
+    diseaseKicker: "పంట ఆరోగ్యం",
+    diseaseTitle: "ఆకు సమస్యను<br><em>ముందుగానే గుర్తించండి.</em>",
+    diseaseNote: "ఒక స్పష్టమైన ఫోటో సీజన్ మొత్తాన్ని కాపాడగలదు. ఆ ఆకును కలిసి చూద్దాం.",
+    diseaseIntro: "ప్రభావిత ఆకు ఫోటోను అప్‌లోడ్ చేయండి — ఏమి జరుగుతుందో, తర్వాత ఏమి చేయాలో అర్థం చేసుకోవడంలో సహాయం చేస్తాం.",
+    diseaseNewCheck: "కొత్త పంట తనిఖీ",
+    diseaseHeading: "పంట ఫోటోను తనిఖీ చేయండి",
+    uploadPhoto: "ఫోటో అప్‌లోడ్ చేయండి",
+    leafHint: "మంచి వెలుతురులో ఒక ప్రభావిత ఆకును దగ్గరగా తీసిన ఫోటో ఉత్తమం.",
+    dropLeaf: "ప్రభావిత ఆకు ఫోటోను ఇక్కడ వేయండి",
+    leafFormats: "ఫోన్ కెమెరాతో తీసిన JPG లేదా PNG ఫోటో సరిపోతుంది.",
+    leafPreviewAlt: "ఆకు ఫోటో ప్రివ్యూ",
+    diseaseResults: "ఫలితాలు",
+    diseaseResultsHint: "మీ ఫోటోలో కనిపించినది ఇక్కడ చూపిస్తాం.",
+    checkPhoto: "ఈ ఫోటోను తనిఖీ చేయండి",
+    removePhoto: "ఫోటోను తీసివేయండి",
+    diseaseAnalyzing: "మీ ఫోటోను తనిఖీ చేస్తున్నాం…",
+    diseaseError: "ఫోటోను తనిఖీ చేయలేకపోయాం. సర్వర్ నడుస్తుందో చూసి మళ్లీ ప్రయత్నించండి.",
+    diseaseHealthyLabel: "ఆరోగ్యంగా ఉంది",
+    diseaseAlsoPossible: "ఇవి కూడా కావచ్చు:",
+    diseaseHealthyAdvice: "ఈ ఫోటోలో వ్యాధి లక్షణాలు కనిపించలేదు. కొత్త పెరుగుదలపై దృష్టి ఉంచండి, మార్పులు కనిపిస్తే మళ్లీ తనిఖీ చేయండి.",
+    diseaseSickAdvice: "ఇది {condition} లా కనిపిస్తుంది. ఎక్కువగా దెబ్బతిన్న ఆకులను తీసివేయండి, పైనుంచి నీళ్లు పోయడం తగ్గించండి, పిచికారీకి ముందు స్థానిక వ్యవసాయ కార్యాలయంతో చికిత్సను నిర్ధారించుకోండి.",
+    diseaseLowConfidence: "దీనిపై పూర్తి నమ్మకం లేదు — మంచి వెలుతురులో ఒక ఆకును దగ్గరగా తీసి మళ్లీ ప్రయత్నించండి.",
+    askMitaAboutIt: "దీని గురించి మీతాను అడగండి →",
+    diseasePrivacy: "మీ ఫోటో ప్రస్తుతానికి ఈ పరికరంలోనే ఉంటుంది. ఫలితాలు మార్గదర్శకం మాత్రమే, స్థానిక వ్యవసాయ సలహాకు ప్రత్యామ్నాయం కాదు.",
     plan: "పొలం ప్లాన్",
     dashboard: "డ్యాష్‌బోర్డ్",
     ask: "మీతాను అడగండి",
@@ -1211,6 +1468,57 @@ const i18n = {
     phoneNumber: "ఫోన్ నంబర్",
     continueToField: "నా పొలానికి కొనసాగండి",
     historyEnterNumber: "ముందు సేవ్ చేసిన ప్లాన్‌లు చూడటానికి మీ నంబర్ ఇవ్వండి.",
+    loginCopy:
+      "మీ ఫోన్ నంబర్ మరియు పిన్‌తో లాగ్ ఇన్ అవ్వండి, లేదా పొలం ప్లాన్‌లు సేవ్ చేయడానికి ఉచిత ఖాతా సృష్టించండి.",
+    loginTab: "లాగ్ ఇన్",
+    registerTab: "ఖాతా సృష్టించండి",
+    pin: "పిన్",
+    choosePin: "పిన్ ఎంచుకోండి",
+    confirmPin: "పిన్ నిర్ధారించండి",
+    newPin: "కొత్త పిన్",
+    registerButton: "నా ఖాతా సృష్టించండి",
+    forgotPin: "పిన్ మర్చిపోయారా?",
+    orDivider: "లేదా",
+    skipForNow: "ప్రస్తుతానికి దాటవేయండి",
+    phoneStepTitle: "మీ పొలం ప్లాన్‌లు మీకు సేవ్ అవ్వడానికి ఫోన్ నంబర్ జోడించండి.",
+    phoneStepSave: "ఫోన్ నంబర్ సేవ్ చేయండి",
+    pinStepTitle: "ఫోన్ నంబర్‌తో లాగ్ ఇన్ కావడానికి కొత్త పిన్ సెట్ చేయండి.",
+    pinStepSave: "కొత్త పిన్ సేవ్ చేయండి",
+    signedInAs: "సైన్ ఇన్:",
+    changePin: "పిన్ మార్చండి",
+    addPhone: "ఫోన్ నంబర్ జోడించండి",
+    logout: "లాగ్ అవుట్",
+    linkGoogleHint: "మర్చిపోయిన పిన్‌ను తర్వాత రీసెట్ చేయడానికి కింద మీ Google ఖాతాను లింక్ చేయండి.",
+    err_forgot_pin_hint: "పిన్ రీసెట్ చేయడానికి కింద Googleతో సైన్ ఇన్ అవ్వండి.",
+    err_bad_credentials: "ఫోన్ నంబర్, పేరు లేదా పిన్ తప్పు.",
+    err_duplicate_phone: "ఈ ఫోన్ నంబర్ ఇప్పటికే నమోదైంది. లాగ్ ఇన్ ప్రయత్నించండి.",
+    err_pin_mismatch: "పిన్‌లు సరిపోలలేదు.",
+    err_invalid_phone: "సరైన 10 అంకెల ఫోన్ నంబర్ ఇవ్వండి.",
+    err_invalid_pin: "పిన్ సరిగ్గా 4 అంకెలు ఉండాలి.",
+    err_invalid_username: "మీ పేరు ఇవ్వండి.",
+    err_google_failed: "Google సైన్-ఇన్ విఫలమైంది. మళ్లీ ప్రయత్నించండి.",
+    err_google_account: "ఈ ఖాతా Googleతో సైన్ ఇన్ అవుతుంది.",
+    err_google_unconfigured: "Google సైన్-ఇన్ అందుబాటులో లేదు.",
+    err_google_taken: "ఈ Google ఖాతా వేరే ప్రొఫైల్‌కి లింక్ అయ్యింది.",
+    err_not_signed_in: "దయచేసి మళ్లీ లాగ్ ఇన్ అవ్వండి.",
+    err_network: "సర్వర్‌ను చేరుకోలేకపోయాం. మళ్లీ ప్రయత్నించండి.",
+    accountDetails: "ఖాతా వివరాలు",
+    emailLabel: "ఇమెయిల్",
+    memberSince: "సభ్యులైన తేదీ",
+    signInMethods: "సైన్-ఇన్ పద్ధతులు",
+    notSet: "సెట్ కాలేదు",
+    editProfile: "ప్రొఫైల్ సవరించండి",
+    saveChanges: "మార్పులు సేవ్ చేయండి",
+    cancelEdit: "రద్దు చేయండి",
+    security: "భద్రత",
+    setPin: "పిన్ సెట్ చేయండి",
+    pinSaved: "పిన్ సేవ్ అయ్యింది.",
+    profileSaved: "ప్రొఫైల్ అప్‌డేట్ అయ్యింది.",
+    deleteProfile: "ప్రొఫైల్ తొలగించండి",
+    deleteConfirmMsg:
+      "ప్రొఫైల్ శాశ్వతంగా తొలగించాలా? ఈ పరికరంలో సేవ్ చేసిన ప్లాన్‌లు కూడా తొలగించబడతాయి.",
+    savedPlans: "సేవ్ చేసిన పొలం ప్లాన్‌లు",
+    addPhoneForHistory: "పొలం ప్లాన్‌లు సేవ్ చేయడానికి ఫోన్ నంబర్ జోడించండి.",
     cropCalendar: "పంట క్యాలెండర్",
     expectedDuration: "అంచనా వ్యవధి:",
     complete: "పూర్తి",
@@ -3167,26 +3475,549 @@ function setupLogin() {
       )
       .join("");
   };
+  const registerForm = document.querySelector("#registerForm");
+  const errorBox = document.querySelector("#authError");
+  const show = (selector, on) => {
+    const element = document.querySelector(selector);
+    if (element) element.hidden = !on;
+  };
+  const showError = (err) => {
+    if (!errorBox) return;
+    const key = err?.code ? `err_${err.code}` : "";
+    const translated = key ? t(key) : "";
+    errorBox.textContent =
+      (translated && translated !== key ? translated : err?.error) ||
+      t("err_network");
+    errorBox.hidden = false;
+  };
+  const clearError = () => {
+    if (errorBox) errorBox.hidden = true;
+  };
+  let pinLength = 4;
+  let currentUser = null;
+  let forgotMode = false;
+  const validPin = (pin) => new RegExp(`^\\d{${pinLength}}$`).test(pin);
+  const finishLogin = (user) => {
+    localStorage.setItem(
+      "terraProfile",
+      JSON.stringify({ name: user.username, phone: user.phone || "" }),
+    );
+    location.href = "planner.html";
+  };
+  const showOnly = (step) => {
+    clearError();
+    ["#authTabs", "#loginForm", "#registerForm", "#phoneStep", "#pinStep"].forEach(
+      (selector) => show(selector, false),
+    );
+    if (step === "forms") {
+      show("#authTabs", true);
+      const active = document.querySelector(".auth-tab.active")?.dataset.tab || "login";
+      show(active === "login" ? "#loginForm" : "#registerForm", true);
+    } else {
+      show(step, true);
+    }
+  };
+  const afterGoogleLogin = (data) => {
+    const user = data.user;
+    currentUser = user;
+    if (forgotMode) {
+      forgotMode = false;
+      showOnly("#pinStep");
+    } else if (data.isNew && !user.phone) {
+      showOnly("#phoneStep");
+    } else {
+      finishLogin(user);
+    }
+  };
+  document.querySelectorAll(".auth-tab").forEach((tab) =>
+    tab.addEventListener("click", () => {
+      document
+        .querySelectorAll(".auth-tab")
+        .forEach((other) => other.classList.toggle("active", other === tab));
+      clearError();
+      show("#loginForm", tab.dataset.tab === "login");
+      show("#registerForm", tab.dataset.tab === "register");
+    }),
+  );
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    clearError();
+    const phone = form.elements["phone"].value.trim();
+    const username = form.elements["username"].value.trim();
+    const pin = form.elements["pin"].value;
+    if (!/^[0-9]{10}$/.test(phone)) return showError({ code: "invalid_phone" });
+    if (!username) return showError({ code: "invalid_username" });
+    if (!validPin(pin)) return showError({ code: "invalid_pin" });
+    try {
+      const data = await authFetch("/login", { phone, username, pin });
+      finishLogin(data.user);
+    } catch (err) {
+      showError(err);
+    }
+  });
+  registerForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    clearError();
+    const phone = registerForm.elements["phone"].value.trim();
+    const username = registerForm.elements["username"].value.trim();
+    const pin = registerForm.elements["pin"].value;
+    const confirmPin = registerForm.elements["confirmPin"].value;
+    if (!/^[0-9]{10}$/.test(phone)) return showError({ code: "invalid_phone" });
+    if (!username) return showError({ code: "invalid_username" });
+    if (!validPin(pin)) return showError({ code: "invalid_pin" });
+    if (pin !== confirmPin) return showError({ code: "pin_mismatch" });
+    try {
+      const data = await authFetch("/register", { phone, username, pin, confirmPin });
+      finishLogin(data.user);
+    } catch (err) {
+      showError(err);
+    }
+  });
+  document.querySelector("#forgotPin")?.addEventListener("click", () => {
+    forgotMode = true;
+    clearError();
+    showError({ code: "forgot_pin_hint" });
+  });
+  document.querySelector("#phoneStep")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    clearError();
+    const phone = document.querySelector("#phoneStepInput").value.trim();
+    if (!/^[0-9]{10}$/.test(phone)) return showError({ code: "invalid_phone" });
+    try {
+      const data = await authFetch("/phone", { phone });
+      finishLogin(data.user);
+    } catch (err) {
+      showError(err);
+    }
+  });
+  document.querySelector("#phoneStepSkip")?.addEventListener("click", () => {
+    if (currentUser) finishLogin(currentUser);
+  });
+  document.querySelector("#pinStep")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    clearError();
+    const pin = document.querySelector("#pinStepPin").value;
+    const confirmPin = document.querySelector("#pinStepConfirm").value;
+    if (!validPin(pin)) return showError({ code: "invalid_pin" });
+    if (pin !== confirmPin) return showError({ code: "pin_mismatch" });
+    try {
+      const data = await authFetch("/pin", { pin, confirmPin });
+      currentUser = data.user;
+      if (!data.user.phone) showOnly("#phoneStep");
+      else finishLogin(data.user);
+    } catch (err) {
+      showError(err);
+    }
+  });
+  document.querySelector("#pinStepSkip")?.addEventListener("click", () => {
+    if (currentUser) finishLogin(currentUser);
+  });
+  const onGoogleCredential = async (response) => {
+    clearError();
+    try {
+      const data = await authFetch("/google", { credential: response.credential });
+      afterGoogleLogin(data);
+    } catch (err) {
+      showError(err);
+    }
+  };
+  const renderGoogleButton = (clientId) => {
+    let attempts = 0;
+    const tryRender = () => {
+      if (window.google?.accounts?.id) {
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: onGoogleCredential,
+        });
+        window.google.accounts.id.renderButton(
+          document.querySelector("#googleButton"),
+          { theme: "outline", size: "large", width: 320 },
+        );
+        show("#authOr", true);
+      } else if (attempts++ < 50) {
+        setTimeout(tryRender, 200);
+      }
+    };
+    tryRender();
+  };
   const profile = storedProfile();
   if (profile) {
-    form.elements["name"].value = profile.name || "";
     form.elements["phone"].value = profile.phone || "";
+    form.elements["username"].value = profile.name || "";
     renderHistory(profile.phone || "");
   }
   form.elements["phone"].addEventListener("input", () =>
     renderHistory(form.elements["phone"].value.trim()),
   );
-  form.addEventListener("submit", (event) => {
+  authFetch("/config")
+    .then((config) => {
+      pinLength = config.pinLength || 4;
+      const placeholder = "•".repeat(pinLength);
+      document
+        .querySelectorAll('input[inputmode="numeric"][type="password"], #pinStepPin, #pinStepConfirm')
+        .forEach((input) => {
+          input.maxLength = pinLength;
+          input.placeholder = placeholder;
+        });
+      if (config.googleClientId) renderGoogleButton(config.googleClientId);
+    })
+    .catch(() => {});
+  authFetch("/me")
+    .then(() => location.replace("profile.html"))
+    .catch(() => {});
+}
+const AUTH_BASE = window.TERRABYTE_AUTH_ENDPOINT || "/api/auth";
+async function authFetch(path, body) {
+  const response = await fetch(
+    `${AUTH_BASE}${path}`,
+    body === undefined
+      ? {}
+      : {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        },
+  );
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw data;
+  return data;
+}
+function setupProfilePage() {
+  if (!document.body.classList.contains("profile-page")) return;
+  const errorBox = document.querySelector("#profileError");
+  const noteBox = document.querySelector("#profileNote");
+  const showMsg = (element, text) => {
+    if (element) {
+      element.textContent = text || "";
+      element.hidden = !text;
+    }
+  };
+  const showError = (err) => {
+    const key = err?.code ? `err_${err.code}` : "";
+    const translated = key ? t(key) : "";
+    showMsg(noteBox, "");
+    showMsg(
+      errorBox,
+      (translated && translated !== key ? translated : err?.error) || t("err_network"),
+    );
+  };
+  const notify = (key) => {
+    showMsg(errorBox, "");
+    showMsg(noteBox, t(key));
+  };
+  const dateLabel = (iso) =>
+    new Intl.DateTimeFormat("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }).format(new Date(iso));
+  let user = null;
+  let pinLength = 4;
+  const renderHistory = () => {
+    const target = document.querySelector("#profileHistory");
+    if (!target) return;
+    if (!user.phone) {
+      target.innerHTML = `<p class="profile-empty">${t("addPhoneForHistory")}</p>`;
+      return;
+    }
+    const history = historyFor(user.phone);
+    if (!history.length) {
+      target.innerHTML = `<p class="profile-empty">${t("historyNoPlans")}</p>`;
+      return;
+    }
+    target.innerHTML = history
+      .map((entry) => {
+        const field = entry.field || {};
+        const parts = [
+          ["N", field.nitrogen],
+          ["P", field.phosphorus],
+          ["K", field.potassium],
+          ["pH", field.ph],
+          ["°C", field.temperature],
+          ["% RH", field.humidity],
+          ["mm", field.rainfall],
+        ]
+          .filter(([, value]) => value !== undefined && value !== null && value !== "")
+          .map(([label, value]) => `<span>${value} ${label}</span>`)
+          .join("");
+        return `<div class="history-entry"><b>${dateLabel(entry.date)}</b>${parts}</div>`;
+      })
+      .join("");
+  };
+  const render = () => {
+    document.querySelector("#profileHeroName").textContent = user.username;
+    document.querySelector("#profileHeroMeta").textContent = [user.phone, user.email]
+      .filter(Boolean)
+      .join(" · ");
+    document.querySelector("#detailName").textContent = user.username;
+    document.querySelector("#detailPhone").textContent = user.phone || t("notSet");
+    document.querySelector("#detailEmail").textContent = user.email || t("notSet");
+    document.querySelector("#detailSince").textContent = user.createdAt
+      ? dateLabel(user.createdAt.replace(" ", "T") + "Z")
+      : "—";
+    document.querySelector("#detailMethods").textContent =
+      [user.hasPin ? t("pin") : null, user.hasGoogle ? "Google" : null]
+        .filter(Boolean)
+        .join(" · ") || t("notSet");
+    document.querySelector("#changePinButton").textContent = user.hasPin
+      ? t("changePin")
+      : t("setPin");
+    localStorage.setItem(
+      "terraProfile",
+      JSON.stringify({ name: user.username, phone: user.phone || "" }),
+    );
+    renderHistory();
+  };
+  const editForm = document.querySelector("#editForm");
+  const detailsList = document.querySelector("#profileDetails");
+  const detailActions = document.querySelector("#detailActions");
+  const closeEdit = () => {
+    editForm.hidden = true;
+    detailsList.hidden = false;
+    detailActions.hidden = false;
+  };
+  document.querySelector("#editStart")?.addEventListener("click", () => {
+    editForm.elements["username"].value = user.username;
+    editForm.elements["phone"].value = user.phone || "";
+    editForm.hidden = false;
+    detailsList.hidden = true;
+    detailActions.hidden = true;
+  });
+  document.querySelector("#editCancel")?.addEventListener("click", closeEdit);
+  editForm?.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const name = form.elements["name"].value.trim();
-    const phone = form.elements["phone"].value.trim();
-    if (!name || !/^[0-9]{10}$/.test(phone)) return;
-    localStorage.setItem("terraProfile", JSON.stringify({ name, phone }));
-    location.href = "planner.html";
+    const username = editForm.elements["username"].value.trim();
+    const phone = editForm.elements["phone"].value.trim();
+    if (!username) return showError({ code: "invalid_username" });
+    if (phone && !/^[0-9]{10}$/.test(phone)) return showError({ code: "invalid_phone" });
+    try {
+      if (username !== user.username) user = (await authFetch("/profile", { username })).user;
+      if (phone && phone !== user.phone) user = (await authFetch("/phone", { phone })).user;
+      render();
+      closeEdit();
+      notify("profileSaved");
+    } catch (err) {
+      showError(err);
+    }
+  });
+  document.querySelector("#changePinForm")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const pin = form.elements["pin"].value;
+    const confirmPin = form.elements["confirmPin"].value;
+    if (!new RegExp(`^\\d{${pinLength}}$`).test(pin)) return showError({ code: "invalid_pin" });
+    if (pin !== confirmPin) return showError({ code: "pin_mismatch" });
+    try {
+      user = (await authFetch("/pin", { pin, confirmPin })).user;
+      form.reset();
+      render();
+      notify("pinSaved");
+    } catch (err) {
+      showError(err);
+    }
+  });
+  document.querySelector("#deleteProfile")?.addEventListener("click", async () => {
+    if (!confirm(t("deleteConfirmMsg"))) return;
+    try {
+      await authFetch("/delete", {});
+      if (user?.phone) localStorage.removeItem(`terraHistory_${user.phone}`);
+      localStorage.removeItem("terraProfile");
+      location.href = "index.html";
+    } catch (err) {
+      showError(err);
+    }
+  });
+  document.querySelector("#profileLogout")?.addEventListener("click", async () => {
+    try {
+      await authFetch("/logout", {});
+    } catch {}
+    localStorage.removeItem("terraProfile");
+    location.href = "login.html";
+  });
+  const onGoogleCredential = async (response) => {
+    try {
+      user = (await authFetch("/google", { credential: response.credential })).user;
+      document.querySelector("#profileGoogleSection").hidden = true;
+      render();
+      notify("profileSaved");
+    } catch (err) {
+      showError(err);
+    }
+  };
+  authFetch("/me")
+    .then(async (data) => {
+      user = data.user;
+      render();
+      try {
+        const config = await authFetch("/config");
+        pinLength = config.pinLength || 4;
+        const placeholder = "•".repeat(pinLength);
+        document
+          .querySelectorAll('#changePinForm input[type="password"]')
+          .forEach((input) => {
+            input.maxLength = pinLength;
+            input.placeholder = placeholder;
+          });
+        if (config.googleClientId && !user.hasGoogle) {
+          document.querySelector("#profileGoogleSection").hidden = false;
+          let attempts = 0;
+          const tryRender = () => {
+            if (window.google?.accounts?.id) {
+              window.google.accounts.id.initialize({
+                client_id: config.googleClientId,
+                callback: onGoogleCredential,
+              });
+              window.google.accounts.id.renderButton(
+                document.querySelector("#profileGoogleButton"),
+                { theme: "outline", size: "large", width: 280 },
+              );
+            } else if (attempts++ < 50) {
+              setTimeout(tryRender, 200);
+            }
+          };
+          tryRender();
+        }
+      } catch {}
+    })
+    .catch(() => location.replace("login.html"));
+}
+function setupAuthNav() {
+  const isAppPage = document.body.classList.contains("app-page");
+  const profileLink = document.querySelector('.top-actions .login-link[href="login.html"], .topbar .login-link[href="login.html"]');
+  authFetch("/me")
+    .then((data) => {
+      const user = data.user;
+      localStorage.setItem(
+        "terraProfile",
+        JSON.stringify({ name: user.username, phone: user.phone || "" }),
+      );
+      if (profileLink && !document.querySelector("#logoutLink")) {
+        profileLink.textContent = t("myProfile");
+        profileLink.dataset.i18n = "myProfile";
+        profileLink.href = "profile.html";
+        const logout = document.createElement("a");
+        logout.id = "logoutLink";
+        logout.className = profileLink.className;
+        logout.href = "#";
+        logout.textContent = t("logout");
+        logout.addEventListener("click", async (event) => {
+          event.preventDefault();
+          try {
+            await authFetch("/logout", {});
+          } catch {}
+          localStorage.removeItem("terraProfile");
+          location.href = "login.html";
+        });
+        profileLink.after(logout);
+      }
+    })
+    .catch(() => {
+      if (isAppPage) {
+        localStorage.removeItem("terraProfile");
+        location.href = "login.html";
+      }
+    });
+}
+function setupDiseasePage() {
+  const input = document.querySelector("#leafPhoto");
+  if (!input) return;
+  const previewBox = document.querySelector("#leafPreview");
+  const previewImage = document.querySelector("#leafImage");
+  const checkButton = document.querySelector("#checkLeafBtn");
+  const resultBox = document.querySelector("#diseaseResult");
+  const showMessage = (text) => {
+    resultBox.textContent = text;
+    resultBox.classList.add("visible");
+  };
+  input.addEventListener("change", () => {
+    const file = input.files?.[0];
+    if (!file) return;
+    if (previewImage.src) URL.revokeObjectURL(previewImage.src);
+    previewImage.src = URL.createObjectURL(file);
+    previewBox.classList.add("visible");
+    checkButton.disabled = false;
+    resultBox.classList.remove("visible");
+    resultBox.textContent = "";
+  });
+  document.querySelector("#removeLeafBtn").addEventListener("click", () => {
+    input.value = "";
+    if (previewImage.src) URL.revokeObjectURL(previewImage.src);
+    previewImage.removeAttribute("src");
+    previewBox.classList.remove("visible");
+    checkButton.disabled = true;
+    resultBox.classList.remove("visible");
+    resultBox.textContent = "";
+  });
+  checkButton.addEventListener("click", async () => {
+    const file = input.files?.[0];
+    if (!file) return;
+    checkButton.disabled = true;
+    showMessage(t("diseaseAnalyzing"));
+    try {
+      const body = new FormData();
+      body.append("photo", file);
+      const response = await fetch("/api/disease", { method: "POST", body });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.predictions?.length)
+        throw new Error(data.error || "request failed");
+      renderDiseaseResult(resultBox, data.predictions);
+      resultBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    } catch {
+      showMessage(t("diseaseError"));
+    } finally {
+      checkButton.disabled = false;
+    }
   });
 }
+function renderDiseaseResult(resultBox, predictions) {
+  const diseaseName = (prediction) =>
+    `${prediction.crop} — ${prediction.healthy ? t("diseaseHealthyLabel") : prediction.condition}`;
+  const top = predictions[0];
+  const percent = Math.round(top.probability * 100);
+  resultBox.innerHTML = "";
+
+  const heading = document.createElement("div");
+  heading.className = "disease-top" + (top.healthy ? " healthy" : "");
+  const nameEl = document.createElement("b");
+  nameEl.textContent = diseaseName(top);
+  const percentEl = document.createElement("span");
+  percentEl.textContent = `${percent}%`;
+  heading.append(nameEl, percentEl);
+
+  const meter = document.createElement("div");
+  meter.className = "disease-meter";
+  const fill = document.createElement("b");
+  fill.style.width = `${percent}%`;
+  meter.append(fill);
+  resultBox.append(heading, meter);
+
+  const alternates = predictions.slice(1).filter((p) => p.probability >= 0.05);
+  if (alternates.length) {
+    const alts = document.createElement("p");
+    alts.className = "disease-alts";
+    alts.textContent =
+      `${t("diseaseAlsoPossible")} ` +
+      alternates
+        .map((p) => `${diseaseName(p)} (${Math.round(p.probability * 100)}%)`)
+        .join(", ");
+    resultBox.append(alts);
+  }
+
+  const advice = document.createElement("p");
+  advice.className = "disease-advice";
+  advice.textContent =
+    top.probability < 0.5
+      ? t("diseaseLowConfidence")
+      : top.healthy
+        ? t("diseaseHealthyAdvice")
+        : t("diseaseSickAdvice", { condition: top.condition });
+  resultBox.append(advice);
+  resultBox.classList.add("visible");
+}
 useLanguage();
-applyTheme();
 setupPlanner();
 setupDashboard();
 setupLogin();
+setupProfilePage();
+setupDiseasePage();
+if (!document.body.classList.contains("login-page")) setupAuthNav();

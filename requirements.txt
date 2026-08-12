@@ -1,7 +1,11 @@
 flask
 flask-cors
+google-auth
+requests
 joblib
 numpy
 pandas
 scikit-learn
 xgboost
+tensorflow
+pillow

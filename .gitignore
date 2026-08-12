@@ -16,3 +16,6 @@ mandi_cache.json
 # OS / editor
 .DS_Store
 *.swp
+.env
+data/
+__pycache__/
