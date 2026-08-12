@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>My profile — TerraByte</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css"></head>
+<body class="app-page profile-page">
+  <header class="topbar"><a href="index.html" class="logo dark-logo"><b>✦</b> terra<span>byte</span></a><nav><a href="planner.html" data-i18n="plan">Plan a field</a><a href="dashboard.html" data-i18n="dashboard">Dashboard</a><a href="disease.html" data-i18n="disease">Disease check</a><a href="dashboard.html#ask" data-i18n="ask">Ask Mita</a></nav><div class="top-actions"><a class="login-link active" href="profile.html" data-i18n="myProfile">My profile</a><select class="language-picker" aria-label="Choose language"><option value="en">EN</option><option value="hi">हिंदी</option><option value="mr">मराठी</option><option value="te">తెలుగు</option></select><button class="mode-toggle" aria-label="Switch colour mode">◐</button></div></header>
+  <main class="profile-main">
+    <section class="profile-hero"><p class="kicker" data-i18n="farmerProfile">YOUR FARMER PROFILE</p><h1><span id="profileHeroName">…</span></h1><p class="profile-hero-meta" id="profileHeroMeta"></p></section>
+    <p class="auth-error" id="profileError" hidden></p><p class="profile-note" id="profileNote" hidden></p>
+    <section class="profile-grid">
+      <div class="profile-card"><h3 data-i18n="accountDetails">Account details</h3>
+        <dl class="profile-details" id="profileDetails"><div><dt data-i18n="yourName">Your name</dt><dd id="detailName"></dd></div><div><dt data-i18n="phoneNumber">Phone number</dt><dd id="detailPhone"></dd></div><div><dt data-i18n="emailLabel">Email</dt><dd id="detailEmail"></dd></div><div><dt data-i18n="memberSince">Member since</dt><dd id="detailSince"></dd></div><div><dt data-i18n="signInMethods">Sign-in methods</dt><dd id="detailMethods"></dd></div></dl>
+        <form id="editForm" hidden><label><span data-i18n="yourName">Your name</span><input name="username" maxlength="60" required></label><label><span data-i18n="phoneNumber">Phone number</span><input name="phone" inputmode="numeric" pattern="[0-9]{10}" placeholder="10-digit mobile number" data-i18n-placeholder="phonePlaceholder"></label><div class="profile-actions"><button type="submit" class="primary-button" data-i18n="saveChanges">Save changes</button><button type="button" class="text-button" id="editCancel" data-i18n="cancelEdit">Cancel</button></div></form>
+        <div class="profile-actions" id="detailActions"><button type="button" class="primary-button" id="editStart" data-i18n="editProfile">Edit profile</button></div>
+      </div>
+      <div class="profile-card"><h3 data-i18n="security">Security</h3>
+        <form id="changePinForm"><label><span data-i18n="newPin">New PIN</span><input name="pin" type="password" autocomplete="new-password" inputmode="numeric" maxlength="4" placeholder="••••" required></label><label><span data-i18n="confirmPin">Confirm PIN</span><input name="confirmPin" type="password" autocomplete="new-password" inputmode="numeric" maxlength="4" placeholder="••••" required></label><button type="submit" class="primary-button" id="changePinButton" data-i18n="changePin">Change PIN</button></form>
+        <div class="profile-google" id="profileGoogleSection" hidden><p data-i18n="linkGoogleHint">Link your Google account below to reset a forgotten PIN later.</p><div id="profileGoogleButton"></div></div>
+        <div class="profile-danger"><button type="button" class="text-button danger-button" id="deleteProfile" data-i18n="deleteProfile">Delete profile</button><button type="button" class="text-button" id="profileLogout" data-i18n="logout">Log out</button></div>
+      </div>
+    </section>
+    <section class="profile-history"><h2 data-i18n="savedPlans">Saved field plans</h2><div id="profileHistory"></div></section>
+  </main>
+<script src="https://accounts.google.com/gsi/client" async defer></script><script src="app.js"></script></body></html>
