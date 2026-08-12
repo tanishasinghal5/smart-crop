@@ -3802,7 +3802,6 @@ function setupProfilePage() {
     .catch(() => location.replace("login.html"));
 }
 function setupAuthNav() {
-  const isAppPage = document.body.classList.contains("app-page");
   const profileLink = document.querySelector('.top-actions .login-link[href="login.html"], .topbar .login-link[href="login.html"]');
   authFetch("/me")
     .then((data) => {
@@ -3832,12 +3831,10 @@ function setupAuthNav() {
       }
     })
     .catch((error) => {
-      // Only bounce to login when the auth server explicitly rejects the
-      // session. A missing backend (static hosting, 404) keeps the page
-      // usable as a guest so features like disease detection still work.
-      if (isAppPage && error?.httpStatus === 401) {
+      // Login is optional — never bounce to login.html. Just drop a stale
+      // profile if the auth server explicitly rejected the session.
+      if (error?.httpStatus === 401) {
         localStorage.removeItem("terraProfile");
-        location.href = "login.html";
       }
     });
 }

@@ -6,9 +6,12 @@ Serves the static frontend and APIs:
   POST /api/chat         — Mita farm advisor (needs OPENAI_API_KEY + OPENAI_MODEL)
   /api/auth/*            — register/login with phone+username+PIN, Google Sign-In
 
-Run:  py -3.13 server.py   (then open http://localhost:8000)
-      Disease detection needs tensorflow + pillow, which have no Python 3.14
-      wheels yet — run the server with Python 3.13.
+Run:  python server.py   (then open http://localhost:8080)
+      Disease detection runs in the browser (disease-model.tflite), so any
+      Python 3.x works. The /api/disease server fallback additionally needs
+      tensorflow/keras, which currently means running under Python 3.13
+      (py -3.13 server.py) — without it the endpoint returns 503 and the
+      browser-side detector still covers the feature.
 """
 import io
 import threading
@@ -459,7 +462,7 @@ def chat():
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 8000))
+    port = int(os.environ.get('PORT', 8080))
     # On Windows two servers can silently share the port (SO_REUSEADDR) and the
     # older one keeps answering requests — probe exclusively and bail out early.
     import socket
