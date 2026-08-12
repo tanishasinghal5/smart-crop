@@ -1,0 +1,82 @@
+/* ===== Growth planner page ===== */
+.growth-aside{background:linear-gradient(130deg,rgba(8,37,18,.9),rgba(8,37,18,.4)),url("polina-rytova-1dGMs4hhcVA-unsplash.jpg") center/cover}
+.growth-basics{grid-template-columns:repeat(3,1fr)}
+.growth-rain{grid-template-columns:repeat(2,1fr);margin-top:14px}
+.growth-rain select{border:0;border-bottom:1px solid #d2dbcb;background:none;padding:7px 0 3px;outline:0;width:100%;color:var(--ink);font:500 15px "Fraunces"}
+.dark .growth-rain select{color:var(--ink)}
+.growth-rain select option{color:#183020}
+.water-switch{grid-template-columns:repeat(5,1fr)}
+.water-switch .source-card{flex-direction:column;text-align:center;gap:7px;padding:12px 8px}
+.water-switch .source-card span{align-items:center}
+.water-switch .source-card i{margin:0}
+.goal-switch{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:25px 0 5px}
+
+/* results */
+.growth-results{margin-top:14px}
+.match-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}
+.match-card{border:1px solid #d7ded1;background:var(--paper);color:var(--ink);text-align:left;padding:13px;cursor:pointer;display:flex;flex-direction:column;gap:6px}
+.match-card.selected{border-color:#5d7e51;box-shadow:inset 0 0 0 1px #5d7e51}
+.match-card b{font:500 17px "Fraunces";letter-spacing:-.02em}
+.match-card small{font:500 8px "DM Mono";letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.match-card .match-net{font:500 12px "DM Mono";color:#3f743e}
+.match-card .match-net.negative{color:#a03427}
+.match-flags{display:flex;gap:4px;flex-wrap:wrap}
+.match-flags em{font:500 7px "DM Mono";font-style:normal;letter-spacing:.04em;text-transform:uppercase;padding:3px 5px;border:1px solid #cbd6c7;color:#52664d}
+.match-flags em.warn{border-color:#c8a06b;color:#93611c}
+.dark .match-flags em{border-color:#3f5c49;color:#a9c39f}
+.dark .match-flags em.warn{border-color:#8a6f3e;color:#dfb96a}
+.dark .match-card .match-net{color:#9ecb8f}
+.dark .match-card .match-net.negative{color:#e0a183}
+
+.plan-header{display:flex;align-items:end;justify-content:space-between;gap:18px;margin:34px 0 4px;flex-wrap:wrap}
+.plan-header h3{font:500 clamp(34px,4vw,48px)/.95 "Fraunces";letter-spacing:-.05em;margin:6px 0 0}
+.plan-header .kicker{margin:0}
+.plan-season-tag{font:500 9px "DM Mono";letter-spacing:.07em;text-transform:uppercase;color:#48673d;border:1px solid #8ca684;padding:7px 9px;white-space:nowrap}
+.plan-season-tag.warn{color:#93611c;border-color:#c8a06b}
+.dark .plan-season-tag{color:#a9c39f;border-color:#3f5c49}
+.dark .plan-season-tag.warn{color:#dfb96a;border-color:#8a6f3e}
+
+.plan-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:20px 0}
+.plan-stats p{margin:0;border:1px solid #dfe4d9;padding:13px;display:flex;flex-direction:column;gap:5px;background:var(--paper)}
+.plan-stats b{font:500 21px "Fraunces";letter-spacing:-.02em}
+.plan-stats b.negative{color:#a03427}
+.dark .plan-stats b.negative{color:#e0a183}
+.plan-stats span{font:500 8px "DM Mono";letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.dark .plan-stats p{border-color:#2c4a37}
+
+.water-check{margin:26px 0;padding:16px 18px;background:var(--sage);color:var(--ink)}
+.water-check h4{margin:0 0 4px;font:500 15px "Fraunces";letter-spacing:-.02em}
+.water-check p{margin:6px 0 12px;font-size:11px;color:var(--muted)}
+.water-meter{position:relative;height:10px;background:rgba(255,255,255,.6);overflow:hidden}
+.dark .water-meter{background:rgba(0,0,0,.3)}
+.water-meter i{position:absolute;inset:0 auto 0 0;display:block}
+.water-meter .rain-fill{background:#6798b1}
+.water-meter .irrigation-fill{background:#84a275}
+.water-legend{display:flex;gap:18px;margin-top:9px;font:500 9px "DM Mono";color:var(--muted);flex-wrap:wrap}
+.water-legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:baseline}
+.water-legend .dot-rain{background:#6798b1}.water-legend .dot-irrigation{background:#84a275}.water-legend .dot-need{background:#c58f4a}
+.water-verdict{margin:10px 0 0!important;font:500 10px "DM Mono"!important;color:#2f5c35!important}
+.water-verdict.short{color:#93611c!important}
+.dark .water-verdict{color:#a8cf9a!important}
+.dark .water-verdict.short{color:#dfb96a!important}
+
+.stage-table{margin-top:8px;border-top:1px solid var(--line)}
+.stage-row{display:grid;grid-template-columns:96px 1fr 110px 76px;gap:14px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}
+.stage-row.head{padding:9px 0;font:500 8px "DM Mono";letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.stage-row .stage-date{font:500 11px "DM Mono";color:#48673d}
+.dark .stage-row .stage-date{color:#a9c39f}
+.stage-row .stage-name{font-size:13px}
+.stage-row .stage-name small{display:block;font:500 8px "DM Mono";color:var(--muted);margin-top:2px}
+.stage-row .stage-cost,.stage-row .stage-labour{font:500 11px "DM Mono";text-align:right}
+.plan-note{margin:18px 0 0;padding:12px 14px;border:1px dashed #8ca686;background:#eff4e9;color:#3c5a35;font-size:11px;line-height:1.6}
+.dark .plan-note{background:#1d3a28;color:#c4d6bb;border-color:#3f5c49}
+
+@media(max-width:800px){
+  .growth-basics{grid-template-columns:1fr 1fr}
+  .growth-rain{grid-template-columns:1fr}
+  .water-switch{grid-template-columns:repeat(2,1fr)}
+  .goal-switch{grid-template-columns:1fr}
+  .match-strip{grid-template-columns:1fr 1fr}
+  .plan-stats{grid-template-columns:1fr 1fr}
+  .stage-row{grid-template-columns:78px 1fr 84px 58px;gap:8px}
+}
