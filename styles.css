@@ -69,3 +69,9 @@
 
 .dashboard-hero .hero-nav-btn{background:var(--gold);color:var(--forest)}
 .dashboard-hero .hero-nav-btn.secondary{background:transparent;border:1px solid var(--gold);color:var(--gold)}
+
+/* ===== Mandi prices (flipbook market box) ===== */
+.market-box .mandi-range{font:500 10px "DM Mono";color:#315d37}
+.market-box .mandi-note{font:400 9px "DM Sans";color:#768271;max-width:230px}
+.market-box .mandi-meta{align-items:end;text-align:right;gap:6px}
+.market-box .mandi-asof{font:400 8px "DM Mono";color:#768271;letter-spacing:.04em}

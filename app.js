@@ -2251,6 +2251,44 @@ const mlCropLibrary = {
       "A kharif oilseed-pulse that fixes nitrogen while feeding strong demand.",
   },
 };
+function mandiInfoFor(cropSlug) {
+  const table = window.MANDI_PRICES;
+  const info = table?.crop_prices?.[cropSlug];
+  if (!info) return null;
+  return {
+    ...info,
+    slug: cropSlug,
+    asOf: table.price_table_as_of,
+    season: table.msp_season,
+  };
+}
+function withMandiPrice(crop, slug) {
+  const mandi = mandiInfoFor(slug);
+  if (!mandi) return crop;
+  return { ...crop, mandi, price: `₹${mandi.modal.toLocaleString("en-IN")}` };
+}
+function marketBoxHtml(crop) {
+  const link = `<a target="_blank" rel="noreferrer" href="https://www.data.gov.in/catalog/current-daily-price-various-commodities-various-markets-mandi">Check live price ↗</a>`;
+  const mandi = crop.mandi;
+  if (!mandi)
+    return `<div class="market-box"><span>INDICATIVE MANDI PRICE<b>${crop.price}</b>${crop.unit}</span>${link}</div>`;
+  const escape = (text) =>
+    String(text)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  const rupees = (value) => `₹${value.toLocaleString("en-IN")}`;
+  const label =
+    mandi.source === "MSP" ? `MSP ${mandi.season}` : "INDICATIVE MANDI PRICE";
+  const range =
+    mandi.min !== mandi.max
+      ? `<small class="mandi-range">Mandi range ${rupees(mandi.min)} – ${rupees(mandi.max)}</small>`
+      : "";
+  const note = mandi.note
+    ? `<small class="mandi-note">${escape(mandi.note)}</small>`
+    : "";
+  return `<div class="market-box"><span>${label}<b>${crop.price}</b>${crop.unit || "per quintal"}${range}${note}</span><span class="mandi-meta">${link}<small class="mandi-asof">as of ${mandi.asOf}</small></span></div>`;
+}
 async function fetchMlRecommendations(field) {
   const endpoint = window.TERRABYTE_RECOMMEND_ENDPOINT || "/api/recommend";
   console.log(endpoint);
@@ -2275,18 +2313,22 @@ async function fetchMlRecommendations(field) {
     throw new Error("No recommendations returned");
   return data.recommendations.slice(0, 3).map((item) => {
     const info = mlCropLibrary[item.crop] || {};
-    return {
-      name: info.name || item.crop.charAt(0).toUpperCase() + item.crop.slice(1),
-      image: info.image || "benjamin-davies-Zm2n2O7Fph4-unsplash.jpg",
-      price: info.price || "—",
-      unit: "per quintal",
-      notes: info.notes || ["Model pick"],
-      description:
-        info.description ||
-        "Suggested for your readings by the trained crop model.",
-      confidence: Math.max(1, Math.round(item.probability * 100)),
-      ml: true,
-    };
+    return withMandiPrice(
+      {
+        name:
+          info.name || item.crop.charAt(0).toUpperCase() + item.crop.slice(1),
+        image: info.image || "benjamin-davies-Zm2n2O7Fph4-unsplash.jpg",
+        price: info.price || "—",
+        unit: "per quintal",
+        notes: info.notes || ["Model pick"],
+        description:
+          info.description ||
+          "Suggested for your readings by the trained crop model.",
+        confidence: Math.max(1, Math.round(item.probability * 100)),
+        ml: true,
+      },
+      item.crop,
+    );
   });
 }
 function storedField() {
@@ -2401,7 +2443,12 @@ function score(crop, field) {
 }
 function rankedCrops(field) {
   return cropLibrary
-    .map((crop) => ({ ...crop, confidence: score(crop, field) }))
+    .map((crop) =>
+      withMandiPrice(
+        { ...crop, confidence: score(crop, field) },
+        crop.name.toLowerCase(),
+      ),
+    )
     .sort((a, b) => b.confidence - a.confidence)
     .slice(0, 3);
 }
@@ -3139,7 +3186,7 @@ async function setupDashboard() {
   book.innerHTML = crops
     .map(
       (crop, index) =>
-        `<article class="book-page ${index ? "hidden" : ""}" data-page="${index}" style="--crop-image:url('${crop.image}')"><div class="book-image"></div><div class="book-details"><span class="book-rank">0${index + 1} / ${crop.ml ? (index ? "MODEL RUNNER-UP" : "AI MODEL MATCH") : index < 3 ? "FIELD MATCH" : "ROTATION OPTION"}</span><div class="confidence-pie" style="--percent:${crop.confidence}"><b>${crop.confidence}%</b><span>CONFIDENCE</span></div><h3>${crop.name}</h3><p>${crop.description}</p><div class="result-factors">${crop.notes.map((note) => `<span>${note}</span>`).join("")}<span>pH ${field.ph}</span></div><div class="market-box"><span>INDICATIVE MANDI PRICE<b>${crop.price}</b>${crop.unit}</span><a target="_blank" rel="noreferrer" href="https://www.data.gov.in/catalog/current-daily-price-various-commodities-various-markets-mandi">Check live price ↗</a></div></div></article>`,
+        `<article class="book-page ${index ? "hidden" : ""}" data-page="${index}" style="--crop-image:url('${crop.image}')"><div class="book-image"></div><div class="book-details"><span class="book-rank">0${index + 1} / ${crop.ml ? (index ? "MODEL RUNNER-UP" : "AI MODEL MATCH") : index < 3 ? "FIELD MATCH" : "ROTATION OPTION"}</span><div class="confidence-pie" style="--percent:${crop.confidence}"><b>${crop.confidence}%</b><span>CONFIDENCE</span></div><h3>${crop.name}</h3><p>${crop.description}</p><div class="result-factors">${crop.notes.map((note) => `<span>${note}</span>`).join("")}<span>pH ${field.ph}</span></div>${marketBoxHtml(crop)}</div></article>`,
     )
     .join("");
   const scrollToEl = (el) => {
