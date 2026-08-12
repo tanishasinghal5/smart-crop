@@ -66,3 +66,6 @@
 .disease-actions{display:flex;justify-content:flex-end;margin-top:10px}
 .disease-actions a{text-decoration:none}
 .primary-button:disabled{opacity:.45;cursor:not-allowed}
+
+.dashboard-hero .hero-nav-btn{background:var(--gold);color:var(--forest)}
+.dashboard-hero .hero-nav-btn.secondary{background:transparent;border:1px solid var(--gold);color:var(--gold)}
