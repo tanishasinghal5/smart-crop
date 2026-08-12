@@ -486,7 +486,7 @@ const i18n = {
     diseasePrivacy: "Your photo stays on this device for now. Results are guidance, not a replacement for local agricultural advice.",
     plan: "Plan a field",
     dashboard: "Dashboard",
-    ask: "Ask Mita",
+    ask: "Ask KrishiSahayak",
     login: "Log in",
     myProfile: "My profile",
     home: "Home",
@@ -596,9 +596,9 @@ const i18n = {
       "These are soil-building rotations—not a replacement for local nutrient advice or required amendments.",
     backToFieldPlan: "Back to Field Plan",
     editFieldReadings: "Edit Field Readings",
-    askMitaSoil: "Ask Mita About Soil",
+    askMitaSoil: "Ask KrishiSahayak About Soil",
     fieldAdvisor: "YOUR FARM ADVISOR",
-    askTitle: "Ask Mita anything<br>about your farm.",
+    askTitle: "Ask KrishiSahayak anything<br>about your farm.",
     aiLanguageReady: "Ready to answer in your selected language.",
     aiLanguageStatus: "Mita will answer in {language}.",
     mitaGreeting:
@@ -1990,6 +1990,17 @@ function historyFor(phone) {
   } catch {
     return [];
   }
+}
+function applyTheme() {
+  const isDark = localStorage.getItem("terraTheme") === "dark";
+  if (isDark) document.body.classList.add("dark");
+  
+  document.querySelectorAll(".mode-toggle").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const isNowDark = document.body.classList.toggle("dark");
+      localStorage.setItem("terraTheme", isNowDark ? "dark" : "light");
+    });
+  });
 }
 function useLanguage() {
   const language = currentLanguage();
