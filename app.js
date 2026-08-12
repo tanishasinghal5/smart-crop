@@ -476,7 +476,7 @@ const i18n = {
     checkPhoto: "Check this photo",
     removePhoto: "Remove photo",
     diseaseAnalyzing: "Checking your photo…",
-    diseaseError: "Could not check the photo. Please make sure the server is running and try again.",
+    diseaseError: "Could not check the photo. Please check your internet connection and try again.",
     diseaseHealthyLabel: "looks healthy",
     diseaseAlsoPossible: "Also possible:",
     diseaseHealthyAdvice: "No disease signs found in this photo. Keep an eye on new growth and check again if you spot changes.",
@@ -862,7 +862,7 @@ const i18n = {
     checkPhoto: "यह फोटो जांचें",
     removePhoto: "फोटो हटाएं",
     diseaseAnalyzing: "आपकी फोटो जांची जा रही है…",
-    diseaseError: "फोटो जांच नहीं हो सकी। कृपया देखें कि सर्वर चल रहा है और फिर से कोशिश करें।",
+    diseaseError: "फोटो जांच नहीं हो सकी। कृपया अपना इंटरनेट कनेक्शन देखें और फिर से कोशिश करें।",
     diseaseHealthyLabel: "स्वस्थ दिख रहा है",
     diseaseAlsoPossible: "यह भी संभव:",
     diseaseHealthyAdvice: "इस फोटो में रोग के लक्षण नहीं मिले। नई पत्तियों पर नज़र रखें और बदलाव दिखे तो फिर से जांचें।",
@@ -1132,7 +1132,7 @@ const i18n = {
     checkPhoto: "हा फोटो तपासा",
     removePhoto: "फोटो काढा",
     diseaseAnalyzing: "तुमचा फोटो तपासला जात आहे…",
-    diseaseError: "फोटो तपासता आला नाही. कृपया सर्व्हर सुरू आहे का ते पाहा आणि पुन्हा प्रयत्न करा.",
+    diseaseError: "फोटो तपासता आला नाही. कृपया तुमचे इंटरनेट कनेक्शन तपासा आणि पुन्हा प्रयत्न करा.",
     diseaseHealthyLabel: "निरोगी दिसते",
     diseaseAlsoPossible: "हेही शक्य:",
     diseaseHealthyAdvice: "या फोटोत रोगाची लक्षणे आढळली नाहीत. नव्या वाढीवर लक्ष ठेवा आणि बदल दिसल्यास पुन्हा तपासा.",
@@ -1351,7 +1351,7 @@ const i18n = {
     checkPhoto: "ఈ ఫోటోను తనిఖీ చేయండి",
     removePhoto: "ఫోటోను తీసివేయండి",
     diseaseAnalyzing: "మీ ఫోటోను తనిఖీ చేస్తున్నాం…",
-    diseaseError: "ఫోటోను తనిఖీ చేయలేకపోయాం. సర్వర్ నడుస్తుందో చూసి మళ్లీ ప్రయత్నించండి.",
+    diseaseError: "ఫోటోను తనిఖీ చేయలేకపోయాం. దయచేసి మీ ఇంటర్నెట్ కనెక్షన్ చూసి మళ్లీ ప్రయత్నించండి.",
     diseaseHealthyLabel: "ఆరోగ్యంగా ఉంది",
     diseaseAlsoPossible: "ఇవి కూడా కావచ్చు:",
     diseaseHealthyAdvice: "ఈ ఫోటోలో వ్యాధి లక్షణాలు కనిపించలేదు. కొత్త పెరుగుదలపై దృష్టి ఉంచండి, మార్పులు కనిపిస్తే మళ్లీ తనిఖీ చేయండి.",
@@ -3585,7 +3585,10 @@ async function authFetch(path, body) {
         },
   );
   const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw data;
+  if (!response.ok) {
+    data.httpStatus = response.status;
+    throw data;
+  }
   return data;
 }
 function setupProfilePage() {
@@ -3817,12 +3820,101 @@ function setupAuthNav() {
         profileLink.after(logout);
       }
     })
-    .catch(() => {
-      if (isAppPage) {
+    .catch((error) => {
+      // Only bounce to login when the auth server explicitly rejects the
+      // session. A missing backend (static hosting, 404) keeps the page
+      // usable as a guest so features like disease detection still work.
+      if (isAppPage && error?.httpStatus === 401) {
         localStorage.removeItem("terraProfile");
         location.href = "login.html";
       }
     });
+}
+// PlantVillage class order — must stay in sync with DISEASE_LABELS in server.py.
+const DISEASE_LABELS = [
+  "Apple___Apple_scab", "Apple___Black_rot", "Apple___Cedar_apple_rust",
+  "Apple___healthy", "Blueberry___healthy",
+  "Cherry_(including_sour)___Powdery_mildew", "Cherry_(including_sour)___healthy",
+  "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot", "Corn_(maize)___Common_rust_",
+  "Corn_(maize)___Northern_Leaf_Blight", "Corn_(maize)___healthy",
+  "Grape___Black_rot", "Grape___Esca_(Black_Measles)",
+  "Grape___Leaf_blight_(Isariopsis_Leaf_Spot)", "Grape___healthy",
+  "Orange___Haunglongbing_(Citrus_greening)", "Peach___Bacterial_spot",
+  "Peach___healthy", "Pepper,_bell___Bacterial_spot", "Pepper,_bell___healthy",
+  "Potato___Early_blight", "Potato___Late_blight", "Potato___healthy",
+  "Raspberry___healthy", "Soybean___healthy", "Squash___Powdery_mildew",
+  "Strawberry___Leaf_scorch", "Strawberry___healthy", "Tomato___Bacterial_spot",
+  "Tomato___Early_blight", "Tomato___Late_blight", "Tomato___Leaf_Mold",
+  "Tomato___Septoria_leaf_spot", "Tomato___Spider_mites Two-spotted_spider_mite",
+  "Tomato___Target_Spot", "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+  "Tomato___Tomato_mosaic_virus", "Tomato___healthy",
+];
+function prettyDisease(label) {
+  const clean = (part) => part.replace(/_/g, " ").replace(/\s+/g, " ").trim();
+  const [crop, condition = ""] = label.split("___");
+  return { crop: clean(crop), condition: clean(condition) || "unknown" };
+}
+// tfjs + tflite runtime is vendored (same-origin) because Chrome's ORB
+// blocks the WASM loader when it is fetched from a cross-origin CDN.
+const TFLITE_DIR = "vendor/tflite/";
+let diseaseModelPromise = null;
+function getDiseaseModel() {
+  if (!diseaseModelPromise)
+    diseaseModelPromise = (async () => {
+      const load = (src) =>
+        new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = src;
+          script.onload = resolve;
+          script.onerror = reject;
+          document.head.appendChild(script);
+        });
+      if (!window.tf) await load(TFLITE_DIR + "tf.min.js");
+      if (!window.tflite) await load(TFLITE_DIR + "tf-tflite.min.js");
+      tflite.setWasmPath(TFLITE_DIR);
+      return tflite.loadTFLiteModel("disease-model.tflite");
+    })().catch((error) => {
+      diseaseModelPromise = null;
+      throw error;
+    });
+  return diseaseModelPromise;
+}
+async function detectDiseaseInBrowser(file) {
+  const model = await getDiseaseModel();
+  const bitmap = await createImageBitmap(file);
+  const canvas = document.createElement("canvas");
+  canvas.width = canvas.height = 224;
+  canvas.getContext("2d").drawImage(bitmap, 0, 0, 224, 224);
+  bitmap.close();
+  // The saved model rescales internally, so raw 0-255 pixels go in as-is.
+  const pixels = tf.browser.fromPixels(canvas).toFloat().expandDims(0);
+  const output = model.predict(pixels);
+  const probabilities = await output.data();
+  pixels.dispose();
+  output.dispose();
+  return Array.from(probabilities.keys())
+    .sort((a, b) => probabilities[b] - probabilities[a])
+    .slice(0, 3)
+    .map((i) => {
+      const label = DISEASE_LABELS[i] || `class_${i}`;
+      const { crop, condition } = prettyDisease(label);
+      return {
+        label,
+        crop,
+        condition,
+        healthy: condition.toLowerCase() === "healthy",
+        probability: probabilities[i],
+      };
+    });
+}
+async function detectDiseaseOnServer(file) {
+  const body = new FormData();
+  body.append("photo", file);
+  const response = await fetch("/api/disease", { method: "POST", body });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || !data.predictions?.length)
+    throw new Error(data.error || "request failed");
+  return data.predictions;
 }
 function setupDiseasePage() {
   const input = document.querySelector("#leafPhoto");
@@ -3844,6 +3936,7 @@ function setupDiseasePage() {
     checkButton.disabled = false;
     resultBox.classList.remove("visible");
     resultBox.textContent = "";
+    getDiseaseModel().catch(() => {}); // warm up while the user reviews the preview
   });
   document.querySelector("#removeLeafBtn").addEventListener("click", () => {
     input.value = "";
@@ -3860,13 +3953,13 @@ function setupDiseasePage() {
     checkButton.disabled = true;
     showMessage(t("diseaseAnalyzing"));
     try {
-      const body = new FormData();
-      body.append("photo", file);
-      const response = await fetch("/api/disease", { method: "POST", body });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok || !data.predictions?.length)
-        throw new Error(data.error || "request failed");
-      renderDiseaseResult(resultBox, data.predictions);
+      let predictions;
+      try {
+        predictions = await detectDiseaseInBrowser(file);
+      } catch {
+        predictions = await detectDiseaseOnServer(file);
+      }
+      renderDiseaseResult(resultBox, predictions);
       resultBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
     } catch {
       showMessage(t("diseaseError"));
