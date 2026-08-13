@@ -94,3 +94,22 @@
 .dark .place-results{background:#1d3527}
 .dark .place-results button:hover,.dark .place-results button:focus-visible{background:#254333}
 .dark .place-results b{color:var(--cream)}
+
+/* ===== Field input ranges & validation ===== */
+.reading-grid label{min-width:0}
+.reading-grid label>span{display:block}
+.reading-grid label>small{display:block;white-space:normal;overflow-wrap:anywhere}
+.reading-grid input.input-invalid{border-bottom-color:#b23a2d;color:#b23a2d}
+.reading-grid label:has(input.input-invalid){border-color:#b23a2d}
+.reading-grid label:has(input.input-invalid)>small{color:#b23a2d}
+.range-error-banner{margin:14px 0 0;padding:12px 14px;border-radius:12px;background:rgba(178,58,45,.09);border:1px solid rgba(178,58,45,.35);color:#a03427;font:500 13px/1.5 "DM Sans"}
+.range-error-banner ul{margin:6px 0 0;padding-left:18px}
+.range-error-banner li{margin-top:2px}
+.range-error-banner[hidden]{display:none}
+.dark .range-error-banner{background:rgba(224,108,94,.12);border-color:rgba(224,108,94,.4);color:#f0a99f}
+.dark .reading-grid input.input-invalid{color:#f0a99f;border-bottom-color:#e06c5e}
+.range-warning-banner{margin:12px 0 0;padding:12px 14px;border-radius:12px;background:rgba(197,140,42,.1);border:1px solid rgba(197,140,42,.4);color:#8a6216;font:500 13px/1.5 "DM Sans"}
+.range-warning-banner ul{margin:6px 0 0;padding-left:18px}
+.range-warning-banner li{margin-top:2px}
+.range-warning-banner[hidden]{display:none}
+.dark .range-warning-banner{background:rgba(226,178,92,.12);border-color:rgba(226,178,92,.42);color:#e8c584}

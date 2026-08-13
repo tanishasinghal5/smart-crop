@@ -1,10 +1,40 @@
 const translations = {
   en: {},
   hi: {
-    nitrogenUnit: "N · किग्रा/हेक्टेयर",
-    phosphorusUnit: "P · किग्रा/हेक्टेयर",
-    potassiumUnit: "K · किग्रा/हेक्टेयर",
-    phRange: "0–14",
+    nitrogenUnit: "N · किग्रा/हेक्टेयर · 0–800",
+    outOfRangeTitle: "कुछ मान सीमा से बाहर हैं — कृपया ठीक करें:",
+    outOfRangeRequired: "{label} आवश्यक है",
+    rangeImpossible: "{label} {value} संभव नहीं है (मान्य सीमा {min}–{max}{unit})।",
+    guardBelowGrowing: "{label} {value} फसल की वृद्धि सीमा से कम है ({min}–{max}{unit})।",
+    guardAboveGrowing: "{label} {value} फसल की वृद्धि सीमा से अधिक है ({min}–{max}{unit})।",
+    guardTitleImpossible: "ये रीडिंग सही नहीं हो सकतीं:",
+    guardTitleNotReal: "ये रीडिंग किसी असली खेत की नहीं लगतीं:",
+    guardTitleUnits: "ये रीडिंग किसी और इकाई में लग रही हैं:",
+    guardTitleOutside: "कुछ रीडिंग उस दायरे से बाहर हैं जिस पर हम सलाह दे सकते हैं:",
+    guardTitleEdge: "कुछ रीडिंग हमारे डेटा की सीमा के करीब हैं:",
+    guardUnitScale:
+      "{label} {value} हमारे डेटा के उच्चतम मान ({max}) का {times}× है।",
+    guardFar: "{label} {value} हमारे डेटा से काफ़ी बाहर है ({min}–{max}{unit})।",
+    guardMild: "{label} {value} हमारे डेटा से थोड़ा बाहर है ({min}–{max}{unit})।",
+    guardFixRainfall:
+      "यह पूरे सीज़न का कुल लगता है। मॉडल मासिक वर्षा पर प्रशिक्षित है — सीज़न के योग को महीनों की संख्या से भाग दें।",
+    guardFixNitrogen:
+      "यह मृदा स्वास्थ्य कार्ड का उपलब्ध नाइट्रोजन (किग्रा/हेक्टेयर) लगता है। मॉडल दूसरी स्केल पर प्रशिक्षित है — पहले कार्ड मान को उस दायरे में बदलें।",
+    guardFixPhosphorus:
+      "मृदा स्वास्थ्य कार्ड फॉस्फोरस को P2O5 में देते हैं। मॉडल को मूल P चाहिए — पहले 0.44 से गुणा करें।",
+    guardFixPotassium:
+      "मृदा स्वास्थ्य कार्ड पोटैशियम को K2O में देते हैं। मॉडल को मूल K चाहिए — पहले 0.83 से गुणा करें।",
+    rangePhLow:
+      "मिट्टी का pH {value} किसी भी फसल की सहनशीलता से कम है — इतनी अम्लीय मिट्टी में पहले चूना डालना ज़रूरी है।",
+    rangePhHigh:
+      "मिट्टी का pH {value} किसी भी फसल की सहनशीलता से अधिक है — क्षारीय मिट्टी में पहले जिप्सम डालना ज़रूरी है।",
+    rangeNpkAllZero:
+      "नाइट्रोजन, फॉस्फोरस और पोटैशियम तीनों शून्य हैं। किसी भी असली मिट्टी में तीनों शून्य नहीं होते — कृपया जाँचें कि मान भरे गए हैं या नहीं।",
+    rangeNpkTwoZero:
+      "{labels} दोनों शून्य हैं, जो जाँची गई मिट्टी में बहुत असामान्य है। कृपया इन मानों की दोबारा जाँच करें।",
+    phosphorusUnit: "P · किग्रा/हेक्टेयर · 0–300",
+    potassiumUnit: "K · किग्रा/हेक्टेयर · 0–800",
+    phRange: "pH · 0–14",
     scanningCardImage: "कार्ड की इमेज स्कैन हो रही है…",
     soilCardPreview: "मिट्टी कार्ड का प्रीव्यू",
     extractedBadge: "✓ मिट्टी के मान निकाले गए! यदि आवश्यक हो तो ऊपर अपने मानों की जांच करें और बदलें।",
@@ -147,10 +177,39 @@ const translations = {
   },
   mr: {
     jumpToSection: "विभागाकडे जा",
-    nitrogenUnit: "N · किलो/हेक्टर",
-    phosphorusUnit: "P · किलो/हेक्टर",
-    potassiumUnit: "K · किलो/हेक्टर",
-    phRange: "0–14",
+    nitrogenUnit: "N · किलो/हेक्टर · 0–800",
+    outOfRangeTitle: "काही मूल्ये मर्यादेबाहेर आहेत — कृपया दुरुस्त करा:",
+    outOfRangeRequired: "{label} आवश्यक आहे",
+    rangeImpossible: "{label} {value} शक्य नाही (वैध मर्यादा {min}–{max}{unit}).",
+    guardBelowGrowing: "{label} {value} पिकाच्या वाढीच्या मर्यादेपेक्षा कमी आहे ({min}–{max}{unit}).",
+    guardAboveGrowing: "{label} {value} पिकाच्या वाढीच्या मर्यादेपेक्षा जास्त आहे ({min}–{max}{unit}).",
+    guardTitleImpossible: "ही मूल्ये बरोबर असू शकत नाहीत:",
+    guardTitleNotReal: "ही मूल्ये खऱ्या शेताची वाटत नाहीत:",
+    guardTitleUnits: "ही मूल्ये वेगळ्या एककात दिसत आहेत:",
+    guardTitleOutside: "काही मूल्ये आम्ही सल्ला देऊ शकतो त्या मर्यादेबाहेर आहेत:",
+    guardTitleEdge: "काही मूल्ये आमच्या डेटाच्या सीमेजवळ आहेत:",
+    guardUnitScale: "{label} {value} हे आमच्या डेटातील सर्वाधिक मूल्याच्या ({max}) {times}× आहे.",
+    guardFar: "{label} {value} आमच्या डेटाच्या खूप बाहेर आहे ({min}–{max}{unit}).",
+    guardMild: "{label} {value} आमच्या डेटाच्या थोडे बाहेर आहे ({min}–{max}{unit}).",
+    guardFixRainfall:
+      "हे संपूर्ण हंगामाचे एकूण दिसते. मॉडेल मासिक पावसावर प्रशिक्षित आहे — हंगामी बेरजेला महिन्यांच्या संख्येने भागा.",
+    guardFixNitrogen:
+      "हे मृदा आरोग्य पत्रिकेतील उपलब्ध नायट्रोजन (किलो/हेक्टर) दिसते. मॉडेल वेगळ्या स्केलवर प्रशिक्षित आहे — आधी ते मूल्य त्या मर्यादेत रूपांतरित करा.",
+    guardFixPhosphorus:
+      "मृदा आरोग्य पत्रिका फॉस्फरस P2O5 मध्ये देते. मॉडेलला मूळ P हवे — आधी 0.44 ने गुणा.",
+    guardFixPotassium:
+      "मृदा आरोग्य पत्रिका पोटॅशियम K2O मध्ये देते. मॉडेलला मूळ K हवे — आधी 0.83 ने गुणा.",
+    rangePhLow:
+      "मातीचा pH {value} कोणत्याही पिकाच्या सहनशीलतेपेक्षा कमी आहे — इतक्या आम्लधर्मी मातीत आधी चुना घालावा लागतो.",
+    rangePhHigh:
+      "मातीचा pH {value} कोणत्याही पिकाच्या सहनशीलतेपेक्षा जास्त आहे — क्षारयुक्त मातीत आधी जिप्सम घालावे लागते.",
+    rangeNpkAllZero:
+      "नायट्रोजन, फॉस्फरस आणि पोटॅशियम तिन्ही शून्य आहेत. कोणत्याही खऱ्या मातीत तिन्ही शून्य नसतात — मूल्ये भरली आहेत का ते तपासा.",
+    rangeNpkTwoZero:
+      "{labels} दोन्ही शून्य आहेत, जे तपासलेल्या शेतात फार असामान्य आहे. कृपया ही मूल्ये पुन्हा तपासा.",
+    phosphorusUnit: "P · किलो/हेक्टर · 0–300",
+    potassiumUnit: "K · किलो/हेक्टर · 0–800",
+    phRange: "pH · 0–14",
     ocrHint: "स्पष्ट JPG किंवा PNG—आम्ही N, P, K आणि pH वाचू.",
     scanningCardImage: "कार्ड इमेज स्कॅन होत आहे…",
     soilCardPreview: "माती कार्ड प्रिव्ह्यू",
@@ -299,10 +358,39 @@ const translations = {
   te: {
     jumpToSection: "విభాగానికి వెళ్ళండి",
     humanNote: "కొన్ని నిజమైన రీడింగులు. స్పష్టమైన తదుపరి దశ. మేము గణాంకాలను ఉపయోగకరంగా చేస్తాము.",
-    nitrogenUnit: "N · కిలో/హెక్టార్",
-    phosphorusUnit: "P · కిలో/హెక్టార్",
-    potassiumUnit: "K · కిలో/హెక్టార్",
-    phRange: "0–14",
+    nitrogenUnit: "N · కిలో/హెక్టార్ · 0–800",
+    outOfRangeTitle: "కొన్ని విలువలు పరిధి దాటాయి — దయచేసి సరిచేయండి:",
+    outOfRangeRequired: "{label} తప్పనిసరి",
+    rangeImpossible: "{label} {value} సాధ్యం కాదు (చెల్లుబాటు పరిధి {min}–{max}{unit}).",
+    guardBelowGrowing: "{label} {value} పంట పెరుగుదల పరిధి కంటే తక్కువ ({min}–{max}{unit}).",
+    guardAboveGrowing: "{label} {value} పంట పెరుగుదల పరిధి కంటే ఎక్కువ ({min}–{max}{unit}).",
+    guardTitleImpossible: "ఈ విలువలు సరైనవి కావు:",
+    guardTitleNotReal: "ఈ విలువలు నిజమైన పొలాన్ని సూచించడం లేదు:",
+    guardTitleUnits: "ఈ విలువలు వేరే యూనిట్లలో ఉన్నట్టు కనిపిస్తున్నాయి:",
+    guardTitleOutside: "కొన్ని విలువలు మేము సలహా ఇవ్వగల పరిధి దాటాయి:",
+    guardTitleEdge: "కొన్ని విలువలు మా డేటా అంచున ఉన్నాయి:",
+    guardUnitScale: "{label} {value} మా డేటాలోని గరిష్ఠ విలువ ({max}) కంటే {times}× ఎక్కువ.",
+    guardFar: "{label} {value} మా డేటా కంటే చాలా బయట ఉంది ({min}–{max}{unit}).",
+    guardMild: "{label} {value} మా డేటా కంటే కొంచెం బయట ఉంది ({min}–{max}{unit}).",
+    guardFixRainfall:
+      "ఇది సీజన్ మొత్తంలా ఉంది. మోడల్ నెలవారీ వర్షపాతంపై శిక్షణ పొందింది — సీజన్ మొత్తాన్ని నెలల సంఖ్యతో భాగించండి.",
+    guardFixNitrogen:
+      "ఇది సాయిల్ హెల్త్ కార్డ్ నత్రజని (కిలో/హెక్టార్) లా ఉంది. మోడల్ వేరే స్కేల్‌పై శిక్షణ పొందింది — ముందు ఆ విలువను శిక్షణ పరిధిలోకి మార్చండి.",
+    guardFixPhosphorus:
+      "సాయిల్ హెల్త్ కార్డ్‌లు భాస్వరాన్ని P2O5 గా ఇస్తాయి. మోడల్‌కు మౌలిక P కావాలి — ముందు 0.44 తో గుణించండి.",
+    guardFixPotassium:
+      "సాయిల్ హెల్త్ కార్డ్‌లు పొటాషియంను K2O గా ఇస్తాయి. మోడల్‌కు మౌలిక K కావాలి — ముందు 0.83 తో గుణించండి.",
+    rangePhLow:
+      "నేల pH {value} ఏ పంట తట్టుకునే స్థాయి కంటే తక్కువ — ఇంత ఆమ్ల నేలకు ముందుగా సున్నం వేయాలి.",
+    rangePhHigh:
+      "నేల pH {value} ఏ పంట తట్టుకునే స్థాయి కంటే ఎక్కువ — క్షార నేలకు ముందుగా జిప్సం చికిత్స అవసరం.",
+    rangeNpkAllZero:
+      "నత్రజని, భాస్వరం, పొటాషియం మూడూ సున్నా. నిజమైన నేలలో మూడూ సున్నా ఉండవు — విలువలు నమోదు అయ్యాయో లేదో చూడండి.",
+    rangeNpkTwoZero:
+      "{labels} రెండూ సున్నా, ఇది పరీక్షించిన పొలంలో చాలా అసాధారణం. దయచేసి ఈ విలువలను మళ్లీ సరిచూడండి.",
+    phosphorusUnit: "P · కిలో/హెక్టార్ · 0–300",
+    potassiumUnit: "K · కిలో/హెక్టార్ · 0–800",
+    phRange: "pH · 0–14",
     dropCard: "మీ సాయిల్ హెల్త్ కార్డ్ ఫోటోను ఇక్కడ వేయండి",
     ocrHint: "స్పష్టమైన JPG లేదా PNG—మేము N, P, K మరియు pHలను చదువుతాము.",
     scanningCardImage: "కార్డ్ ఇమేజ్ స్కాన్ అవుతోంది…",
@@ -605,13 +693,45 @@ const i18n = {
     scanCard: "Scan Soil Health Card",
     scanHint: "Read N, P, K & pH from a photo",
     nitrogen: "Nitrogen",
-    nitrogenUnit: "N · kg/ha",
+    nitrogenUnit: "N · kg/ha · 0–800",
+    outOfRangeTitle: "Some values are out of range — please fix these:",
+    outOfRangeRequired: "{label} is required",
+    rangeImpossible:
+      "{label} of {value} is not possible (valid range {min}–{max}{unit}).",
+    guardBelowGrowing: "{label} of {value} is below the growing range ({min}–{max}{unit}).",
+    guardAboveGrowing: "{label} of {value} is above the growing range ({min}–{max}{unit}).",
+    guardTitleImpossible: "These readings can't be right:",
+    guardTitleNotReal: "These readings don't describe a real field:",
+    guardTitleUnits: "These readings look like they're in different units:",
+    guardTitleOutside: "Some readings are outside what we can advise on:",
+    guardTitleEdge: "Some readings are near the edge of our data:",
+    guardUnitScale:
+      "{label} of {value} is {times}× the highest value in our data ({max}).",
+    guardFar:
+      "{label} of {value} is well outside anything in our data ({min}–{max}{unit}).",
+    guardMild: "{label} of {value} is just outside our data ({min}–{max}{unit}).",
+    guardFixRainfall:
+      "This looks like a seasonal total. The model was trained on monthly rainfall — divide the seasonal sum by the number of months.",
+    guardFixNitrogen:
+      "This looks like a Soil Health Card available-nitrogen figure in kg/ha. The model was trained on a different scale — map the card value onto the training range first.",
+    guardFixPhosphorus:
+      "Soil Health Cards report phosphorus as P2O5. The model expects elemental P — multiply by 0.44 first.",
+    guardFixPotassium:
+      "Soil Health Cards report potassium as K2O. The model expects elemental K — multiply by 0.83 first.",
+    rangePhLow:
+      "Soil pH of {value} is below what any crop tolerates — soil this acidic needs liming before anything can be recommended.",
+    rangePhHigh:
+      "Soil pH of {value} is above what any crop tolerates — sodic soil needs gypsum treatment first.",
+    rangeNpkAllZero:
+      "Nitrogen, phosphorus and potassium are all zero. No real soil has none of all three — even bare sand tests above zero. Check whether the readings were entered.",
+    rangeNpkTwoZero:
+      "{labels} are both zero, which is very unusual in a tested field. Please re-check those values.",
     phosphorus: "Phosphorus",
-    phosphorusUnit: "P · kg/ha",
+    phosphorusUnit: "P · kg/ha · 0–300",
     potassium: "Potassium",
-    potassiumUnit: "K · kg/ha",
+    potassiumUnit: "K · kg/ha · 0–800",
     soilPh: "Soil pH",
-    phRange: "0–14",
+    phRange: "pH · 0–14",
     dropCard: "Drop your Soil Health Card photo",
     ocrHint:
       "A photo or PDF scan — we’ll automatically read N, P, K and pH.",
@@ -3011,6 +3131,259 @@ function setupPlanner() {
   const form = document.querySelector("#fieldForm");
   if (!form) return;
   const manual = document.querySelector(".manual-readings");
+  // ---------------------------------------------------------------------------
+  // Browser-side mirror of input_guard.py v2 — layers 0-3, so a reading that
+  // the server would reject is caught before the request is ever sent.
+  //   0 PHYSICAL   impossible anywhere on Earth   -> error
+  //   1 DOMAIN     possible, not a farm field     -> error
+  //   2 UNIT SCALE right quantity, wrong units    -> error, with the fix
+  //   3 UNIVARIATE far outside training           -> error
+  //                just outside training          -> warning, submit allowed
+  // Layers 4-5 (Mahalanobis, per-crop fit) need the fitted stats and stay on
+  // the server.
+  //
+  // Soil readings only. Temperature, humidity and rainfall are left
+  // unrestricted: they come from Open-Meteo on a different scale to the
+  // training data (fetchClimate returns a cumulative SEASON total, the guard
+  // expects monthly), so bounding them here rejects live locations.
+  // ---------------------------------------------------------------------------
+  const fieldRanges = {
+    nitrogen: { guard: "N", label: "nitrogen", unit: " kg/ha", physical: [0, 800] },
+    phosphorus: { guard: "P", label: "phosphorus", unit: " kg/ha", physical: [0, 300] },
+    potassium: { guard: "K", label: "potassium", unit: " kg/ha", physical: [0, 800] },
+    ph: { guard: "ph", label: "soilPh", unit: "", physical: [0, 14], agronomic: [3.5, 10] },
+    temperature: { label: "temperatureLabel", unit: " °C", unrestricted: true },
+    humidity: { label: "humidityLabel", unit: "%", unrestricted: true },
+    rainfall: { label: "rainfallLabel", unit: " mm", unrestricted: true },
+  };
+  // UNIT_SCALE_HINTS from the guard: how far above the training maximum a value
+  // has to sit before it reads as a unit error rather than an extreme field.
+  const unitScaleHints = {
+    nitrogen: { ratio: 2, fix: "guardFixNitrogen" },
+    phosphorus: { ratio: 2, fix: "guardFixPhosphorus" },
+    potassium: { ratio: 2, fix: "guardFixPotassium" },
+  };
+  // Observed training range, padded 15% like InputGuard.fit does. Replaced at
+  // runtime by guard_stats.json when the guard has been fitted and exported
+  // (`guard.save_json("guard_stats.json")`); these are the documented defaults.
+  let trainingRange = {
+    nitrogen: { min: 0, max: 193 },
+    phosphorus: { min: 5, max: 145 },
+    potassium: { min: 5, max: 205 },
+    ph: { min: 3.5, max: 9.94 },
+  };
+  const softRange = (name) => {
+    const { min, max } = trainingRange[name];
+    const pad = (max - min) * 0.15;
+    return [min - pad, max + pad];
+  };
+  let rangeBanner = document.querySelector("#rangeError");
+  if (!rangeBanner) {
+    rangeBanner = document.createElement("div");
+    rangeBanner.id = "rangeError";
+    rangeBanner.className = "range-error-banner";
+    rangeBanner.setAttribute("role", "alert");
+    rangeBanner.hidden = true;
+    form.querySelector(".primary-button")?.before(rangeBanner);
+  }
+  let unusualBanner = document.querySelector("#rangeWarning");
+  if (!unusualBanner) {
+    unusualBanner = document.createElement("div");
+    unusualBanner.id = "rangeWarning";
+    unusualBanner.className = "range-warning-banner";
+    unusualBanner.setAttribute("role", "status");
+    unusualBanner.hidden = true;
+    rangeBanner.after(unusualBanner);
+  }
+  function paintBanner(banner, titleKey, messages) {
+    banner.innerHTML = "";
+    if (!messages.length) {
+      banner.hidden = true;
+      return;
+    }
+    const title = document.createElement("strong");
+    title.textContent = t(titleKey);
+    banner.append(title);
+    const list = document.createElement("ul");
+    messages.forEach((message) => {
+      const item = document.createElement("li");
+      item.textContent = message;
+      list.append(item);
+    });
+    banner.append(list);
+    banner.hidden = false;
+  }
+  function checkRanges(requireAll = false) {
+    const values = {};
+    const missing = [];
+    const flagged = new Set();
+    Object.entries(fieldRanges).forEach(([name, range]) => {
+      const input = form.elements[name];
+      if (!input) return;
+      const raw = String(input.value).trim();
+      const value = Number(raw);
+      if (raw === "" || !Number.isFinite(value)) {
+        if (raw !== "" || requireAll) {
+          missing.push(t("outOfRangeRequired", { label: t(range.label) }));
+          flagged.add(name);
+        }
+      } else {
+        values[name] = value;
+      }
+    });
+    const fmt = (name, value) => `${value}${fieldRanges[name].unit}`;
+    let title = "outOfRangeTitle";
+    let errors = missing;
+    const warnings = [];
+
+    // ---- LAYER 0 : physically impossible ------------------------------------
+    if (!errors.length) {
+      const bad = [];
+      Object.entries(values).forEach(([name, value]) => {
+        const limits = fieldRanges[name].physical;
+        if (!limits) return;
+        const [lo, hi] = limits;
+        if (value < lo || value > hi) {
+          bad.push(
+            t("rangeImpossible", {
+              label: t(fieldRanges[name].label),
+              value: fmt(name, value),
+              min: lo,
+              max: hi,
+              unit: fieldRanges[name].unit,
+            }),
+          );
+          flagged.add(name);
+        }
+      });
+      if (bad.length) {
+        title = "guardTitleImpossible";
+        errors = bad;
+      }
+    }
+
+    // ---- LAYER 1 : not a real field -----------------------------------------
+    if (!errors.length) {
+      const rules = [];
+      const npk = ["nitrogen", "phosphorus", "potassium"];
+      if (npk.every((name) => values[name] !== undefined)) {
+        const zeros = npk.filter((name) => values[name] <= 0.5);
+        if (zeros.length === 3) rules.push(t("rangeNpkAllZero"));
+        else if (zeros.length === 2)
+          rules.push(
+            t("rangeNpkTwoZero", {
+              labels: zeros.map((name) => t(fieldRanges[name].label)).join(" + "),
+            }),
+          );
+        if (zeros.length >= 2) zeros.forEach((name) => flagged.add(name));
+      }
+      Object.entries(values).forEach(([name, value]) => {
+        const bounds = fieldRanges[name].agronomic;
+        if (!bounds) return;
+        const [lo, hi] = bounds;
+        if (value >= lo && value <= hi) return;
+        rules.push(
+          name === "ph"
+            ? t(value < lo ? "rangePhLow" : "rangePhHigh", { value })
+            : t(value < lo ? "guardBelowGrowing" : "guardAboveGrowing", {
+                label: t(fieldRanges[name].label),
+                value: fmt(name, value),
+                min: lo,
+                max: hi,
+                unit: fieldRanges[name].unit,
+              }),
+        );
+        flagged.add(name);
+      });
+      if (rules.length) {
+        title = "guardTitleNotReal";
+        errors = rules;
+      }
+    }
+
+    // ---- LAYER 2 : right quantity, wrong units ------------------------------
+    if (!errors.length) {
+      const unitProblems = [];
+      Object.entries(values).forEach(([name, value]) => {
+        const hint = unitScaleHints[name];
+        const max = trainingRange[name]?.max;
+        if (!hint || !max || value <= max * hint.ratio) return;
+        unitProblems.push(
+          t("guardUnitScale", {
+            label: t(fieldRanges[name].label),
+            value: fmt(name, value),
+            times: (value / max).toFixed(1),
+            max: fmt(name, max),
+          }),
+        );
+        unitProblems.push(`${t(fieldRanges[name].label)}: ${t(hint.fix)}`);
+        flagged.add(name);
+      });
+      if (unitProblems.length) {
+        title = "guardTitleUnits";
+        errors = unitProblems;
+      }
+    }
+
+    // ---- LAYER 3 : one value outside the training data ----------------------
+    if (!errors.length) {
+      const far = [];
+      Object.entries(values).forEach(([name, value]) => {
+        const observed = trainingRange[name];
+        if (!observed) return;
+        const [softMin, softMax] = softRange(name);
+        const bounds = {
+          label: t(fieldRanges[name].label),
+          value: fmt(name, value),
+          min: observed.min,
+          max: observed.max,
+          unit: fieldRanges[name].unit,
+        };
+        if (value < softMin || value > softMax) {
+          far.push(t("guardFar", bounds));
+          flagged.add(name);
+        } else if (value < observed.min || value > observed.max) {
+          warnings.push(t("guardMild", bounds));
+        }
+      });
+      if (far.length) {
+        title = "guardTitleOutside";
+        errors = far;
+      }
+    }
+
+    Object.keys(fieldRanges).forEach((name) => {
+      const input = form.elements[name];
+      if (!input) return;
+      const bad = flagged.has(name);
+      input.classList.toggle("input-invalid", bad);
+      input.setAttribute("aria-invalid", bad ? "true" : "false");
+    });
+    paintBanner(rangeBanner, title, errors);
+    paintBanner(unusualBanner, "guardTitleEdge", errors.length ? [] : warnings);
+    return errors.length === 0;
+  }
+  form.plannerCheckRanges = checkRanges;
+  Object.keys(fieldRanges).forEach((name) => {
+    form.elements[name]?.addEventListener("input", () => checkRanges());
+  });
+  // If the guard has been fitted and exported for the frontend, use its real
+  // observed ranges instead of the defaults above.
+  fetch("guard_stats.json")
+    .then((response) => (response.ok ? response.json() : null))
+    .then((stats) => {
+      if (!stats?.global_range) return;
+      const updated = {};
+      Object.entries(fieldRanges).forEach(([name, range]) => {
+        const observed = stats.global_range[range.guard];
+        if (observed) updated[name] = { min: observed.min, max: observed.max };
+      });
+      if (Object.keys(updated).length) {
+        trainingRange = { ...trainingRange, ...updated };
+        checkRanges();
+      }
+    })
+    .catch(() => {});
   const voiceInputBtn = document.querySelector("#voiceInputBtn");
   if (voiceInputBtn) {
     voiceInputBtn.addEventListener("click", () => {
@@ -3037,6 +3410,7 @@ function setupPlanner() {
           document.querySelector("#inputPhosphorus").value = numbers[1];
           document.querySelector("#inputPotassium").value = numbers[2];
           document.querySelector("#inputPh").value = numbers[3];
+          checkRanges();
         } else {
           alert("Could not clearly extract 4 numbers (N, P, K, pH). Please try again.");
         }
@@ -3186,6 +3560,7 @@ function setupPlanner() {
     ["temperature", "humidity", "rainfall"].forEach(
       (key) => (form.elements[key].value = values[key]),
     );
+    checkRanges();
     weatherLabel.removeAttribute("data-i18n");
     weatherStatus.removeAttribute("data-i18n");
     weatherLabel.textContent = label;
@@ -3282,6 +3657,7 @@ function setupPlanner() {
       form.elements["potassium"].value = 38;
       form.elements["ph"].value = 6.5;
     }
+    checkRanges();
   }
 
   if (upload) {
@@ -3299,6 +3675,11 @@ function setupPlanner() {
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
+    if (!checkRanges(true)) {
+      rangeBanner.scrollIntoView({ behavior: "smooth", block: "center" });
+      form.querySelector(".input-invalid")?.focus();
+      return;
+    }
     const field = Object.fromEntries(new FormData(form));
     Object.keys(field).forEach((key) => (field[key] = Number(field[key])));
     field.forecast = JSON.parse(form.dataset.forecast || "null");
