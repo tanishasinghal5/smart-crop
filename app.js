@@ -541,6 +541,19 @@ const translations = {
 
 const i18n = {
   en: {
+    showMyMatches: "Show my matches",
+    plannerStepSeason: "Add season & costs",
+    plannerIntroSeason: "Add your land, water and goal, and one plan carries the crop match, the season costs and the stage calendar together.",
+    seasonSetup: "Season & costs",
+    seasonSetupHint: "Your land, water and goal — so the same plan can cost out the whole season.",
+    seeFullPlan: "See my full field plan",
+    sectionSeasonPlan: "Season Plan & Costs",
+    seasonPlanTitle: "What the season<br>costs, and pays back.",
+    seasonPlanHint: "Costed from the land, water and goal you set in your field plan.",
+    seasonPlanContext: "Costed for {acres} acres sown {date}, on {water}, weighted for “{goal}”.",
+    compareAllCrops: "Compare all crops",
+    editSeasonInputs: "Edit season inputs",
+    daysToHarvest: "days to harvest",
     titleHome: "TerraByte — Farming, made clearer",
     titlePlanner: "Build a field plan — TerraByte",
     titleDashboard: "Dashboard — TerraByte",
@@ -1053,6 +1066,19 @@ const i18n = {
       "Prices are indicative. Check your nearest mandi before making a selling decision.",
   },
   hi: {
+    showMyMatches: "मेरे सुझाव दिखाएं",
+    plannerStepSeason: "सीज़न और लागत जोड़ें",
+    plannerIntroSeason: "अपनी ज़मीन, पानी और लक्ष्य बताइए — एक ही योजना में फसल सुझाव, सीज़न की लागत और चरण कैलेंडर साथ मिलेंगे।",
+    seasonSetup: "सीज़न और लागत",
+    seasonSetupHint: "आपकी ज़मीन, पानी और लक्ष्य — ताकि पूरे सीज़न की लागत भी इसी योजना में आ जाए।",
+    seeFullPlan: "मेरी पूरी खेत योजना देखें",
+    sectionSeasonPlan: "सीज़न योजना और लागत",
+    seasonPlanTitle: "इस सीज़न की लागत<br>और उससे वापसी।",
+    seasonPlanHint: "आपकी खेत योजना में दी गई ज़मीन, पानी और लक्ष्य के आधार पर लागत।",
+    seasonPlanContext: "{acres} एकड़ के लिए, बुवाई {date}, {water} पर, “{goal}” को ध्यान में रखकर।",
+    compareAllCrops: "सभी फसलें देखें",
+    editSeasonInputs: "सीज़न की जानकारी बदलें",
+    daysToHarvest: "दिन में कटाई",
     titleHome: "TerraByte — खेती को आसान बनाया",
     titlePlanner: "खेत की योजना बनाएं — TerraByte",
     titleDashboard: "डैशबोर्ड — TerraByte",
@@ -1418,6 +1444,19 @@ const i18n = {
       "{language} में ऑन-डिवाइस स्पीच उपयोग करें। मॉडल एक बार डाउनलोड होकर ऑफलाइन कैश हो जाता है।",
   },
   mr: {
+    showMyMatches: "माझ्या सुचवण्या दाखवा",
+    plannerStepSeason: "हंगाम व खर्च जोडा",
+    plannerIntroSeason: "तुमची जमीन, पाणी आणि उद्दिष्ट सांगा — एकाच योजनेत पीक सुचवणी, हंगामाचा खर्च आणि टप्पेवार दिनदर्शिका मिळेल.",
+    seasonSetup: "हंगाम व खर्च",
+    seasonSetupHint: "तुमची जमीन, पाणी आणि उद्दिष्ट — म्हणजे संपूर्ण हंगामाचा खर्चही याच योजनेत येईल.",
+    seeFullPlan: "माझी संपूर्ण शेत योजना पहा",
+    sectionSeasonPlan: "हंगाम योजना व खर्च",
+    seasonPlanTitle: "हंगामाचा खर्च<br>आणि परतावा.",
+    seasonPlanHint: "तुमच्या शेत योजनेतील जमीन, पाणी आणि उद्दिष्टानुसार खर्च.",
+    seasonPlanContext: "{acres} एकरासाठी, पेरणी {date}, {water} वर, “{goal}” लक्षात घेऊन.",
+    compareAllCrops: "सर्व पिके पहा",
+    editSeasonInputs: "हंगामाची माहिती बदला",
+    daysToHarvest: "दिवसांत कापणी",
     titleHome: "TerraByte — शेती अधिक स्पष्ट",
     titlePlanner: "शेत योजना तयार करा — TerraByte",
     titleDashboard: "डॅशबोर्ड — TerraByte",
@@ -1732,6 +1771,19 @@ const i18n = {
       "खुल्या प्रश्नांसाठी मिताला सुरक्षित AI सेवा कनेक्शन लागते. तुमचा शेत डेटा वर उपलब्ध आहे; सेवा सेट झाल्यावर पुन्हा प्रयत्न करा.",
   },
   te: {
+    showMyMatches: "నా సూచనలు చూపించు",
+    plannerStepSeason: "సీజన్ & ఖర్చులు జోడించండి",
+    plannerIntroSeason: "మీ భూమి, నీరు, లక్ష్యం చెప్పండి — ఒకే ప్రణాళికలో పంట సూచన, సీజన్ ఖర్చులు, దశల క్యాలెండర్ కలిసి వస్తాయి.",
+    seasonSetup: "సీజన్ & ఖర్చులు",
+    seasonSetupHint: "మీ భూమి, నీరు, లక్ష్యం — తద్వారా మొత్తం సీజన్ ఖర్చు కూడా ఇదే ప్రణాళికలో వస్తుంది.",
+    seeFullPlan: "నా పూర్తి పొలం ప్రణాళిక చూడండి",
+    sectionSeasonPlan: "సీజన్ ప్రణాళిక & ఖర్చులు",
+    seasonPlanTitle: "సీజన్ ఖర్చు<br>మరియు రాబడి.",
+    seasonPlanHint: "మీ పొలం ప్రణాళికలో ఇచ్చిన భూమి, నీరు, లక్ష్యం ఆధారంగా ఖర్చు.",
+    seasonPlanContext: "{acres} ఎకరాలకు, విత్తనం {date}, {water} పై, “{goal}” దృష్టిలో ఉంచుకుని.",
+    compareAllCrops: "అన్ని పంటలు పోల్చండి",
+    editSeasonInputs: "సీజన్ వివరాలు మార్చండి",
+    daysToHarvest: "రోజుల్లో కోత",
     titleHome: "TerraByte — వ్యవసాయం మరింత స్పష్టం",
     titlePlanner: "పొలం ప్లాన్ తయారు చేయండి — TerraByte",
     titleDashboard: "డ్యాష్‌బోర్డ్ — TerraByte",
@@ -2503,6 +2555,7 @@ async function fetchMlRecommendations(field) {
           info.description ||
           "Suggested for your readings by the trained crop model.",
         confidence: Math.max(1, Math.round(item.probability * 100)),
+        slug: item.crop,
         ml: true,
       },
       item.crop,
@@ -2534,15 +2587,21 @@ function historyFor(phone) {
   }
 }
 function applyTheme() {
+  const paintButtons = (isDark) =>
+    document.querySelectorAll(".mode-toggle").forEach((btn) => {
+      btn.textContent = isDark ? "☀" : "◐";
+      btn.setAttribute("aria-pressed", isDark);
+    });
   const isDark = localStorage.getItem("terraTheme") === "dark";
-  if (isDark) document.body.classList.add("dark");
-  
-  document.querySelectorAll(".mode-toggle").forEach(btn => {
+  document.body.classList.toggle("dark", isDark);
+  paintButtons(isDark);
+  document.querySelectorAll(".mode-toggle").forEach((btn) =>
     btn.addEventListener("click", () => {
       const isNowDark = document.body.classList.toggle("dark");
       localStorage.setItem("terraTheme", isNowDark ? "dark" : "light");
-    });
-  });
+      paintButtons(isNowDark);
+    }),
+  );
 }
 function useLanguage() {
   const language = currentLanguage();
@@ -2568,7 +2627,6 @@ function useLanguage() {
     });
   });
   applyTranslations();
-  localStorage.removeItem("terraTheme");
 }
 function applyTranslations(root = document) {
   const currentLang = currentLanguage();
@@ -2623,7 +2681,7 @@ function rankedCrops(field) {
   return cropLibrary
     .map((crop) =>
       withMandiPrice(
-        { ...crop, confidence: score(crop, field) },
+        { ...crop, confidence: score(crop, field), slug: crop.name.toLowerCase() },
         crop.name.toLowerCase(),
       ),
     )
@@ -3424,9 +3482,12 @@ function setupPlanner() {
       recognition.start();
     });
   }
-  document.querySelectorAll(".source-card").forEach((card) =>
+  // scoped to the soil switch: the water-source and goal cards on this page
+  // share the .source-card class and keep their own selection
+  const soilSwitch = form.querySelector(".source-switch:not(.water-switch)");
+  soilSwitch?.querySelectorAll(".source-card").forEach((card) =>
     card.addEventListener("click", () => {
-      document
+      soilSwitch
         .querySelectorAll(".source-card")
         .forEach((item) => item.classList.toggle("selected", item === card));
       const scanning = card.dataset.source === "card";
@@ -3673,6 +3734,64 @@ function setupPlanner() {
     });
   }
 
+  // ---------------------------------------------------------------------------
+  // Season & costs (section 03) — the Growth planner's inputs, gathered here so
+  // one submit produces the crop match, the costed season plan and the stage
+  // calendar together. They are written to the same terraGrowthPlan record the
+  // Growth planner page reads, so either page can pick up the other's work.
+  // ---------------------------------------------------------------------------
+  const growthEngine = window.GrowthEngine;
+  const sourcesBox = form.querySelector("#waterSources");
+  const goalSwitch = form.querySelector("#goalSwitch");
+  const today = () => new Date().toISOString().slice(0, 10);
+  function saveSeasonInputs(entries, rainfall) {
+    if (!growthEngine) return;
+    growthEngine.storePlan({
+      acres: Math.max(0.1, Number(entries.acres) || 1),
+      sowingDate: entries.sowingDate || today(),
+      ownLabour: Math.max(0, Number(entries.ownLabour) || 0),
+      source:
+        sourcesBox?.querySelector(".source-card.selected")?.dataset.source ||
+        "rainfed",
+      goal:
+        goalSwitch?.querySelector(".goal-card.selected")?.dataset.goal ||
+        "max_profit",
+      rainfall: Math.max(0, Number(rainfall) || 0),
+    });
+  }
+  if (goalSwitch) {
+    goalSwitch.addEventListener("click", (event) => {
+      const card = event.target.closest(".goal-card");
+      if (!card) return;
+      goalSwitch
+        .querySelectorAll(".goal-card")
+        .forEach((item) => item.classList.toggle("selected", item === card));
+    });
+  }
+  if (sourcesBox) {
+    const plan = growthEngine ? growthEngine.savedPlan() : null;
+    if (growthEngine) sourcesBox.innerHTML = growthEngine.sourceCardsHtml(plan.source);
+    sourcesBox.addEventListener("click", (event) => {
+      const card = event.target.closest(".source-card");
+      if (!card) return;
+      sourcesBox
+        .querySelectorAll(".source-card")
+        .forEach((item) => item.classList.toggle("selected", item === card));
+    });
+    if (plan) {
+      if (form.elements.acres) form.elements.acres.value = plan.acres || "";
+      if (form.elements.sowingDate)
+        form.elements.sowingDate.value = plan.sowingDate || today();
+      if (form.elements.ownLabour && plan.ownLabour)
+        form.elements.ownLabour.value = plan.ownLabour;
+      goalSwitch
+        ?.querySelectorAll(".goal-card")
+        .forEach((card) =>
+          card.classList.toggle("selected", card.dataset.goal === plan.goal),
+        );
+    }
+  }
+
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     if (!checkRanges(true)) {
@@ -3680,9 +3799,20 @@ function setupPlanner() {
       form.querySelector(".input-invalid")?.focus();
       return;
     }
-    const field = Object.fromEntries(new FormData(form));
-    Object.keys(field).forEach((key) => (field[key] = Number(field[key])));
+    const entries = Object.fromEntries(new FormData(form));
+    // the season inputs travel in their own record, not in the soil/weather one
+    const field = {};
+    [
+      "nitrogen",
+      "phosphorus",
+      "potassium",
+      "ph",
+      "temperature",
+      "humidity",
+      "rainfall",
+    ].forEach((key) => (field[key] = Number(entries[key])));
     field.forecast = JSON.parse(form.dataset.forecast || "null");
+    saveSeasonInputs(entries, field.rainfall);
     localStorage.setItem("terraField", JSON.stringify(field));
     const profile = storedProfile();
     if (profile?.phone) {
@@ -3768,11 +3898,22 @@ function setupCropCalendar(crop, field) {
     target = document.createElement("section");
     target.id = "cropCalendar";
     target.className = "crop-calendar-section";
-    recommendation.insertAdjacentElement("afterend", target);
+    (document.querySelector("#seasonPlan") || recommendation).insertAdjacentElement(
+      "afterend",
+      target,
+    );
   }
+  // the calendar runs on the same crop duration and sowing date as the season plan
+  const growthProfile = window.GrowthEngine?.profileFor(crop.slug || crop.name);
+  const seasonInputs = window.GrowthEngine?.savedPlan();
   const storageKey = `terraCalendar_${crop.name}`;
   const saved = JSON.parse(localStorage.getItem(storageKey) || "{}");
-  const start = new Date(saved.startDate || Date.now());
+  const start = new Date(
+    saved.startDate ||
+      (seasonInputs?.sowingDate
+        ? `${seasonInputs.sowingDate}T00:00:00`
+        : Date.now()),
+  );
   if (!saved.startDate) {
     saved.startDate = start.toISOString();
     localStorage.setItem(storageKey, JSON.stringify(saved));
@@ -3781,7 +3922,7 @@ function setupCropCalendar(crop, field) {
       0,
       Math.floor((Date.now() - start.getTime()) / 86400000),
     ),
-    duration = 120,
+    duration = growthProfile?.duration_days || 120,
     progress = Math.min(
       100,
       Math.max(3, Math.round((elapsed / duration) * 100)),
@@ -3838,12 +3979,14 @@ function setupCropCalendar(crop, field) {
       : "Dry conditions ahead. Schedule irrigation in the early morning.";
   target.innerHTML = `<div class="calendar-shell"><header class="calendar-head"><div class="calendar-title"><span class="calendar-sprout">♧</span><div><p class="kicker">CROP CALENDAR</p><h2 id="cropCalendarTitle">${crop.name}</h2><p class="calendar-duration"><b>Expected duration:</b> ${duration} days</p></div></div><div class="calendar-progress" style="--progress:${progress}"><b>${progress}%</b><span>COMPLETE</span></div></header><div class="calendar-weather"><div><span>Temperature</span><b>${Math.round(field.temperature)}°C</b></div><div><span>Humidity</span><b>${Math.round(field.humidity)}%</b></div><div><span>Rain probability</span><b>${rainChance}%</b></div><div class="weather-advice"><b>WEATHER IMPACT</b>${advice}</div></div><div class="calendar-layout"><div><div class="calendar-timeline-title"><div><p class="kicker">GROWING JOURNEY</p><h3>Crop timeline</h3></div><span>SCROLL TO EXPLORE →</span></div><div class="timeline-scroll"><ol class="timeline">${stages
     .map(([title, day, description, icon], index) => {
+      // stage days are written against a 120-day season; stretch them to this crop
+      const dayOffset = Math.round((day * duration) / 120);
       const date = new Date(start);
-      date.setDate(date.getDate() + day);
+      date.setDate(date.getDate() + dayOffset);
       const status =
-        elapsed >= day + 6
+        elapsed >= dayOffset + 6
           ? "completed"
-          : elapsed >= day
+          : elapsed >= dayOffset
             ? "active"
             : "upcoming";
       return `<li class="stage-card ${status}" style="--delay:${index}"><span class="stage-icon">${status === "completed" ? "✓" : icon}</span><time>${dateLabel(date)}</time><h4>${title}</h4><p>${description}</p><small>${status === "completed" ? "COMPLETED" : status === "active" ? "IN PROGRESS" : "UPCOMING"}</small></li>`;
@@ -3880,6 +4023,102 @@ function setupCropCalendar(crop, field) {
       );
   };
   if (saved.reminders) scheduleCropTaskReminders(crop, tasks);
+}
+// ---------------------------------------------------------------------------
+// Season plan on the dashboard — the Growth planner's economics, costed for the
+// crops the field model just matched, using the season inputs collected on the
+// planner page. Falls back to the field plan's rainfall when the farmer has not
+// filled a seasonal figure of their own.
+// ---------------------------------------------------------------------------
+const goalLabelKeys = {
+  max_profit: "goalProfit",
+  safest: "goalSafe",
+  low_water: "goalWater",
+  low_capital: "goalCapital",
+};
+function seasonContextFor(field) {
+  const engine = window.GrowthEngine;
+  if (!engine) return null;
+  const plan = engine.savedPlan();
+  if (!plan.rainfall) plan.rainfall = field.rainfall;
+  return engine.makeContext(plan);
+}
+function cropEconHtml(crop, context) {
+  const engine = window.GrowthEngine;
+  const id = engine && context ? engine.resolveCrop(crop.slug || crop.name) : null;
+  if (!id) return "";
+  const result = engine.evaluateCrop(id, context);
+  return `<div class="book-econ"><span><b>${engine.money(result.spend)}</b>${t("estSpend")}</span><span><b class="${result.net < 0 ? "negative" : ""}">${engine.money(result.net)}</b>${t("estNet")}</span><span><b>${result.profile.duration_days}</b>${t("daysToHarvest")}</span></div>`;
+}
+function setupSeasonPlan(crops, field, preferredCrop) {
+  const section = document.querySelector("#seasonPlan");
+  const engine = window.GrowthEngine;
+  const context = seasonContextFor(field);
+  if (!section || !engine || !context) return;
+  const seen = new Set();
+  const recommended = crops
+    .map((crop) => engine.resolveCrop(crop.slug || crop.name))
+    .filter((id) => id && !seen.has(id) && seen.add(id))
+    .map((id) => engine.evaluateCrop(id, context));
+  const compareButton = section.querySelector("#compareAllCrops");
+  let comparing = !recommended.length; // no costed picks — open on the full list
+  let results = recommended;
+  const wanted = engine.resolveCrop(
+    preferredCrop || localStorage.getItem("terraSelectedCrop"),
+  );
+  let selected = null;
+  const strip = section.querySelector("#seasonMatchStrip");
+  const detail = section.querySelector("#seasonPlanDetail");
+  function renderStrip() {
+    results = comparing ? engine.rankCrops(context).slice(0, 6) : recommended;
+    if (
+      selected &&
+      !results.some((result) => result.id === selected.id) &&
+      comparing
+    )
+      results = [...results, selected];
+    if (!selected || !results.some((result) => result.id === selected.id))
+      selected =
+        results.find((result) => result.id === wanted) || results[0];
+    strip.innerHTML = results
+      .map((result) => engine.matchCardHtml(result, selected.id))
+      .join("");
+    detail.innerHTML = engine.planHtml(selected, context);
+    if (compareButton) {
+      compareButton.querySelector("span").textContent = comparing
+        ? t("showMyMatches")
+        : t("compareAllCrops");
+      compareButton.hidden = !recommended.length;
+    }
+  }
+  renderStrip();
+  if (compareButton)
+    compareButton.onclick = () => {
+      comparing = !comparing;
+      renderStrip();
+    };
+  const contextLine = section.querySelector("#seasonPlanContext");
+  if (contextLine) {
+    contextLine.textContent = t("seasonPlanContext", {
+      acres: context.acres,
+      date: engine.formatDate(context.sowing),
+      water: t(engine.sourceMeta[context.source]?.key || "sourceRainfed"),
+      goal: t(goalLabelKeys[context.goal] || "goalProfit"),
+    });
+    delete contextLine.dataset.i18n;
+  }
+  section.hidden = false;
+  strip.onclick = (event) => {
+    const card = event.target.closest(".match-card");
+    if (!card) return;
+    const result = results.find((item) => item.id === card.dataset.crop);
+    if (!result) return;
+    selected = result;
+    strip
+      .querySelectorAll(".match-card")
+      .forEach((item) => item.classList.toggle("selected", item === card));
+    detail.innerHTML = engine.planHtml(result, context);
+  };
 }
 async function setupDashboard() {
   const book = document.querySelector("#flipbook");
@@ -3921,6 +4160,7 @@ async function setupDashboard() {
       .querySelector(`#${id}Meter`)
       .style.setProperty("--value", `${Math.min(100, (value / max) * 100)}%`);
   });
+  const seasonContext = seasonContextFor(field);
   const restore = restorationPlan(field);
   document.querySelector("#restoreSummary").textContent = restore.note;
   document.querySelector("#restoreGrid").innerHTML =
@@ -3933,9 +4173,10 @@ async function setupDashboard() {
   book.innerHTML = crops
     .map(
       (crop, index) =>
-        `<article class="book-page ${index ? "hidden" : ""}" data-page="${index}" style="--crop-image:url('${crop.image}')"><div class="book-image"></div><div class="book-details"><span class="book-rank">0${index + 1} / ${crop.ml ? (index ? "MODEL RUNNER-UP" : "AI MODEL MATCH") : index < 3 ? "FIELD MATCH" : "ROTATION OPTION"}</span><div class="confidence-pie" style="--percent:${crop.confidence}"><b>${crop.confidence}%</b><span>CONFIDENCE</span></div><h3>${crop.name}</h3><p>${crop.description}</p><div class="result-factors">${crop.notes.map((note) => `<span>${note}</span>`).join("")}<span>pH ${field.ph}</span></div>${marketBoxHtml(crop)}</div></article>`,
+        `<article class="book-page ${index ? "hidden" : ""}" data-page="${index}" style="--crop-image:url('${crop.image}')"><div class="book-image"></div><div class="book-details"><span class="book-rank">0${index + 1} / ${crop.ml ? (index ? "MODEL RUNNER-UP" : "AI MODEL MATCH") : index < 3 ? "FIELD MATCH" : "ROTATION OPTION"}</span><div class="confidence-pie" style="--percent:${crop.confidence}"><b>${crop.confidence}%</b><span>CONFIDENCE</span></div><h3>${crop.name}</h3><p>${crop.description}</p><div class="result-factors">${crop.notes.map((note) => `<span>${note}</span>`).join("")}<span>pH ${field.ph}</span></div>${marketBoxHtml(crop)}${cropEconHtml(crop, seasonContext)}</div></article>`,
     )
     .join("");
+  setupSeasonPlan(crops, field);
   const scrollToEl = (el) => {
     if (!el) return;
     const topbar = document.querySelector(".topbar");
@@ -3958,6 +4199,7 @@ async function setupDashboard() {
         : `Plan ${crops[index].name}`;
     choice.onclick = () => {
       localStorage.setItem("terraSelectedCrop", crops[index].name);
+      setupSeasonPlan(crops, field, crops[index].slug || crops[index].name);
       setupCropCalendar(crops[index], field);
       scrollToEl(document.querySelector("#cropCalendar"));
       pages.forEach((item, itemIndex) => {
@@ -5138,6 +5380,7 @@ function renderDiseaseResult(resultBox, predictions) {
   resultBox.classList.add("visible");
 }
 useLanguage();
+applyTheme();
 setupPlanner();
 setupDashboard();
 setupLogin();

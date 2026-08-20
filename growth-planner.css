@@ -80,3 +80,26 @@
   .plan-stats{grid-template-columns:1fr 1fr}
   .stage-row{grid-template-columns:78px 1fr 84px 58px;gap:8px}
 }
+
+/* ===== Field plan + season plan, shown together ===== */
+.field-subhead{margin:26px 0 -4px;font:500 10px "DM Mono";letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.season-plan-section{padding:clamp(62px,9vw,120px) clamp(24px,5vw,78px);margin-top:0;border-top:1px solid var(--line)}
+.season-plan-section .section-row{margin-bottom:10px;gap:20px}
+.season-plan-section #seasonPlanContext{margin:14px 0 0;max-width:430px;font-size:12px;line-height:1.65;color:var(--muted)}
+.season-plan-actions{display:flex;gap:9px;flex-wrap:wrap}
+.season-plan-actions a,.season-plan-actions button{text-decoration:none;display:inline-flex;align-items:center;gap:7px;border:1px solid #8ca684;background:none;color:#315c37;padding:10px 11px;font:500 9px "DM Mono";letter-spacing:.04em;cursor:pointer}
+.dark .season-plan-actions a,.dark .season-plan-actions button{border-color:#3f5c49;color:#a9c39f}
+.season-plan-section .match-strip{margin-top:26px}
+
+/* per-crop economics inside the recommendation flipbook */
+.book-econ{display:flex;gap:20px;margin-top:14px;padding-top:13px;border-top:1px solid var(--line)}
+.book-econ span{display:flex;flex-direction:column;gap:3px;font:500 8px "DM Mono";letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.book-econ b{font:500 17px "Fraunces";letter-spacing:-.02em;color:var(--ink)}
+.book-econ b.negative{color:#a03427}
+.dark .book-econ b.negative{color:#e0a183}
+.dashboard-page .flipbook{height:492px}
+@media(max-width:800px){
+  .dashboard-page .flipbook{height:640px}
+  .season-plan-section{padding:65px 24px}
+  .book-econ{gap:14px}
+}
