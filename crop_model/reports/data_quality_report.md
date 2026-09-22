@@ -1,0 +1,319 @@
+# Crop Production Data Quality Report
+
+Source: `crop_production.csv/crop_production.csv`
+
+## Row and domain summary
+- Original rows: 246,091
+- Cleaned rows: 246,091
+- Training rows: 242,361
+- Exact duplicates removed: 0
+- States: 33
+- Districts: 646
+- Crops: 124
+- Year range: 1997 to 2015
+- Unique environmental keys: 34,999
+
+## Missing values in original input
+- `State_Name`: 0
+- `District_Name`: 0
+- `Crop_Year`: 0
+- `Season`: 0
+- `Crop`: 0
+- `Area`: 0
+- `Production`: 3,730
+
+## Validation counts
+- Area <= 0: 0
+- Production < 0: 0
+- Missing Production: 3730
+
+## Season values
+- `Kharif`: 95,951
+- `Rabi`: 66,987
+- `Whole Year`: 57,305
+- `Summer`: 14,841
+- `Winter`: 6,058
+- `Autumn`: 4,949
+
+## Crop frequency (cleaned rows)
+- `Rice`: 15,104
+- `Maize`: 13,947
+- `Moong(Green Gram)`: 10,318
+- `Urad`: 9,850
+- `Sesamum`: 9,046
+- `Groundnut`: 8,834
+- `Sugarcane`: 7,921
+- `Wheat`: 7,899
+- `Rapeseed &Mustard`: 7,592
+- `Arhar/Tur`: 7,578
+- `Gram`: 7,361
+- `Jowar`: 7,065
+- `Onion`: 7,012
+- `Potato`: 6,931
+- `Dry chillies`: 6,489
+- `Sunflower`: 5,571
+- `Bajra`: 5,427
+- `Small millets`: 4,652
+- `Peas & beans (Pulses)`: 4,524
+- `Cotton(lint)`: 4,518
+- `Linseed`: 4,405
+- `Masoor`: 4,224
+- `Turmeric`: 4,202
+- `Barley`: 4,199
+- `Sweet potato`: 4,198
+- `Ragi`: 4,145
+- `Horse-gram`: 3,902
+- `Other Kharif pulses`: 3,659
+- `Castor seed`: 3,376
+- `Coriander`: 3,369
+- `Garlic`: 3,289
+- `Soyabean`: 3,212
+- `Banana`: 3,209
+- `Other Rabi pulses`: 3,180
+- `Dry ginger`: 3,008
+- `Tobacco`: 2,698
+- `Sannhamp`: 2,395
+- `Niger seed`: 2,070
+- `Coconut`: 1,985
+- `Mesta`: 1,787
+- `Tapioca`: 1,586
+- `Arecanut`: 1,577
+- `Jute`: 1,453
+- `Khesari`: 1,360
+- `Safflower`: 1,335
+- `Guar seed`: 1,295
+- `Cashewnut`: 1,081
+- `Black pepper`: 934
+- `Moth`: 878
+- `other oilseeds`: 633
+- `Other Cereals & Millets`: 628
+- `Cowpea(Lobia)`: 587
+- `Papaya`: 483
+- `Paddy`: 479
+- `Mango`: 449
+- `Cardamom`: 427
+- `Oilseeds total`: 426
+- `Other Fresh Fruits`: 410
+- `Brinjal`: 386
+- `Other Vegetables`: 381
+- `Tomato`: 368
+- `Citrus Fruit`: 301
+- `Pome Fruit`: 297
+- `Orange`: 271
+- `Pulses total`: 266
+- `Pineapple`: 247
+- `Ginger`: 241
+- `Bhindi`: 236
+- `Cabbage`: 205
+- `Total foodgrain`: 188
+- `Beans & Mutter(Vegetable)`: 167
+- `Grapes`: 129
+- `Korra`: 126
+- `Cauliflower`: 122
+- `Blackgram`: 118
+- `Drum Stick`: 112
+- `Jack Fruit`: 112
+- `Cucumber`: 93
+- `Pump Kin`: 93
+- `Bitter Gourd`: 92
+- `Samai`: 87
+- `Water Melon`: 85
+- `Bottle Gourd`: 84
+- `Snak Guard`: 82
+- `other misc. pulses`: 70
+- `Other Citrus Fruit`: 69
+- `Pome Granet`: 66
+- `Tea`: 62
+- `Redish`: 61
+- `Varagu`: 58
+- `Lab-Lab`: 48
+- `Ash Gourd`: 44
+- `Lemon`: 39
+- `Sapota`: 39
+- `Ribed Guard`: 38
+- `Yam`: 36
+- `Cashewnut Raw`: 35
+- `Lentil`: 31
+- `Rubber`: 29
+- `Carrot`: 28
+- `Cashewnut Processed`: 21
+- `Arcanut (Processed)`: 20
+- `Atcanut (Raw)`: 20
+- `Bean`: 20
+- `Jute & mesta`: 20
+- `Cond-spcs other`: 18
+- `Rajmash Kholar`: 18
+- `Beet Root`: 16
+- `Kapas`: 12
+- `Peas (vegetable)`: 11
+- `Colocosia`: 11
+- `Ber`: 11
+- `other fibres`: 10
+- `Ricebean (nagadal)`: 10
+- `Jobster`: 9
+- `Perilla`: 9
+- `Turnip`: 8
+- `Coffee`: 6
+- `Pear`: 6
+- `Plums`: 6
+- `Litchi`: 6
+- `Apple`: 4
+- `Peach`: 4
+- `Other Dry Fruit`: 1
+
+## State frequency (cleaned rows)
+- `Uttar Pradesh`: 33,306
+- `Madhya Pradesh`: 22,943
+- `Karnataka`: 21,122
+- `Bihar`: 18,885
+- `Assam`: 14,628
+- `Odisha`: 13,575
+- `Tamil Nadu`: 13,547
+- `Maharashtra`: 12,628
+- `Rajasthan`: 12,514
+- `Chhattisgarh`: 10,709
+- `Andhra Pradesh`: 9,628
+- `West Bengal`: 9,613
+- `Gujarat`: 8,436
+- `Haryana`: 5,875
+- `Telangana`: 5,649
+- `Uttarakhand`: 4,896
+- `Kerala`: 4,261
+- `Nagaland`: 3,906
+- `Punjab`: 3,173
+- `Meghalaya`: 2,867
+- `Arunachal Pradesh`: 2,546
+- `Himachal Pradesh`: 2,494
+- `Jammu and Kashmir`: 1,634
+- `Tripura`: 1,412
+- `Manipur`: 1,267
+- `Jharkhand`: 1,266
+- `Mizoram`: 957
+- `Puducherry`: 876
+- `Sikkim`: 714
+- `Dadra and Nagar Haveli`: 263
+- `Goa`: 208
+- `Andaman and Nicobar Islands`: 203
+- `Chandigarh`: 90
+
+## Yield flags
+Yield is `Production / Area`. `Yield_Percentile` is calculated within crop. `Yield_Outlier` flags values below the crop-wise 1st percentile or above its 99th percentile; flagged rows are retained.
+- `Arcanut (Processed)`: 2 flagged
+- `Arecanut`: 32 flagged
+- `Arhar/Tur`: 150 flagged
+- `Atcanut (Raw)`: 2 flagged
+- `Bajra`: 95 flagged
+- `Banana`: 64 flagged
+- `Barley`: 82 flagged
+- `Bean`: 1 flagged
+- `Beans & Mutter(Vegetable)`: 2 flagged
+- `Bhindi`: 3 flagged
+- `Black pepper`: 20 flagged
+- `Blackgram`: 2 flagged
+- `Brinjal`: 4 flagged
+- `Cabbage`: 2 flagged
+- `Cardamom`: 8 flagged
+- `Carrot`: 1 flagged
+- `Cashewnut`: 22 flagged
+- `Cashewnut Processed`: 1 flagged
+- `Cashewnut Raw`: 2 flagged
+- `Castor seed`: 66 flagged
+- `Cauliflower`: 2 flagged
+- `Citrus Fruit`: 3 flagged
+- `Coconut`: 40 flagged
+- `Coffee`: 2 flagged
+- `Cond-spcs other`: 2 flagged
+- `Coriander`: 68 flagged
+- `Cotton(lint)`: 88 flagged
+- `Cowpea(Lobia)`: 12 flagged
+- `Drum Stick`: 2 flagged
+- `Dry chillies`: 128 flagged
+- `Dry ginger`: 60 flagged
+- `Garlic`: 66 flagged
+- `Ginger`: 6 flagged
+- `Gram`: 145 flagged
+- `Grapes`: 2 flagged
+- `Groundnut`: 176 flagged
+- `Guar seed`: 26 flagged
+- `Horse-gram`: 76 flagged
+- `Jack Fruit`: 1 flagged
+- `Jobster`: 2 flagged
+- `Jowar`: 140 flagged
+- `Jute`: 30 flagged
+- `Jute & mesta`: 2 flagged
+- `Kapas`: 2 flagged
+- `Khesari`: 28 flagged
+- `Korra`: 4 flagged
+- `Lemon`: 2 flagged
+- `Lentil`: 2 flagged
+- `Linseed`: 88 flagged
+- `Maize`: 276 flagged
+- `Mango`: 5 flagged
+- `Masoor`: 84 flagged
+- `Mesta`: 31 flagged
+- `Moong(Green Gram)`: 203 flagged
+- `Niger seed`: 39 flagged
+- `Oilseeds total`: 5 flagged
+- `Onion`: 135 flagged
+- `Orange`: 3 flagged
+- `Other Cereals & Millets`: 13 flagged
+- `Other Fresh Fruits`: 5 flagged
+- `Other Kharif pulses`: 72 flagged
+- `Other Rabi pulses`: 62 flagged
+- `Other Vegetables`: 4 flagged
+- `Paddy`: 10 flagged
+- `Papaya`: 5 flagged
+- `Peas & beans (Pulses)`: 90 flagged
+- `Perilla`: 2 flagged
+- `Pineapple`: 6 flagged
+- `Pome Fruit`: 3 flagged
+- `Pome Granet`: 1 flagged
+- `Potato`: 140 flagged
+- `Pulses total`: 6 flagged
+- `Ragi`: 83 flagged
+- `Rajmash Kholar`: 2 flagged
+- `Rapeseed &Mustard`: 151 flagged
+- `Redish`: 1 flagged
+- `Rice`: 302 flagged
+- `Ricebean (nagadal)`: 2 flagged
+- `Rubber`: 2 flagged
+- `Safflower`: 27 flagged
+- `Samai`: 1 flagged
+- `Sannhamp`: 21 flagged
+- `Sapota`: 2 flagged
+- `Sesamum`: 89 flagged
+- `Small millets`: 92 flagged
+- `Soyabean`: 64 flagged
+- `Sugarcane`: 158 flagged
+- `Sunflower`: 109 flagged
+- `Sweet potato`: 84 flagged
+- `Tapioca`: 31 flagged
+- `Tea`: 2 flagged
+- `Tobacco`: 53 flagged
+- `Tomato`: 4 flagged
+- `Total foodgrain`: 4 flagged
+- `Turmeric`: 84 flagged
+- `Turnip`: 1 flagged
+- `Urad`: 196 flagged
+- `Varagu`: 2 flagged
+- `Wheat`: 157 flagged
+- `other misc. pulses`: 1 flagged
+- `other oilseeds`: 6 flagged
+
+## Suspicious or sparse categories
+Categories with fewer than 10 cleaned rows are listed below for review; no explanation is inferred.
+- `Jobster`: 9 rows
+- `Perilla`: 9 rows
+- `Turnip`: 8 rows
+- `Coffee`: 6 rows
+- `Pear`: 6 rows
+- `Plums`: 6 rows
+- `Litchi`: 6 rows
+- `Apple`: 4 rows
+- `Peach`: 4 rows
+- `Other Dry Fruit`: 1 rows
+
+## Limitations
+- Production units are not inferred or converted; unit consistency requires source documentation.
+- Raw yield is not used as a cross-crop comparison; percentiles are crop-wise only.
+- Class imbalance is represented by the crop frequency table and must be considered in model evaluation.
