@@ -24,7 +24,7 @@ def extract_ndvi(geometry, start_date, end_date, ee_module=None):
         .map(lambda image: _mask_and_ndvi(image, ee_module))
     )
     count = collection.size().getInfo()
-    if count == 0:
+    if not count:
         return {
             "Preseason_NDVI_Mean": None,
             "Preseason_NDVI_Median": None,
@@ -34,17 +34,8 @@ def extract_ndvi(geometry, start_date, end_date, ee_module=None):
             "NDVI_Observation_Count": 0,
             "NDVI_Quality_Flag": "no_valid_observation",
         }
-    image = collection.toBands()
-    stats = image.reduceRegion(
-        reducer=ee_module.Reducer.mean().combine(ee_module.Reducer.median(), "", True)
-        .combine(ee_module.Reducer.minMax(), "", True)
-        .combine(ee_module.Reducer.stdDev(), "", True),
-        geometry=geometry,
-        scale=30,
-        bestEffort=True,
-        maxPixels=1e9,
-    ).getInfo()
-    # Aggregate the per-scene summaries so the returned fields are stable.
+    # Aggregate per-scene district means so the observation count is stable
+    # and pixels are not incorrectly treated as independent observations.
     scene_stats = collection.map(
         lambda image: image.reduceRegion(
             reducer=ee_module.Reducer.mean(), geometry=geometry, scale=30, bestEffort=True

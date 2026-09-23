@@ -2,6 +2,7 @@ import argparse
 
 import joblib
 import pandas as pd
+from sklearn.base import clone
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, f1_score, top_k_accuracy_score
 from sklearn.model_selection import train_test_split
 
@@ -20,10 +21,12 @@ def evaluate(model_path=MODEL_PATH, dataset_path=None):
     train, test = train_test_split(data, test_size=0.2, random_state=42, stratify=data[target])
     bundle = joblib.load(model_path)
     model = bundle["model"] if isinstance(bundle, dict) and "model" in bundle else bundle
-    model.fit(train[AGRONOMIC_FEATURES], train[target])
-    predictions = model.predict(test[AGRONOMIC_FEATURES])
-    probabilities = model.predict_proba(test[AGRONOMIC_FEATURES])
-    labels = getattr(model, "classes_", sorted(data[target].unique()))
+    # Evaluate a clone so the serialized production bundle is never mutated.
+    estimator = clone(model)
+    estimator.fit(train[AGRONOMIC_FEATURES], train[target])
+    predictions = estimator.predict(test[AGRONOMIC_FEATURES])
+    probabilities = estimator.predict_proba(test[AGRONOMIC_FEATURES])
+    labels = getattr(estimator, "classes_", sorted(data[target].unique()))
     return {
         "accuracy": accuracy_score(test[target], predictions),
         "macro_f1": f1_score(test[target], predictions, average="macro"),

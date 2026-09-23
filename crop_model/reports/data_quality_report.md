@@ -6,7 +6,8 @@ Source: `crop_production.csv/crop_production.csv`
 - Original rows: 246,091
 - Cleaned rows: 246,091
 - Training rows: 242,361
-- Exact duplicates removed: 0
+- Exact duplicate rows in original input: 0
+- Rows removed after normalization/deduplication: 0
 - States: 33
 - Districts: 646
 - Crops: 124
@@ -312,6 +313,12 @@ Categories with fewer than 10 cleaned rows are listed below for review; no expla
 - `Apple`: 4 rows
 - `Peach`: 4 rows
 - `Other Dry Fruit`: 1 rows
+
+## Production-unit review
+The source does not provide a production-unit column. Units are therefore unknown; no conversion or explanation is inferred.
+
+## Imbalance review
+The crop frequency table above is the direct evidence of class imbalance; the least frequent crops are also listed as sparse categories.
 
 ## Limitations
 - Production units are not inferred or converted; unit consistency requires source documentation.

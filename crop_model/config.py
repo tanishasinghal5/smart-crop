@@ -6,6 +6,7 @@ REPORT_DIR = ROOT / "crop_model" / "reports"
 MODEL_PATH = ROOT / "bundle.pkl"
 
 PRODUCTION_CANDIDATES = (
+    ROOT / "crop_production.csv" / "crop_production.csv",
     ROOT / "crop_production.csv",
     ROOT / "Crop_Production.csv",
     ROOT / "data" / "crop_production.csv",

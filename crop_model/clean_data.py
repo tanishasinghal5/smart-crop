@@ -34,7 +34,8 @@ def build_report(original, clean, training, keys, source):
         f"- Original rows: {len(original):,}",
         f"- Cleaned rows: {len(clean):,}",
         f"- Training rows: {len(training):,}",
-        f"- Exact duplicates removed: {len(original) - len(clean):,}",
+        f"- Exact duplicate rows in original input: {int(original.duplicated().sum()):,}",
+        f"- Rows removed after normalization/deduplication: {len(original) - len(clean):,}",
         f"- States: {clean['State_Name'].nunique(dropna=True):,}",
         f"- Districts: {clean['District_Name'].nunique(dropna=True):,}",
         f"- Crops: {clean['Crop'].nunique(dropna=True):,}",
@@ -75,6 +76,8 @@ def build_report(original, clean, training, keys, source):
     ]
     sparse = clean["Crop"].value_counts()
     lines.extend(f"- `{key}`: {value:,} rows" for key, value in sparse[sparse < 10].items())
+    lines += ["", "## Production-unit review", "The source does not provide a production-unit column. Units are therefore unknown; no conversion or explanation is inferred.",
+              "", "## Imbalance review", "The crop frequency table above is the direct evidence of class imbalance; the least frequent crops are also listed as sparse categories."]
     lines += [
         "",
         "## Limitations",

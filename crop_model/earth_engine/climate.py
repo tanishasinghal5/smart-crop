@@ -8,6 +8,12 @@ def extract_climate(geometry, start_date, end_date, ee_module=None):
         from .client import initialize
         ee_module = initialize()
     collection = ee_module.ImageCollection(DATASET).filterDate(start_date, end_date).filterBounds(geometry)
+    if not collection.size().getInfo():
+        return {
+            "Temperature_Mean_C": None, "Temperature_Min_C": None,
+            "Temperature_Max_C": None, "Preseason_Soil_Moisture_Mean": None,
+            "Soil_Moisture_Quality_Flag": "no_valid_observation",
+        }
     image = collection.select(TEMPERATURE_BANDS).mean()
     result = image.reduceRegion(ee_module.Reducer.mean(), geometry, 10000, bestEffort=True).getInfo()
     output = {

@@ -19,6 +19,15 @@ def _canonical_text(value):
     return " ".join(str(value).strip().split())
 
 
+def _canonical_season(value):
+    value = _canonical_text(value)
+    if pd.isna(value):
+        return value
+    labels = ("Kharif", "Rabi", "Summer", "Whole Year", "Autumn", "Winter")
+    folded = value.casefold()
+    return next((label for label in labels if label.casefold() == folded), value)
+
+
 def standardize_columns(frame):
     return frame.rename(columns={_find_column(frame, name): name for name in REQUIRED_COLUMNS})
 
@@ -27,6 +36,7 @@ def clean_production_frame(frame):
     frame = standardize_columns(frame.copy())
     for column in TEXT_COLUMNS:
         frame[column] = frame[column].map(_canonical_text)
+    frame["Season"] = frame["Season"].map(_canonical_season)
     for column in ["Crop_Year", "Area", "Production"]:
         frame[column] = pd.to_numeric(frame[column], errors="coerce")
     return frame.drop_duplicates(ignore_index=True)
