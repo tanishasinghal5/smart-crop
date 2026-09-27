@@ -495,7 +495,8 @@ def gemini():
     payload = {
         "contents": [{"role": "user", "parts": [{"text": prompt}]}]
     }
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+    model = os.getenv('GEMINI_MODEL', 'gemini-3.8-flash')
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
     req = urllib.request.Request(
         url,
         data=json.dumps(payload).encode(),
