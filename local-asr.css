@@ -1,0 +1,5 @@
+#micButton{position:relative;transition:transform .2s ease,background .2s ease,color .2s ease,box-shadow .2s ease}
+#micButton.asr-listening{background:#d85332;color:#fff;box-shadow:0 0 0 6px rgba(216,83,50,.16);animation:asrPulse 1.15s ease-in-out infinite}
+#micButton.asr-loading{cursor:progress;opacity:.8}
+.speech-note.asr-ready{color:#2f6a40;font-weight:650}
+@keyframes asrPulse{50%{transform:scale(1.08);box-shadow:0 0 0 11px rgba(216,83,50,0)}}

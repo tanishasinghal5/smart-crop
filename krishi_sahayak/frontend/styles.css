@@ -1,0 +1,52 @@
+/* Custom Styles for KrishiSahayak */
+.bot-bubble {
+    border-bottom-left-radius: 0;
+}
+.user-bubble {
+    border-bottom-right-radius: 0;
+}
+
+/* Dark Mode Styles */
+body.dark {
+    background-color: #1a202c;
+    color: #e2e8f0;
+}
+body.dark header {
+    background-color: #064e3b;
+}
+body.dark .bg-white {
+    background-color: #2d3748;
+    border-color: #4a5568;
+}
+body.dark .bg-gray-100 {
+    background-color: #4a5568;
+}
+body.dark .text-gray-900 {
+    color: #e2e8f0;
+}
+body.dark .text-gray-500 {
+    color: #a0aec0;
+}
+body.dark .bot-bubble {
+    background-color: #2d3748;
+    border-color: #4a5568;
+}
+body.dark .user-bubble {
+    background-color: #059669;
+    color: white;
+}
+body.dark footer {
+    background-color: #1a202c;
+    border-color: #4a5568;
+}
+body.dark textarea {
+    color: #e2e8f0;
+}
+body.dark .starter-btn {
+    background-color: #2d3748;
+    color: #34d399;
+    border-color: #065f46;
+}
+body.dark .starter-btn:hover {
+    background-color: #064e3b;
+}

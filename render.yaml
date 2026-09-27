@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: terrabyte
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    # Single worker: the models are loaded per-process and each one costs ~200MB.
+    startCommand: gunicorn server:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 120
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        sync: false
