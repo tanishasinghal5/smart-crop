@@ -23,6 +23,7 @@ import re
 import sqlite3
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 import warnings
 
@@ -756,6 +757,150 @@ def disease_advice():
                    summary=advice.get('summary'),
                    steps=(advice.get('steps') or [])[:3],
                    meta={'source': 'live', 'model': model})
+
+
+# ---- Google Maps: village search and GPS -> place ---------------------------
+# Results are returned in the shape app.js already uses for places:
+# {name, state, district, lat, lng, label, source}.
+
+PLACE_TYPES = {'locality', 'sublocality', 'sublocality_level_1', 'neighborhood',
+               'postal_town', 'administrative_area_level_2',
+               'administrative_area_level_3', 'administrative_area_level_4'}
+PLACES_TTL = 30 * 24 * 3600  # places don't move; also keeps Maps calls low
+_places_cache = {}
+_places_lock = threading.Lock()
+
+
+def _places_cache_get(key):
+    with _places_lock:
+        hit = _places_cache.get(key)
+        return hit[1] if hit and hit[0] > time.time() else None
+
+
+def _places_cache_set(key, value):
+    with _places_lock:
+        if len(_places_cache) > 5000:  # keep memory bounded
+            _places_cache.clear()
+        _places_cache[key] = (time.time() + PLACES_TTL, value)
+
+
+class MapsError(Exception):
+    def __init__(self, message, status=502, code='maps_error'):
+        super().__init__(message)
+        self.status, self.code = status, code
+
+
+def _maps_key():
+    key = os.getenv('MAPS_SERVER_KEY')
+    if not key:
+        raise MapsError('Maps is not configured on this server.', 503, 'maps_unconfigured')
+    return key
+
+
+def _maps_fetch(req):
+    try:
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            return json.load(resp)
+    except urllib.error.HTTPError as exc:
+        raise MapsError('Maps service error', 502, f'maps_http_{exc.code}') from exc
+    except (urllib.error.URLError, OSError) as exc:
+        raise MapsError('Could not reach Maps.', 502, 'maps_unreachable') from exc
+
+
+def _component(components, kind, text_key):
+    """Pull one address part out of a Google address-components list."""
+    for comp in components or []:
+        if kind in comp.get('types', []):
+            return comp.get(text_key, '')
+    return ''
+
+
+def _place_shape(name, district, state, lat, lng, source):
+    label_parts = [name] + [p for p in (district, state) if p and p != name]
+    return {'name': name, 'state': state, 'district': district,
+            'lat': lat, 'lng': lng, 'label': ', '.join(label_parts), 'source': source}
+
+
+@app.get('/api/places')
+def places_search():
+    query = request.args.get('q', '').strip()
+    try:
+        limit = max(1, min(10, int(request.args.get('limit', 8))))
+    except ValueError:
+        limit = 8
+    if len(query) < 2:
+        return jsonify(places=[])
+    cache_key = f'search:{query.lower()}:{limit}'
+    cached = _places_cache_get(cache_key)
+    if cached is not None:
+        return jsonify(places=cached, meta={'source': 'cache'})
+    try:
+        req = urllib.request.Request(
+            'https://places.googleapis.com/v1/places:searchText', method='POST',
+            data=json.dumps({'textQuery': query, 'regionCode': 'IN',
+                             'languageCode': 'en', 'pageSize': limit}).encode(),
+            headers={'Content-Type': 'application/json', 'X-Goog-Api-Key': _maps_key(),
+                     'X-Goog-FieldMask': 'places.displayName,places.location,'
+                                         'places.addressComponents,places.types'})
+        data = _maps_fetch(req)
+    except MapsError as err:
+        return jsonify(error=str(err), code=err.code), err.status
+
+    results = []
+    for place in data.get('places', []):
+        comps = place.get('addressComponents', [])
+        # Only real places in India — not shops, stations or temples named after them.
+        if _component(comps, 'country', 'shortText') != 'IN':
+            continue
+        if not PLACE_TYPES.intersection(place.get('types', [])):
+            continue
+        location = place.get('location') or {}
+        results.append(_place_shape(
+            name=(place.get('displayName') or {}).get('text', ''),
+            district=(_component(comps, 'administrative_area_level_3', 'longText')
+                      or _component(comps, 'administrative_area_level_2', 'longText')),
+            state=_component(comps, 'administrative_area_level_1', 'longText'),
+            lat=location.get('latitude'), lng=location.get('longitude'), source='search'))
+    _places_cache_set(cache_key, results)
+    return jsonify(places=results, meta={'source': 'live'})
+
+
+@app.get('/api/reverse-geocode')
+def reverse_geocode():
+    try:
+        lat = float(request.args['lat'])
+        lng = float(request.args['lng'])
+    except (KeyError, ValueError):
+        return jsonify(error='lat and lng are required numbers.', code='bad_coordinates'), 400
+    if not (-90 <= lat <= 90 and -180 <= lng <= 180):
+        return jsonify(error='lat and lng are out of range.', code='bad_coordinates'), 400
+    cache_key = f'reverse:{lat:.3f},{lng:.3f}'  # ~110 m: nudging the pin still hits the cache
+    cached = _places_cache_get(cache_key)
+    if cached is not None:
+        return jsonify(cached)
+    try:
+        url = ('https://maps.googleapis.com/maps/api/geocode/json?'
+               + urllib.parse.urlencode({'latlng': f'{lat},{lng}', 'language': 'en',
+                                         'key': _maps_key()}))
+        data = _maps_fetch(urllib.request.Request(url))
+    except MapsError as err:
+        return jsonify(error=str(err), code=err.code), err.status
+    if data.get('status') != 'OK' or not data.get('results'):
+        # ZERO_RESULTS (e.g. at sea) or REQUEST_DENIED (key restrictions).
+        return jsonify(error='No place found here.', code=f'maps_{data.get("status", "error").lower()}'), 404
+
+    def first(kind):
+        for result in data['results']:
+            value = _component(result.get('address_components'), kind, 'long_name')
+            if value:
+                return value
+        return ''
+
+    district = first('administrative_area_level_3') or first('administrative_area_level_2')
+    name = first('locality') or first('sublocality') or district or 'Your location'
+    place = _place_shape(name, district, first('administrative_area_level_1'), lat, lng, 'gps')
+    _places_cache_set(cache_key, place)
+    return jsonify(place)
 
 
 @app.post('/api/chat')

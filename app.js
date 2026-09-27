@@ -3044,11 +3044,10 @@ function generateSampleSoilCardDataUrl() {
 }
 
 // ===== Place search + seasonal climate (ported from LocationClimate.tsx) =====
-// Keyless APIs: Open-Meteo (geocoding/forecast/archive) + BigDataCloud (reverse).
-const GEO_URL = "https://geocoding-api.open-meteo.com/v1/search";
+// Place search and GPS -> place go through our server (Google Maps: Places API
+// (New) + Geocoding). Weather stays on keyless Open-Meteo (forecast/archive).
 const FORECAST_URL = "https://api.open-meteo.com/v1/forecast";
 const ARCHIVE_URL = "https://archive-api.open-meteo.com/v1/archive";
-const REVERSE_URL = "https://api.bigdatacloud.net/data/reverse-geocode-client";
 const CLIMATE_TTL_MS = 3 * 60 * 60 * 1000;
 const GEO_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 // ISRIC SoilGrids 250 m global soil rasters — keyless like Open-Meteo.
@@ -3124,26 +3123,16 @@ const OFFLINE_PLACES = [
 async function searchPlaces(query, limit = 8, signal) {
   const q = query.trim();
   if (q.length < 2) return [];
-  const cacheKey = `terraGeo:${q.toLowerCase()}`;
+  // v2 key: results cached under the old key came from Open-Meteo.
+  const cacheKey = `terraGeo2:${q.toLowerCase()}`;
   const hit = tbCacheGet(cacheKey, GEO_TTL_MS);
   if (hit) return hit;
-  const url =
-    `${GEO_URL}?name=${encodeURIComponent(q)}&count=${limit}` +
-    `&language=en&format=json&countryCode=IN`;
+  const url = `/api/places?q=${encodeURIComponent(q)}&limit=${limit}`;
   const response = await fetch(url, { signal });
-  if (!response.ok) throw Error(`Geocoding failed: ${response.status}`);
+  if (!response.ok) throw Error(`Place search failed: ${response.status}`);
   const data = await response.json();
-  if (!data.results || !data.results.length) return [];
-  const places = data.results.map((r) => ({
-    name: r.name,
-    state: r.admin1 || "",
-    district: r.admin2 || "",
-    lat: r.latitude,
-    lng: r.longitude,
-    label: [r.name, r.admin2, r.admin1].filter(Boolean).join(", "),
-    source: "search",
-  }));
-  tbCacheSet(cacheKey, places);
+  const places = data.places || [];
+  if (places.length) tbCacheSet(cacheKey, places);
   return places;
 }
 
@@ -3166,26 +3155,10 @@ async function reverseGeocode(lat, lng) {
     source: "gps",
   };
   try {
-    const response = await fetch(
-      `${REVERSE_URL}?latitude=${lat}&longitude=${lng}&localityLanguage=en`,
-    );
+    const response = await fetch(`/api/reverse-geocode?lat=${lat}&lng=${lng}`);
     if (!response.ok) return fallback;
-    const d = await response.json();
-    const admins = d.localityInfo?.administrative || [];
-    const district =
-      admins.find((a) => a.adminLevel === 5)?.name ||
-      admins.find((a) => a.adminLevel === 6)?.name ||
-      d.city ||
-      "";
-    const name = d.locality || d.city || district || "Your location";
-    const state = d.principalSubdivision || "";
-    return {
-      ...fallback,
-      name,
-      state,
-      district,
-      label: [name, state].filter(Boolean).join(", ") || fallback.label,
-    };
+    const place = await response.json();
+    return { ...fallback, ...place, lat, lng };
   } catch {
     // A failed name lookup must never block the reading — coords are enough.
     return fallback;
