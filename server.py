@@ -483,6 +483,38 @@ def disease():
         response['message'] = message
     return jsonify(response)
 
+_ee = None
+_ee_error = None
+_ee_lock = threading.Lock()
+
+
+def _get_ee():
+    """Connect to Earth Engine once per container, not once per request —
+    ee.Initialize takes several seconds, which every farmer would otherwise pay."""
+    global _ee, _ee_error
+    with _ee_lock:
+        if _ee is None and _ee_error is None:
+            try:
+                from crop_model.earth_engine.client import initialize
+                _ee = initialize()
+            except Exception as exc:  # noqa: BLE001 — surface any failure to the API
+                # client.py wraps the real error in a generic "run earthengine
+                # authenticate" message, which is misleading on a server.
+                cause = exc.__cause__ or exc
+                _ee_error = f'{type(cause).__name__}: {cause}'
+        return _ee
+
+
+@app.get('/api/satellite/health')
+def satellite_health():
+    """Checks Earth Engine is reachable with this server's credentials."""
+    ee = _get_ee()
+    if ee is None:
+        return jsonify(ok=False, error=_ee_error, code='earth_engine_unavailable'), 503
+    return jsonify(ok=True, project=os.environ.get('EARTH_ENGINE_PROJECT_ID'),
+                   test=ee.Number(1).add(1).getInfo())
+
+
 @app.post('/api/gemini')
 def gemini():
     api_key = os.getenv('GEMINI_API_KEY')

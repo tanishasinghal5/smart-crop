@@ -7,7 +7,6 @@ data/
 *.env
 docx guide/
 krishi_sahayak/backend/
-crop_model/
 crop_production.csv/
 merge_conflicts*.txt
 input_guard*.py
