@@ -10,3 +10,4 @@ scikit-learn
 xgboost
 pillow
 earthengine-api
+google-cloud-firestore

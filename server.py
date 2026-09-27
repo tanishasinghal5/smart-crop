@@ -20,7 +20,6 @@ import threading
 import json
 import os
 import re
-import sqlite3
 import time
 import urllib.error
 import urllib.parse
@@ -32,6 +31,9 @@ import numpy as np
 import pandas as pd
 from flask import Flask, jsonify, request, send_from_directory, session
 from werkzeug.security import check_password_hash, generate_password_hash
+
+from user_store import (DuplicateError, FirestoreUserStore, SqliteUserStore,
+                        StoreUnavailable)
 
 try:
     from flask_cors import CORS
@@ -160,25 +162,33 @@ if app.secret_key == 'dev-insecure-terrabyte-secret':
     print('WARNING: SECRET_KEY not set — using an insecure dev fallback.')
 PIN_LENGTH = int(os.environ.get('PIN_LENGTH', 4))
 GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
+# Accounts live in Firestore by default: Cloud Run's disk is wiped on every
+# deploy, so a SQLite file there loses every account. AUTH_STORE=sqlite brings
+# back the old local file as an emergency fallback.
+AUTH_STORE = os.environ.get('AUTH_STORE', 'firestore').lower()
 DB_PATH = os.environ.get('AUTH_DB_PATH', os.path.join(BASE_DIR, 'data', 'users.db'))
-os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+FIRESTORE_PROJECT = os.environ.get('GOOGLE_CLOUD_PROJECT', 'smart-crop-hack')
+_users = None
+_users_lock = threading.Lock()
 
 
-def _db():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
+def users():
+    """The user store, connected on first use so startup stays fast."""
+    global _users
+    with _users_lock:
+        if _users is None:
+            if AUTH_STORE == 'sqlite':
+                _users = SqliteUserStore(DB_PATH)
+            else:
+                _users = FirestoreUserStore(FIRESTORE_PROJECT)  # raises StoreUnavailable
+        return _users
 
 
-with _db() as _conn:
-    _conn.execute('''CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        phone TEXT UNIQUE,
-        username TEXT NOT NULL,
-        pin_hash TEXT,
-        google_sub TEXT UNIQUE,
-        email TEXT,
-        created_at TEXT NOT NULL DEFAULT (datetime('now')))''')
+@app.errorhandler(StoreUnavailable)
+def _store_unavailable(exc):
+    print(f'User store unavailable: {exc}')
+    return jsonify(error='Accounts are temporarily unavailable. Please try again shortly.',
+                   code='store_unavailable'), 503
 
 
 def _user_json(row):
@@ -191,8 +201,7 @@ def _current_user():
     user_id = session.get('user_id')
     if not user_id:
         return None
-    with _db() as conn:
-        row = conn.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
+    row = users().get(user_id)
     if row is None:
         session.clear()
     return row
@@ -235,12 +244,8 @@ def auth_register():
     if pin != body.get('confirmPin'):
         return jsonify(error='PINs do not match.', code='pin_mismatch'), 400
     try:
-        with _db() as conn:
-            cursor = conn.execute(
-                'INSERT INTO users (phone, username, pin_hash) VALUES (?, ?, ?)',
-                (phone, username, generate_password_hash(pin)))
-            row = conn.execute('SELECT * FROM users WHERE id = ?', (cursor.lastrowid,)).fetchone()
-    except sqlite3.IntegrityError:
+        row = users().create(username, phone=phone, pin_hash=generate_password_hash(pin))
+    except DuplicateError:
         return jsonify(error='This phone number is already registered. Try logging in.',
                        code='duplicate_phone'), 409
     session['user_id'] = row['id']
@@ -253,8 +258,7 @@ def auth_login():
     phone = (body.get('phone') or '').strip()
     username = (body.get('username') or '').strip()
     pin = body.get('pin') or ''
-    with _db() as conn:
-        row = conn.execute('SELECT * FROM users WHERE phone = ?', (phone,)).fetchone()
+    row = users().by_phone(phone)
     if row and row['pin_hash'] is None:
         return jsonify(error='This account signs in with Google.', code='google_account'), 401
     if (row is None or row['username'].strip().lower() != username.lower()
@@ -279,22 +283,20 @@ def auth_google():
     email = info.get('email')
     current = _current_user()
     is_new = False
-    with _db() as conn:
-        row = conn.execute('SELECT * FROM users WHERE google_sub = ?', (sub,)).fetchone()
+    taken = jsonify(error='This Google account is already linked to another profile.',
+                    code='google_taken'), 409
+    row = users().by_google_sub(sub)
+    try:
         if current is not None and current['google_sub'] is None:
             if row is not None and row['id'] != current['id']:
-                return jsonify(error='This Google account is already linked to another profile.',
-                               code='google_taken'), 409
-            conn.execute('UPDATE users SET google_sub = ?, email = ? WHERE id = ?',
-                         (sub, email, current['id']))
-            row = conn.execute('SELECT * FROM users WHERE id = ?', (current['id'],)).fetchone()
+                return taken
+            row = users().update(current['id'], google_sub=sub, email=email)
         elif row is None:
             username = (info.get('name') or (email or 'farmer').split('@')[0]).strip()[:60]
-            cursor = conn.execute(
-                'INSERT INTO users (username, google_sub, email) VALUES (?, ?, ?)',
-                (username, sub, email))
-            row = conn.execute('SELECT * FROM users WHERE id = ?', (cursor.lastrowid,)).fetchone()
+            row = users().create(username, google_sub=sub, email=email)
             is_new = True
+    except DuplicateError:  # lost a race for this Google account
+        return taken
     session['user_id'] = row['id']
     return jsonify(user=_user_json(row), isNew=is_new)
 
@@ -308,10 +310,8 @@ def auth_phone():
     if not re.fullmatch(r'\d{10}', phone):
         return jsonify(error='Enter a valid 10-digit phone number.', code='invalid_phone'), 400
     try:
-        with _db() as conn:
-            conn.execute('UPDATE users SET phone = ? WHERE id = ?', (phone, row['id']))
-            row = conn.execute('SELECT * FROM users WHERE id = ?', (row['id'],)).fetchone()
-    except sqlite3.IntegrityError:
+        row = users().update(row['id'], phone=phone)
+    except DuplicateError:
         return jsonify(error='This phone number belongs to another account. '
                              'Log in with your phone number and PIN instead.',
                        code='duplicate_phone'), 409
@@ -329,10 +329,7 @@ def auth_pin():
         return jsonify(error=f'PIN must be exactly {PIN_LENGTH} digits.', code='invalid_pin'), 400
     if pin != body.get('confirmPin'):
         return jsonify(error='PINs do not match.', code='pin_mismatch'), 400
-    with _db() as conn:
-        conn.execute('UPDATE users SET pin_hash = ? WHERE id = ?',
-                     (generate_password_hash(pin), row['id']))
-        row = conn.execute('SELECT * FROM users WHERE id = ?', (row['id'],)).fetchone()
+    row = users().update(row['id'], pin_hash=generate_password_hash(pin))
     return jsonify(user=_user_json(row))
 
 
@@ -344,9 +341,7 @@ def auth_profile():
     username = ((request.get_json(silent=True) or {}).get('username') or '').strip()
     if not username or len(username) > 60:
         return jsonify(error='Enter your name.', code='invalid_username'), 400
-    with _db() as conn:
-        conn.execute('UPDATE users SET username = ? WHERE id = ?', (username, row['id']))
-        row = conn.execute('SELECT * FROM users WHERE id = ?', (row['id'],)).fetchone()
+    row = users().update(row['id'], username=username)
     return jsonify(user=_user_json(row))
 
 
@@ -355,8 +350,7 @@ def auth_delete():
     row = _current_user()
     if row is None:
         return jsonify(error='Not signed in', code='not_signed_in'), 401
-    with _db() as conn:
-        conn.execute('DELETE FROM users WHERE id = ?', (row['id'],))
+    users().delete(row['id'])
     session.clear()
     return jsonify(ok=True)
 
