@@ -3798,79 +3798,105 @@ function setupPlanner() {
   const imgPreview = document.querySelector("#ocrImagePreview");
   const status = document.querySelector("#ocrStatus");
 
+  // Main path: Gemini on the server reads the card (POST /api/soil-card).
+  async function readSoilCardOnServer(sourceFileOrUrl) {
+    const blob =
+      typeof sourceFileOrUrl === "string"
+        ? await (await fetch(sourceFileOrUrl)).blob()
+        : sourceFileOrUrl;
+    const body = new FormData();
+    body.append("file", blob, blob.name || "soil-card.png");
+    const response = await fetch("/api/soil-card", { method: "POST", body });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const err = new Error(data.error || "Soil card reader unavailable");
+      err.status = response.status;
+      throw err;
+    }
+    const values = {};
+    for (const [key, item] of Object.entries(data.extracted || {}))
+      values[key] = item.value;
+    return { values, warnings: data.warnings || [] };
+  }
+
+  // Backup only: Tesseract in the browser, for when the server can't be
+  // reached or Gemini is busy. Less accurate, so the farmer is told.
+  async function readSoilCardOffline(sourceFileOrUrl) {
+    const tesseract = await getTesseract();
+    const { dataUrl } = await preprocessImageForOCR(sourceFileOrUrl);
+    const worker = await tesseract.createWorker("eng");
+    const result = await worker.recognize(dataUrl);
+    await worker.terminate();
+    const e = parseSoilHealthCardText(result.data.text);
+    return { N: e.nitrogen, P: e.phosphorus, K: e.potassium, ph: e.ph };
+  }
+
   async function processSoilCardImage(sourceFileOrUrl) {
     if (!status) return;
-    if (progressBox) progressBox.classList.add("active");
-    if (progressBar) progressBar.style.width = "15%";
-    if (progressText)
-      progressText.textContent = "Loading Tesseract OCR engine…";
-    status.textContent = "Scanning Soil Health Card…";
+    const isPdf =
+      typeof sourceFileOrUrl !== "string" &&
+      sourceFileOrUrl.type === "application/pdf";
+    const hideProgress = () =>
+      setTimeout(() => progressBox && progressBox.classList.remove("active"), 1200);
 
-    try {
-      const tesseract = await getTesseract();
-      if (progressBar) progressBar.style.width = "35%";
-      if (progressText)
-        progressText.textContent =
-          "Preprocessing image for contrast & clarity…";
-
-      const { dataUrl } = await preprocessImageForOCR(sourceFileOrUrl);
-      if (imgPreview) imgPreview.src = dataUrl;
-      if (previewBox) previewBox.classList.add("active");
-
-      if (progressBar) progressBar.style.width = "60%";
-      if (progressText)
-        progressText.textContent = "Analyzing N, P, K & pH text values…";
-
-      const worker = await tesseract.createWorker("eng");
-      const result = await worker.recognize(dataUrl);
-      await worker.terminate();
-
-      if (progressBar) progressBar.style.width = "100%";
-      if (progressText) progressText.textContent = "Scan complete!";
-
-      const text = result.data.text;
-      const extracted = parseSoilHealthCardText(text);
-
-      let foundCount = 0;
-      if (extracted.nitrogen !== null) {
-        form.elements["nitrogen"].value = extracted.nitrogen;
-        foundCount++;
-      }
-      if (extracted.phosphorus !== null) {
-        form.elements["phosphorus"].value = extracted.phosphorus;
-        foundCount++;
-      }
-      if (extracted.potassium !== null) {
-        form.elements["potassium"].value = extracted.potassium;
-        foundCount++;
-      }
-      if (extracted.ph !== null) {
-        form.elements["ph"].value = extracted.ph;
-        foundCount++;
-      }
-
-      if (foundCount > 0) {
-        status.textContent = `✓ Extracted ${foundCount} soil value${foundCount === 1 ? "" : "s"}! Review & adjust fields below.`;
-      } else {
-        form.elements["nitrogen"].value = 110;
-        form.elements["phosphorus"].value = 45;
-        form.elements["potassium"].value = 55;
-        form.elements["ph"].value = 6.8;
-        status.textContent = `Card processed! Pre-filled soil values (110, 45, 55, 6.8). Review & adjust below.`;
-      }
-      setTimeout(() => {
-        if (progressBox) progressBox.classList.remove("active");
-      }, 1200);
-    } catch (err) {
-      console.error(err);
-      if (progressBox) progressBox.classList.remove("active");
-      status.textContent =
-        "Pre-filled sample values below — please adjust if needed.";
-      form.elements["nitrogen"].value = 90;
-      form.elements["phosphorus"].value = 42;
-      form.elements["potassium"].value = 38;
-      form.elements["ph"].value = 6.5;
+    if (imgPreview && previewBox && !isPdf) {
+      imgPreview.src =
+        typeof sourceFileOrUrl === "string"
+          ? sourceFileOrUrl
+          : URL.createObjectURL(sourceFileOrUrl);
+      previewBox.classList.add("active");
     }
+    if (progressBox) progressBox.classList.add("active");
+    if (progressBar) progressBar.style.width = "30%";
+    if (progressText) progressText.textContent = "Reading your card with Google Gemini…";
+    status.textContent = "Reading Soil Health Card…";
+
+    let values = null;
+    let note = "";
+    let warnings = [];
+    try {
+      ({ values, warnings } = await readSoilCardOnServer(sourceFileOrUrl));
+      note = "Read by Google Gemini — please check each value against your card.";
+    } catch (err) {
+      // A 4xx means the server answered and said no (e.g. not a soil card):
+      // tell the farmer why instead of guessing offline.
+      if (err.status && err.status < 500) {
+        hideProgress();
+        status.textContent = err.message;
+        return;
+      }
+      if (isPdf) {
+        hideProgress();
+        status.textContent =
+          "Couldn't reach the card reader, and PDFs can't be read offline. Please upload a photo of the card, or type the values.";
+        return;
+      }
+      if (progressBar) progressBar.style.width = "60%";
+      if (progressText) progressText.textContent = "Card reader unavailable — reading offline instead…";
+      try {
+        values = await readSoilCardOffline(sourceFileOrUrl);
+        note = "Read offline — less accurate. Please check each value carefully against your card.";
+      } catch (offlineErr) {
+        console.error(offlineErr);
+      }
+    }
+    if (progressBar) progressBar.style.width = "100%";
+
+    // Fill only what was actually read. Never invent values: an unread box
+    // stays as it was, and the farmer is asked to type it.
+    const fields = { N: "nitrogen", P: "phosphorus", K: "potassium", ph: "ph" };
+    let foundCount = 0;
+    for (const [key, name] of Object.entries(fields)) {
+      if (values && values[key] != null) {
+        form.elements[name].value = values[key];
+        foundCount++;
+      }
+    }
+    status.textContent =
+      foundCount === 0
+        ? "Couldn't read the values — please type them from your card."
+        : [`✓ ${note}`, ...warnings].join(" ");
+    hideProgress();
     checkRanges();
   }
 

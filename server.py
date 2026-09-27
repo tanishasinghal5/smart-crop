@@ -13,12 +13,16 @@ Run:  python server.py   (then open http://localhost:8080)
       (py -3.13 server.py) — without it the endpoint returns 503 and the
       browser-side detector still covers the feature.
 """
+import base64
 import io
+import mimetypes
 import threading
 import json
 import os
 import re
 import sqlite3
+import time
+import urllib.error
 import urllib.request
 import warnings
 
@@ -515,37 +519,149 @@ def satellite_health():
                    test=ee.Number(1).add(1).getInfo())
 
 
-@app.post('/api/gemini')
-def gemini():
+class GeminiError(Exception):
+    def __init__(self, message, status=502, code='gemini_error', details=None):
+        super().__init__(message)
+        self.status, self.code, self.details = status, code, details
+
+
+def _gemini_generate(parts, response_schema=None, timeout=60):
+    """Call Gemini once, retrying a single time if it is briefly busy.
+    Returns (model, text). With response_schema, the text is JSON."""
     api_key = os.getenv('GEMINI_API_KEY')
     if not api_key:
-        return jsonify(error='Gemini API key not configured.', code='gemini_unconfigured'), 503
+        raise GeminiError('Gemini API key not configured.', 503, 'gemini_unconfigured')
+    model = os.getenv('GEMINI_MODEL', 'gemini-3.8-flash')
+    payload = {'contents': [{'role': 'user', 'parts': parts}]}
+    if response_schema:
+        payload['generationConfig'] = {'responseMimeType': 'application/json',
+                                       'responseSchema': response_schema}
+    url = f'https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent'
+    for attempt in (1, 2):
+        req = urllib.request.Request(
+            url, data=json.dumps(payload).encode(), method='POST',
+            # Key in a header rather than the URL, so it cannot leak into logs.
+            headers={'Content-Type': 'application/json', 'x-goog-api-key': api_key})
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                result = json.load(resp)
+            break
+        except urllib.error.HTTPError as exc:
+            if exc.code in (429, 500, 503) and attempt == 1:
+                time.sleep(1.5)
+                continue
+            if exc.code in (429, 503):
+                raise GeminiError('Gemini is busy right now. Please try again in a moment.',
+                                  503, 'gemini_busy', f'HTTP {exc.code}') from exc
+            raise GeminiError('Gemini service error', 502, 'gemini_error',
+                              f'HTTP {exc.code}') from exc
+        except (urllib.error.URLError, OSError) as exc:
+            raise GeminiError('Could not reach Gemini.', 502, 'gemini_unreachable', str(exc)) from exc
+    try:
+        # Skip "thought" parts that thinking models may return before the answer.
+        text = ''.join(p.get('text', '') for p in result['candidates'][0]['content']['parts']
+                       if not p.get('thought'))
+    except (KeyError, IndexError, TypeError) as exc:
+        raise GeminiError('Gemini returned no answer.', 502, 'gemini_empty') from exc
+    return model, text
+
+
+def _gemini_error_response(err):
+    return jsonify(error=str(err), code=err.code, details=err.details), err.status
+
+
+@app.post('/api/gemini')
+def gemini():
     body = request.get_json(silent=True) or {}
     prompt = body.get('prompt')
     if not prompt:
         return jsonify(error='Prompt required.', code='missing_prompt'), 400
-    payload = {
-        "contents": [{"role": "user", "parts": [{"text": prompt}]}]
-    }
-    model = os.getenv('GEMINI_MODEL', 'gemini-3.8-flash')
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
-    req = urllib.request.Request(
-        url,
-        data=json.dumps(payload).encode(),
-        headers={'Content-Type': 'application/json'},
-        method='POST'
-    )
     try:
-        with urllib.request.urlopen(req, timeout=60) as resp:
-            result = json.load(resp)
-    except Exception as e:
-        return jsonify(error='Gemini service error', details=str(e)), 502
-    # Extract answer
-    try:
-        answer = result['candidates'][0]['content']['parts'][0]['text']
-    except Exception:
-        answer = result.get('text', '')
+        _, answer = _gemini_generate([{'text': prompt}])
+    except GeminiError as err:
+        return _gemini_error_response(err)
     return jsonify(answer=answer)
+
+
+SOIL_CARD_TYPES = {'image/jpeg', 'image/png', 'image/webp', 'application/pdf'}
+SOIL_CARD_MAX_BYTES = 10 * 1024 * 1024
+# Same physical limits the planner uses (app.js fieldRanges), so the two agree.
+SOIL_CARD_LIMITS = {'N': (0, 800), 'P': (0, 300), 'K': (0, 800), 'ph': (0, 14)}
+_SOIL_VALUE = {
+    'type': 'OBJECT',
+    'properties': {
+        'value': {'type': 'NUMBER', 'nullable': True},
+        'unit': {'type': 'STRING', 'nullable': True},
+        'raw_text': {'type': 'STRING', 'nullable': True},
+    },
+    'required': ['value', 'unit', 'raw_text'],
+}
+SOIL_CARD_SCHEMA = {
+    'type': 'OBJECT',
+    'properties': {'is_soil_card': {'type': 'BOOLEAN'},
+                   'N': _SOIL_VALUE, 'P': _SOIL_VALUE, 'K': _SOIL_VALUE, 'ph': _SOIL_VALUE},
+    'required': ['is_soil_card', 'N', 'P', 'K', 'ph'],
+}
+SOIL_CARD_PROMPT = (
+    'This should be an Indian Soil Health Card. Set is_soil_card to false if it is '
+    'not a soil test report. Read these four results: available Nitrogen (N), '
+    'available Phosphorus (P), available Potassium (K), and pH. For each, give the '
+    'number exactly as printed, the unit as printed (for example "kg/ha"), and in '
+    'raw_text the exact line of text you read it from. If a value is missing, '
+    'unreadable or you are not sure, set value, unit and raw_text to null. '
+    'Never guess or estimate a number. Do not read any other fields.'
+)
+
+
+@app.post('/api/soil-card')
+def soil_card():
+    upload = request.files.get('file')
+    if upload is None or not upload.filename:
+        return jsonify(error='Attach a photo or PDF of the Soil Health Card as the "file" field.',
+                       code='missing_file'), 400
+    mime = upload.mimetype
+    if mime not in SOIL_CARD_TYPES:
+        mime = mimetypes.guess_type(upload.filename)[0]
+    if mime not in SOIL_CARD_TYPES:
+        return jsonify(error='Upload a JPG, PNG, WebP or PDF.', code='unsupported_type'), 400
+    data = upload.read()
+    if len(data) > SOIL_CARD_MAX_BYTES:
+        return jsonify(error='File is larger than 10 MB.', code='file_too_large'), 400
+
+    parts = [{'inline_data': {'mime_type': mime, 'data': base64.b64encode(data).decode()}},
+             {'text': SOIL_CARD_PROMPT}]
+    try:
+        model, text = _gemini_generate(parts, response_schema=SOIL_CARD_SCHEMA)
+        reading = json.loads(text)
+    except GeminiError as err:
+        return _gemini_error_response(err)
+    except ValueError:
+        return jsonify(error='Could not understand the card reading.', code='gemini_bad_json'), 502
+
+    if not reading.get('is_soil_card'):
+        return jsonify(error='This does not look like a Soil Health Card. '
+                             'Please upload a photo of the card itself.',
+                       code='not_a_soil_card'), 422
+
+    names = {'N': 'Nitrogen', 'P': 'Phosphorus', 'K': 'Potassium', 'ph': 'pH'}
+    extracted, warnings_out = {}, []
+    for key, (low, high) in SOIL_CARD_LIMITS.items():
+        item = reading.get(key) or {}
+        value = item.get('value')
+        if value is not None and not (low <= value <= high):
+            warnings_out.append(f'{names[key]} {value} is outside the possible range '
+                                f'{low}–{high} — please check it against the card.')
+        elif value is None:
+            warnings_out.append(f'{names[key]} not found on the card — please enter it by hand.')
+        unit = item.get('unit')
+        if key != 'ph' and value is not None and unit and unit.lower().replace(' ', '') != 'kg/ha':
+            warnings_out.append(f'{names[key]} is in "{unit}", not kg/ha — please convert it.')
+        extracted[key] = {'value': value, 'unit': unit, 'raw_text': item.get('raw_text')}
+
+    return jsonify(extracted=extracted,
+                   requires_confirmation=True,  # always — never trust an AI reading silently
+                   warnings=warnings_out,
+                   meta={'source': 'live', 'model': model})
 
 @app.post('/api/chat')
 def chat():
