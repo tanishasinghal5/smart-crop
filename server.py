@@ -59,10 +59,30 @@ CROP_LABELS = [
     'rice', 'soybean', 'sugarcane', 'watermelon', 'wheat',
 ]
 
-with warnings.catch_warnings():
-    warnings.simplefilter('ignore')
-    _bundle = joblib.load(os.path.join(BASE_DIR, 'bundle.pkl'))
-_model = _bundle['model']
+CROP_MODEL_PATH = os.path.join(BASE_DIR, 'bundle.pkl')
+_crop_model = None
+_crop_model_error = None
+_crop_lock = threading.Lock()
+
+
+def _get_crop_model():
+    """Lazy-load bundle.pkl so a cold start can serve pages before the 10 MB
+    unpickle (and the sklearn/xgboost imports it triggers) has finished."""
+    global _crop_model, _crop_model_error
+    with _crop_lock:
+        if _crop_model is None and _crop_model_error is None:
+            try:
+                with warnings.catch_warnings():
+                    warnings.simplefilter('ignore')
+                    _crop_model = joblib.load(CROP_MODEL_PATH)['model']
+            except Exception as exc:  # noqa: BLE001 — surface any load failure to the API
+                _crop_model_error = f'{type(exc).__name__}: {exc}'
+        return _crop_model
+
+
+# Warm the model in the background: pages are served immediately, and the
+# model is usually loaded before the first recommendation is requested.
+threading.Thread(target=_get_crop_model, daemon=True).start()
 
 # PlantVillage class order as seen at training time (sorted dataset folder
 # names, which is how keras image_dataset_from_directory assigns indices).
@@ -356,10 +376,16 @@ def recommend():
     if not (-50 <= temperature <= 60):
         return jsonify(error="Temperature must be between -50 and 60"), 400
 
+    model = _get_crop_model()
+    if model is None:
+        return jsonify(error='Crop recommendation is not available on this server: '
+                             + (_crop_model_error or 'model failed to load'),
+                       code='model_unavailable'), 503
+
     frame = pd.DataFrame([values], columns=FEATURES)
     with warnings.catch_warnings():
         warnings.simplefilter('ignore')
-        probabilities = _model.predict_proba(frame)[0]
+        probabilities = model.predict_proba(frame)[0]
     order = np.argsort(probabilities)[::-1][:5]
     recommendations = [
         {'crop': CROP_LABELS[i], 'probability': round(float(probabilities[i]), 4)}
