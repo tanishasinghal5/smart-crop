@@ -414,12 +414,6 @@ def disease():
     if photo is None or not photo.filename:
         return jsonify(error='Attach a leaf photo as the "photo" form field.'), 400
 
-    model = _get_disease_model()
-    if model is None:
-        return jsonify(error='Disease detection is not available on this server: '
-                             + (_disease_model_error or 'model failed to load'),
-                       code='model_unavailable'), 503
-
     try:
         from PIL import Image
         from image_guard import ImageGuard
@@ -437,6 +431,14 @@ def disease():
             recommendations=verdict.recommendations,
             metrics=verdict.metrics,
         ), 400
+
+    # Checked after the image guard: the guard needs only PIL/numpy, so photo
+    # quality feedback still works on servers without tensorflow.
+    model = _get_disease_model()
+    if model is None:
+        return jsonify(error='Disease detection is not available on this server: '
+                             + (_disease_model_error or 'model failed to load'),
+                       code='model_unavailable'), 503
 
     image = raw_image.convert('RGB').resize((224, 224), Image.BILINEAR)
 
