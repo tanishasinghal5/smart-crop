@@ -1,0 +1,17 @@
+.git
+.gitignore
+__pycache__/
+*.pyc
+data/
+.env
+*.env
+docx guide/
+krishi_sahayak/backend/
+crop_model/
+crop_production.csv/
+merge_conflicts*.txt
+input_guard*.py
+fix_conflicts.py
+LocationClimate.tsx
+*.mp4
+crop_disease_mobilenetv2.keras
