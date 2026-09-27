@@ -57,8 +57,8 @@ languageSelect.addEventListener('change', () => {
     });
 });
 
-// Backend URL (FastAPI)
-const BACKEND_URL = 'http://localhost:8001';
+// Same origin as the site: the Flask server serves this widget and /api/chat.
+const BACKEND_URL = '';
 
 // Theme Toggle
 themeToggle.addEventListener('click', () => {
@@ -158,11 +158,11 @@ chatForm.addEventListener('submit', async (e) => {
             history.push({ role: 'user', content: text });
             history.push({ role: 'assistant', content: data.answer });
         } else {
-            appendMessage('bot', 'Sorry, I am having trouble connecting to my knowledge base right now. Error: ' + data.detail);
+            appendMessage('bot', 'Sorry, I could not answer right now. ' + (data.error || data.detail || 'Please try again in a moment.'));
         }
     } catch (error) {
         document.getElementById(loadingId).remove();
-        appendMessage('bot', 'Network error. Please make sure the KrishiSahayak backend is running.');
+        appendMessage('bot', 'Network error. Please check your connection and try again.');
     }
 });
 

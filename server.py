@@ -919,18 +919,23 @@ def reverse_geocode():
 
 @app.post('/api/chat')
 def chat():
-    """Local port of api/chat.js so Mita also works outside Vercel."""
-    api_key = os.environ.get('OPENAI_API_KEY')
-    model = os.environ.get('OPENAI_MODEL')
-    if not api_key or not model:
-        return jsonify(error='AI service is not configured'), 503
+    """Farm chat for the Krishi Sahayak widget (and the dashboard). Gemini,
+    through the shared helper. Accepts an optional photo as a data URL."""
     body = request.get_json(silent=True) or {}
-    question = body.get('question')
-    if not question or not isinstance(question, str):
+    question = body.get('question') or ''
+    if not isinstance(question, str):
         return jsonify(error='A question is required'), 400
-    language = body.get('language', 'English')
-    context = body.get('context', {})
-    history = body.get('history', [])[-6:]
+    question = question.strip()[:2000]
+    image_data = body.get('image_data') or ''
+    if not question and not image_data:
+        return jsonify(error='A question is required'), 400
+    # Only the widget's own four languages; anything else falls back to English.
+    language = body.get('language') if body.get('language') in LANGUAGE_NAMES.values() else 'English'
+    context = body.get('context') if isinstance(body.get('context'), dict) else {}
+    history = []
+    for turn in (body.get('history') if isinstance(body.get('history'), list) else [])[-6:]:
+        if isinstance(turn, dict) and turn.get('role') in ('user', 'assistant'):
+            history.append(f"{turn['role']}: {str(turn.get('content', ''))[:1000]}")
 
     instructions = (
         f'You are Kisan AI, a concise and practical farm advisor for farmers in India. '
@@ -942,35 +947,29 @@ def chat():
         'agricultural extension officer or certified agronomist. Keep answers under 150 '
         'words and use short bullets only when useful.'
     )
-    prompt = (
-        f'Field context: {json.dumps(context)}\n'
-        f'Conversation: {json.dumps(history)}\n'
-        f'Farmer question: {question}'
-    )
-    req = urllib.request.Request(
-        'https://api.openai.com/v1/responses',
-        data=json.dumps({
-            'model': model,
-            'instructions': instructions,
-            'input': [{'role': 'user', 'content': prompt}],
-        }).encode(),
-        headers={'Authorization': f'Bearer {api_key}', 'Content-Type': 'application/json'},
-        method='POST',
-    )
+    question_text = question or 'What do you see in this photo, and what should I do?'
+    lines = [
+        instructions,
+        '',
+        f'Field context: {json.dumps(context)}',
+        'Conversation so far:',
+        *(history or ['(none)']),
+        f'Farmer question: {question_text}',
+    ]
+    prompt = '\n'.join(lines)
+    parts = [{'text': prompt}]
+    if image_data:
+        match = re.fullmatch(r'data:(image/(?:jpeg|png|webp));base64,([A-Za-z0-9+/=]+)', image_data)
+        if not match or len(image_data) > 10 * 1024 * 1024:
+            return jsonify(error='Attach a JPG, PNG or WebP photo under about 7 MB.'), 400
+        parts.insert(0, {'inline_data': {'mime_type': match.group(1), 'data': match.group(2)}})
     try:
-        with urllib.request.urlopen(req, timeout=60) as response:
-            result = json.load(response)
-        answer = result.get('output_text') or ''.join(
-            part.get('text', '')
-            for item in result.get('output', [])
-            for part in (item.get('content') or [])
-            if part.get('type') == 'output_text'
-        )
-        if not answer:
-            raise ValueError('No answer returned')
-        return jsonify(answer=answer)
-    except Exception:
+        _, answer = _gemini_generate(parts)
+    except GeminiError as err:
+        return _gemini_error_response(err)
+    if not answer.strip():
         return jsonify(error='Kisan AI is temporarily unavailable'), 502
+    return jsonify(answer=answer.strip(), sources=[])
 
 
 if __name__ == '__main__':
