@@ -84,6 +84,20 @@ def _get_crop_model():
 # model is usually loaded before the first recommendation is requested.
 threading.Thread(target=_get_crop_model, daemon=True).start()
 
+# Load confidence thresholds (override defaults if config exists)
+CONF_THRESHOLDS = {
+    'high_confidence': 0.80,
+    'mid_confidence_low': 0.60,
+    'mid_confidence_high': 0.79,
+}
+conf_path = os.path.join(BASE_DIR, 'confidence_config.json')
+try:
+    with open(conf_path, 'r', encoding='utf-8') as _cfg:
+        CONF_THRESHOLDS.update(json.load(_cfg))
+except Exception:
+    # Use defaults defined above
+    pass
+
 # PlantVillage class order as seen at training time (sorted dataset folder
 # names, which is how keras image_dataset_from_directory assigns indices).
 # If the model was trained on a differently ordered dataset, edit this list.
@@ -408,10 +422,23 @@ def disease():
 
     try:
         from PIL import Image
-        image = Image.open(io.BytesIO(photo.read()))
-        image = image.convert('RGB').resize((224, 224), Image.BILINEAR)
+        from image_guard import ImageGuard
+        raw_image = Image.open(io.BytesIO(photo.read()))
     except Exception:
         return jsonify(error='Could not read that image. Upload a JPG or PNG photo.'), 400
+
+    verdict = ImageGuard.validate(raw_image)
+    if not verdict.passed:
+        return jsonify(
+            error=verdict.headline,
+            code='invalid_image_quality',
+            failedCheck=verdict.failed_check,
+            issues=verdict.issues,
+            recommendations=verdict.recommendations,
+            metrics=verdict.metrics,
+        ), 400
+
+    image = raw_image.convert('RGB').resize((224, 224), Image.BILINEAR)
 
     # Rescaling lives inside the saved model, so raw 0-255 pixels go in as-is.
     batch = np.asarray(image, dtype=np.float32)[np.newaxis, ...]
@@ -428,8 +455,62 @@ def disease():
             'healthy': condition.lower() == 'healthy',
             'probability': round(float(probabilities[i]), 4),
         })
-    return jsonify(predictions=predictions, model='crop_disease_mobilenetv2.keras')
 
+    # ----- Confidence gating -----
+    top_conf = probabilities[order[0]]
+    # Load thresholds from config (fallback to defaults)
+    high_thr = CONF_THRESHOLDS.get('high_confidence', 0.80)
+    mid_low = CONF_THRESHOLDS.get('mid_confidence_low', 0.60)
+    if top_conf >= high_thr:
+        diagnosis_state = 'high_confidence'
+        message = None
+    elif top_conf >= mid_low:
+        diagnosis_state = 'possible'
+        message = "The prediction is uncertain. Please consider the top‑3 suggestions."
+    else:
+        diagnosis_state = 'unreliable'
+        message = "The image is insufficient for a reliable diagnosis. Please photograph one affected leaf in daylight."
+
+    response = {
+        'predictions': predictions,
+        'model': 'crop_disease_mobilenetv2.keras',
+        'quality': verdict.to_dict(),
+        'diagnosis_state': diagnosis_state,
+    }
+    if message:
+        response['message'] = message
+    return jsonify(response)
+
+@app.post('/api/gemini')
+def gemini():
+    api_key = os.getenv('GEMINI_API_KEY')
+    if not api_key:
+        return jsonify(error='Gemini API key not configured.', code='gemini_unconfigured'), 503
+    body = request.get_json(silent=True) or {}
+    prompt = body.get('prompt')
+    if not prompt:
+        return jsonify(error='Prompt required.', code='missing_prompt'), 400
+    payload = {
+        "contents": [{"role": "user", "parts": [{"text": prompt}]}]
+    }
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+    req = urllib.request.Request(
+        url,
+        data=json.dumps(payload).encode(),
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            result = json.load(resp)
+    except Exception as e:
+        return jsonify(error='Gemini service error', details=str(e)), 502
+    # Extract answer
+    try:
+        answer = result['candidates'][0]['content']['parts'][0]['text']
+    except Exception:
+        answer = result.get('text', '')
+    return jsonify(answer=answer)
 
 @app.post('/api/chat')
 def chat():

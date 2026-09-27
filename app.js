@@ -5515,12 +5515,18 @@ function renderDiseaseResult(resultBox, predictions) {
 
   const advice = document.createElement("p");
   advice.className = "disease-advice";
-  advice.textContent =
-    top.probability < 0.5
-      ? t("diseaseLowConfidence")
-      : top.healthy
-        ? t("diseaseHealthyAdvice")
-        : t("diseaseSickAdvice", { condition: top.condition });
+  if (top.probability >= 0.80) {
+  // High confidence
+  advice.textContent = top.healthy
+    ? t("diseaseHealthyAdvice")
+    : t("diseaseSickAdvice", { condition: top.condition });
+} else if (top.probability >= 0.60) {
+  // Medium confidence
+  advice.textContent = t("diseasePossibleAdvice", { condition: top.condition });
+} else {
+  // Low confidence
+  advice.textContent = t("diseaseUnreliableAdvice");
+}
   resultBox.append(advice);
   resultBox.classList.add("visible");
 }
