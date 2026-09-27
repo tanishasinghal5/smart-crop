@@ -1,0 +1,1 @@
+"""Earth Engine extraction helpers for district-level environmental features."""
