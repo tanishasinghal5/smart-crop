@@ -883,6 +883,7 @@ const i18n = {
     addPhone: "Add phone number",
     logout: "Log out",
     linkGoogleHint: "Link your Google account below to reset a forgotten PIN later.",
+    continueWithGoogle: "Continue with Google",
     err_forgot_pin_hint: "Sign in with Google below to reset your PIN.",
     err_bad_credentials: "Phone number, username or PIN is incorrect.",
     err_duplicate_phone: "This phone number is already registered. Try logging in.",
@@ -1383,6 +1384,7 @@ const i18n = {
     addPhone: "फ़ोन नंबर जोड़ें",
     logout: "लॉग आउट",
     linkGoogleHint: "भूले हुए पिन को बाद में रीसेट करने के लिए नीचे अपना Google खाता जोड़ें।",
+    continueWithGoogle: "Google से जारी रखें",
     err_forgot_pin_hint: "पिन रीसेट करने के लिए नीचे Google से साइन इन करें।",
     err_bad_credentials: "फ़ोन नंबर, नाम या पिन गलत है।",
     err_duplicate_phone: "यह फ़ोन नंबर पहले से पंजीकृत है। लॉग इन करके देखें।",
@@ -1778,6 +1780,7 @@ const i18n = {
     addPhone: "फोन नंबर जोडा",
     logout: "लॉग आउट",
     linkGoogleHint: "विसरलेला पिन नंतर रीसेट करण्यासाठी खाली तुमचे Google खाते जोडा.",
+    continueWithGoogle: "Google सह पुढे चला",
     err_forgot_pin_hint: "पिन रीसेट करण्यासाठी खाली Google ने साइन इन करा.",
     err_bad_credentials: "फोन नंबर, नाव किंवा पिन चुकीचा आहे.",
     err_duplicate_phone: "हा फोन नंबर आधीच नोंदणीकृत आहे. लॉग इन करून पहा.",
@@ -2123,6 +2126,7 @@ const i18n = {
     addPhone: "ఫోన్ నంబర్ జోడించండి",
     logout: "లాగ్ అవుట్",
     linkGoogleHint: "మర్చిపోయిన పిన్‌ను తర్వాత రీసెట్ చేయడానికి కింద మీ Google ఖాతాను లింక్ చేయండి.",
+    continueWithGoogle: "Google తో కొనసాగండి",
     err_forgot_pin_hint: "పిన్ రీసెట్ చేయడానికి కింద Googleతో సైన్ ఇన్ అవ్వండి.",
     err_bad_credentials: "ఫోన్ నంబర్, పేరు లేదా పిన్ తప్పు.",
     err_duplicate_phone: "ఈ ఫోన్ నంబర్ ఇప్పటికే నమోదైంది. లాగ్ ఇన్ ప్రయత్నించండి.",
@@ -5079,33 +5083,23 @@ function setupLogin() {
   document.querySelector("#pinStepSkip")?.addEventListener("click", () => {
     if (currentUser) finishLogin(currentUser);
   });
-  const onGoogleCredential = async (response) => {
+  const onGoogleIdToken = async (idToken) => {
     clearError();
     try {
-      const data = await authFetch("/google", { credential: response.credential });
+      const data = await authFetch("/google", { idToken });
       afterGoogleLogin(data);
     } catch (err) {
       showError(err);
     }
   };
-  const renderGoogleButton = (clientId) => {
-    let attempts = 0;
-    const tryRender = () => {
-      if (window.google?.accounts?.id) {
-        window.google.accounts.id.initialize({
-          client_id: clientId,
-          callback: onGoogleCredential,
-        });
-        window.google.accounts.id.renderButton(
-          document.querySelector("#googleButton"),
-          { theme: "outline", size: "large", width: 320 },
-        );
-        show("#authOr", true);
-      } else if (attempts++ < 50) {
-        setTimeout(tryRender, 200);
-      }
-    };
-    tryRender();
+  const renderGoogleButton = () => {
+    renderGoogleSignInButton(
+      document.querySelector("#googleButton"),
+      "primary-button full-button",
+      onGoogleIdToken,
+      showError,
+    );
+    show("#authOr", true);
   };
   const profile = storedProfile();
   if (profile) {
@@ -5126,7 +5120,7 @@ function setupLogin() {
           input.maxLength = pinLength;
           input.placeholder = placeholder;
         });
-      if (config.googleClientId) renderGoogleButton(config.googleClientId);
+      if (config.googleSignIn) renderGoogleButton();
     })
     .catch(() => {});
   authFetch("/me")
@@ -5151,6 +5145,76 @@ async function authFetch(path, body) {
     throw data;
   }
   return data;
+}
+
+// ---- Google sign-in via Firebase Auth --------------------------------------
+// This config is public by design; Firestore rules (deny all browser access)
+// protect the data. The SDK loads only when the button is clicked.
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAT9nNR_NU8jNp5DVT_niul0F8DN5GIldg",
+  authDomain: "smart-crop-hack.firebaseapp.com",
+  projectId: "smart-crop-hack",
+  storageBucket: "smart-crop-hack.firebasestorage.app",
+  messagingSenderId: "286027085179",
+  appId: "1:286027085179:web:ebbbeb1dab3391ed2279de",
+};
+const FIREBASE_SDK = "https://www.gstatic.com/firebasejs/12.19.0";
+let firebaseAuthLoad;
+function loadFirebaseAuth() {
+  firebaseAuthLoad ||= Promise.all([
+    import(`${FIREBASE_SDK}/firebase-app.js`),
+    import(`${FIREBASE_SDK}/firebase-auth.js`),
+  ]).then(([appSdk, authSdk]) => ({
+    ...authSdk,
+    auth: authSdk.getAuth(appSdk.initializeApp(FIREBASE_CONFIG)),
+  }));
+  firebaseAuthLoad.catch(() => (firebaseAuthLoad = null)); // allow a retry
+  return firebaseAuthLoad;
+}
+// Opens Google's sign-in popup and returns a Firebase ID token, or null if
+// the farmer closed the popup.
+async function firebaseGoogleIdToken() {
+  const fb = await loadFirebaseAuth();
+  try {
+    const result = await fb.signInWithPopup(fb.auth, new fb.GoogleAuthProvider());
+    return await result.user.getIdToken();
+  } catch (err) {
+    if (
+      err?.code === "auth/popup-closed-by-user" ||
+      err?.code === "auth/cancelled-popup-request"
+    )
+      return null;
+    throw err;
+  } finally {
+    // Our Flask cookie is the one login; don't keep a second Firebase session.
+    fb.signOut(fb.auth).catch(() => {});
+  }
+}
+function renderGoogleSignInButton(container, className, onIdToken, onError) {
+  if (!container) return;
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = className;
+  button.textContent = t("continueWithGoogle");
+  button.addEventListener("click", async () => {
+    button.disabled = true;
+    try {
+      const idToken = await firebaseGoogleIdToken();
+      if (idToken) await onIdToken(idToken);
+    } catch (err) {
+      // Firebase errors ("auth/...") have no translation; show the existing
+      // "Google sign-in failed" message and keep the real reason in the console.
+      if (typeof err?.code === "string" && err.code.startsWith("auth/")) {
+        console.error("Firebase sign-in:", err.code, err.message);
+        onError({ code: "google_failed" });
+      } else {
+        onError(err);
+      }
+    } finally {
+      button.disabled = false;
+    }
+  });
+  container.replaceChildren(button);
 }
 function setupProfilePage() {
   if (!document.body.classList.contains("profile-page")) return;
@@ -5304,9 +5368,9 @@ function setupProfilePage() {
     localStorage.removeItem("terraProfile");
     location.href = "login.html";
   });
-  const onGoogleCredential = async (response) => {
+  const onGoogleIdToken = async (idToken) => {
     try {
-      user = (await authFetch("/google", { credential: response.credential })).user;
+      user = (await authFetch("/google", { idToken })).user;
       document.querySelector("#profileGoogleSection").hidden = true;
       render();
       notify("profileSaved");
@@ -5328,24 +5392,14 @@ function setupProfilePage() {
             input.maxLength = pinLength;
             input.placeholder = placeholder;
           });
-        if (config.googleClientId && !user.hasGoogle) {
+        if (config.googleSignIn && !user.hasGoogle) {
           document.querySelector("#profileGoogleSection").hidden = false;
-          let attempts = 0;
-          const tryRender = () => {
-            if (window.google?.accounts?.id) {
-              window.google.accounts.id.initialize({
-                client_id: config.googleClientId,
-                callback: onGoogleCredential,
-              });
-              window.google.accounts.id.renderButton(
-                document.querySelector("#profileGoogleButton"),
-                { theme: "outline", size: "large", width: 280 },
-              );
-            } else if (attempts++ < 50) {
-              setTimeout(tryRender, 200);
-            }
-          };
-          tryRender();
+          renderGoogleSignInButton(
+            document.querySelector("#profileGoogleButton"),
+            "primary-button",
+            onGoogleIdToken,
+            showError,
+          );
         }
       } catch {}
     })

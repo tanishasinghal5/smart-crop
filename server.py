@@ -226,7 +226,8 @@ def index():
 @app.get('/api/auth/config')
 def auth_config():
     return jsonify(pinLength=PIN_LENGTH,
-                   googleClientId=GOOGLE_CLIENT_ID if google_id_token else None)
+                   googleClientId=GOOGLE_CLIENT_ID if google_id_token else None,
+                   googleSignIn=google_id_token is not None)  # via Firebase Auth
 
 
 @app.post('/api/auth/register')
@@ -271,14 +272,33 @@ def auth_login():
 
 @app.post('/api/auth/google')
 def auth_google():
-    if not GOOGLE_CLIENT_ID or google_id_token is None:
-        return jsonify(error='Google sign-in is not configured.', code='google_unconfigured'), 503
     body = request.get_json(silent=True) or {}
-    try:
-        info = google_id_token.verify_oauth2_token(
-            body.get('credential') or '', google_requests.Request(), GOOGLE_CLIENT_ID)
-    except ValueError:
-        return jsonify(error='Google sign-in failed. Please try again.', code='google_failed'), 401
+    failed = jsonify(error='Google sign-in failed. Please try again.', code='google_failed'), 401
+    if google_id_token is None:
+        return jsonify(error='Google sign-in is not configured.', code='google_unconfigured'), 503
+    if body.get('idToken'):
+        # Firebase Auth: the token is for our Firebase project, and must come
+        # from a Google sign-in (not e.g. an anonymous Firebase user).
+        try:
+            info = google_id_token.verify_firebase_token(
+                body['idToken'], google_requests.Request(), audience=FIRESTORE_PROJECT)
+        except ValueError:
+            return failed
+        firebase = (info or {}).get('firebase', {})
+        google_ids = firebase.get('identities', {}).get('google.com') or []
+        if firebase.get('sign_in_provider') != 'google.com' or not google_ids:
+            return failed
+        # Key accounts on the Google account id, which is the same id the old
+        # Google Identity Services sign-in stored — existing links keep working.
+        info = {**info, 'sub': google_ids[0]}
+    else:
+        if not GOOGLE_CLIENT_ID:
+            return jsonify(error='Google sign-in is not configured.', code='google_unconfigured'), 503
+        try:
+            info = google_id_token.verify_oauth2_token(
+                body.get('credential') or '', google_requests.Request(), GOOGLE_CLIENT_ID)
+        except ValueError:
+            return failed
     sub = info['sub']
     email = info.get('email')
     current = _current_user()
