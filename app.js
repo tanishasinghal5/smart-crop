@@ -585,6 +585,16 @@ const i18n = {
     diseaseLowConfidence: "Not fully sure about this one — try a closer photo of a single leaf in good daylight.",
     diseasePossibleAdvice: "This could be {condition}, but we are not certain. Compare with the other suggestions below, and confirm with your local agri office before spraying.",
     diseaseUnreliableAdvice: "This photo is not clear enough for a reliable diagnosis. Please photograph one affected leaf in daylight and try again.",
+    diseaseAdviceLoading: "Getting a second opinion from Google Gemini…",
+    diseasePhotoQuality: "This photo may not be clear enough — the result above could be wrong:",
+    diseaseSeverityLabel: "Severity",
+    diseaseSeverityNone: "none",
+    diseaseSeverityLow: "low",
+    diseaseSeverityModerate: "moderate",
+    diseaseSeveritySevere: "severe",
+    diseaseGeminiDisagrees: "Gemini does not think this photo shows {condition}. Please get it checked by your local agri office before treating.",
+    diseaseGeminiUnsure: "Gemini could not confirm this from the photo — treat the result above with care.",
+    diseaseStepsHeading: "What to do now",
     askMitaAboutIt: "Ask Mita about it →",
     diseasePrivacy: "Your photo stays on this device for now. Results are guidance, not a replacement for local agricultural advice.",
     plan: "Plan a field",
@@ -1121,6 +1131,16 @@ const i18n = {
     diseaseLowConfidence: "इस पर पूरा भरोसा नहीं है — अच्छी रोशनी में एक पत्ते की पास से फोटो लेकर फिर कोशिश करें।",
     diseasePossibleAdvice: "यह {condition} हो सकता है, लेकिन हम पक्के तौर पर नहीं कह सकते। नीचे दिए दूसरे सुझावों से मिलान करें, और छिड़काव से पहले स्थानीय कृषि कार्यालय से पुष्टि करें।",
     diseaseUnreliableAdvice: "यह फोटो भरोसेमंद जांच के लिए साफ़ नहीं है। कृपया दिन की रोशनी में एक प्रभावित पत्ते की फोटो लेकर फिर कोशिश करें।",
+    diseaseAdviceLoading: "Google Gemini से दूसरी राय ली जा रही है…",
+    diseasePhotoQuality: "यह फोटो शायद साफ़ नहीं है — ऊपर का नतीजा गलत हो सकता है:",
+    diseaseSeverityLabel: "गंभीरता",
+    diseaseSeverityNone: "कोई नहीं",
+    diseaseSeverityLow: "कम",
+    diseaseSeverityModerate: "मध्यम",
+    diseaseSeveritySevere: "गंभीर",
+    diseaseGeminiDisagrees: "Gemini के अनुसार यह फोटो {condition} जैसी नहीं दिखती। इलाज से पहले स्थानीय कृषि कार्यालय से जांच करवाएं।",
+    diseaseGeminiUnsure: "Gemini फोटो से इसकी पुष्टि नहीं कर सका — ऊपर के नतीजे को सावधानी से लें।",
+    diseaseStepsHeading: "अभी क्या करें",
     askMitaAboutIt: "मीता से इस बारे में पूछें →",
     diseasePrivacy: "आपकी फोटो अभी इसी डिवाइस पर रहती है। परिणाम केवल मार्गदर्शन हैं, स्थानीय कृषि सलाह का विकल्प नहीं।",
     plan: "खेत की योजना",
@@ -1510,6 +1530,16 @@ const i18n = {
     diseaseLowConfidence: "याबद्दल पूर्ण खात्री नाही — चांगल्या उजेडात एका पानाचा जवळून फोटो घेऊन पुन्हा प्रयत्न करा.",
     diseasePossibleAdvice: "हे {condition} असू शकते, पण आम्हाला खात्री नाही. खालील इतर सूचनांशी तुलना करा आणि फवारणीपूर्वी स्थानिक कृषी कार्यालयाकडून खात्री करा.",
     diseaseUnreliableAdvice: "हा फोटो विश्वासार्ह तपासणीसाठी पुरेसा स्पष्ट नाही. कृपया दिवसाच्या उजेडात एका प्रभावित पानाचा फोटो घेऊन पुन्हा प्रयत्न करा.",
+    diseaseAdviceLoading: "Google Gemini कडून दुसरे मत घेतले जात आहे…",
+    diseasePhotoQuality: "हा फोटो कदाचित स्पष्ट नाही — वरील निकाल चुकीचा असू शकतो:",
+    diseaseSeverityLabel: "तीव्रता",
+    diseaseSeverityNone: "नाही",
+    diseaseSeverityLow: "कमी",
+    diseaseSeverityModerate: "मध्यम",
+    diseaseSeveritySevere: "गंभीर",
+    diseaseGeminiDisagrees: "Gemini नुसार हा फोटो {condition} सारखा दिसत नाही. उपचारापूर्वी स्थानिक कृषी कार्यालयाकडून तपासणी करून घ्या.",
+    diseaseGeminiUnsure: "Gemini फोटोवरून याची खात्री करू शकले नाही — वरील निकाल सावधगिरीने घ्या.",
+    diseaseStepsHeading: "आता काय करावे",
     askMitaAboutIt: "मिताला याबद्दल विचारा →",
     diseasePrivacy: "तुमचा फोटो सध्या याच डिव्हाइसवर राहतो. निकाल फक्त मार्गदर्शन आहेत, स्थानिक कृषी सल्ल्याचा पर्याय नाहीत.",
     plan: "शेत योजना",
@@ -1848,6 +1878,16 @@ const i18n = {
     diseaseLowConfidence: "దీనిపై పూర్తి నమ్మకం లేదు — మంచి వెలుతురులో ఒక ఆకును దగ్గరగా తీసి మళ్లీ ప్రయత్నించండి.",
     diseasePossibleAdvice: "ఇది {condition} కావచ్చు, కానీ మాకు ఖచ్చితంగా తెలియదు. కింద ఉన్న ఇతర సూచనలతో పోల్చి చూడండి, పిచికారీకి ముందు స్థానిక వ్యవసాయ కార్యాలయంతో నిర్ధారించుకోండి.",
     diseaseUnreliableAdvice: "నమ్మకమైన నిర్ధారణకు ఈ ఫోటో తగినంత స్పష్టంగా లేదు. దయచేసి పగటి వెలుతురులో దెబ్బతిన్న ఒక ఆకు ఫోటో తీసి మళ్లీ ప్రయత్నించండి.",
+    diseaseAdviceLoading: "Google Gemini నుండి రెండవ అభిప్రాయం తీసుకుంటోంది…",
+    diseasePhotoQuality: "ఈ ఫోటో స్పష్టంగా ఉండకపోవచ్చు — పై ఫలితం తప్పు కావచ్చు:",
+    diseaseSeverityLabel: "తీవ్రత",
+    diseaseSeverityNone: "లేదు",
+    diseaseSeverityLow: "తక్కువ",
+    diseaseSeverityModerate: "మధ్యస్థం",
+    diseaseSeveritySevere: "తీవ్రమైనది",
+    diseaseGeminiDisagrees: "Gemini ప్రకారం ఈ ఫోటో {condition} లా కనిపించడం లేదు. చికిత్సకు ముందు స్థానిక వ్యవసాయ కార్యాలయంతో తనిఖీ చేయించండి.",
+    diseaseGeminiUnsure: "Gemini ఫోటో నుండి దీన్ని నిర్ధారించలేకపోయింది — పై ఫలితాన్ని జాగ్రత్తగా పరిగణించండి.",
+    diseaseStepsHeading: "ఇప్పుడు ఏమి చేయాలి",
     askMitaAboutIt: "దీని గురించి మీతాను అడగండి →",
     diseasePrivacy: "మీ ఫోటో ప్రస్తుతానికి ఈ పరికరంలోనే ఉంటుంది. ఫలితాలు మార్గదర్శకం మాత్రమే, స్థానిక వ్యవసాయ సలహాకు ప్రత్యామ్నాయం కాదు.",
     plan: "పొలం ప్లాన్",
@@ -5506,6 +5546,7 @@ function setupDiseasePage() {
       }
       renderDiseaseResult(resultBox, predictions);
       resultBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      addDiseaseAdvice(resultBox, file, predictions[0]); // extra only — not awaited
     } catch {
       showMessage(t("diseaseError"));
     } finally {
@@ -5563,6 +5604,79 @@ function renderDiseaseResult(resultBox, predictions) {
 }
   resultBox.append(advice);
   resultBox.classList.add("visible");
+}
+// Second opinion from the server: photo-quality check, then Gemini's view of
+// whether the photo supports the diagnosis, its severity and 3 steps. Purely
+// additive — if it fails (offline, Gemini busy or out of quota) the result
+// above stands exactly as before.
+async function addDiseaseAdvice(resultBox, file, top) {
+  const box = document.createElement("div");
+  box.className = "disease-gemini";
+  box.textContent = t("diseaseAdviceLoading");
+  resultBox.append(box);
+
+  const body = new FormData();
+  body.append("photo", file);
+  body.append("label", top.label);
+  body.append("confidence", String(top.probability));
+  body.append("language", currentLanguage());
+  let data;
+  try {
+    const response = await fetch("/api/disease/advice", { method: "POST", body });
+    data = await response.json().catch(() => ({}));
+    if (!box.isConnected) return; // photo changed while we waited
+    if (response.status === 400 && data.code === "invalid_image_quality") {
+      box.textContent = `⚠ ${t("diseasePhotoQuality")} ${data.error}`;
+      return;
+    }
+    if (!response.ok || data.skipped) {
+      box.remove();
+      return;
+    }
+  } catch {
+    box.remove();
+    return;
+  }
+
+  box.textContent = "";
+  if (data.gemini_agrees === "no" || data.gemini_agrees === "unsure") {
+    const warn = document.createElement("p");
+    warn.className = "disease-advice";
+    warn.textContent =
+      data.gemini_agrees === "no"
+        ? `⚠ ${t("diseaseGeminiDisagrees", { condition: top.condition })}`
+        : `⚠ ${t("diseaseGeminiUnsure")}`;
+    box.append(warn);
+  }
+  const severityKey = {
+    none: "diseaseSeverityNone",
+    low: "diseaseSeverityLow",
+    moderate: "diseaseSeverityModerate",
+    severe: "diseaseSeveritySevere",
+  }[data.severity];
+  if (severityKey) {
+    const severity = document.createElement("p");
+    severity.className = "disease-alts";
+    severity.textContent = `${t("diseaseSeverityLabel")}: ${t(severityKey)}`;
+    box.append(severity);
+  }
+  if (data.summary) {
+    const summary = document.createElement("p");
+    summary.className = "disease-advice";
+    summary.textContent = data.summary;
+    box.append(summary);
+  }
+  if (data.steps?.length) {
+    const heading = document.createElement("b");
+    heading.textContent = t("diseaseStepsHeading");
+    const list = document.createElement("ol");
+    for (const step of data.steps) {
+      const item = document.createElement("li");
+      item.textContent = step;
+      list.append(item);
+    }
+    box.append(heading, list);
+  }
 }
 useLanguage();
 applyTheme();

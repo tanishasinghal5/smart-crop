@@ -663,6 +663,101 @@ def soil_card():
                    warnings=warnings_out,
                    meta={'source': 'live', 'model': model})
 
+
+LANGUAGE_NAMES = {'en': 'English', 'hi': 'Hindi', 'mr': 'Marathi', 'te': 'Telugu'}
+DISEASE_ADVICE_SCHEMA = {
+    'type': 'OBJECT',
+    'properties': {
+        'supports_diagnosis': {'type': 'STRING', 'enum': ['yes', 'no', 'unsure']},
+        'severity': {'type': 'STRING', 'enum': ['none', 'low', 'moderate', 'severe']},
+        'summary': {'type': 'STRING'},
+        'steps': {'type': 'ARRAY', 'items': {'type': 'STRING'}},
+    },
+    'required': ['supports_diagnosis', 'severity', 'summary', 'steps'],
+}
+
+
+@app.post('/api/disease/advice')
+def disease_advice():
+    """Second opinion on a diagnosis the browser model already made: checks the
+    photo quality, then asks Gemini whether the photo supports the diagnosis,
+    how severe it looks, and what to do. Only adds to the result — the page
+    works without it."""
+    photo = request.files.get('photo')
+    if photo is None or not photo.filename:
+        return jsonify(error='Attach the leaf photo as the "photo" form field.',
+                       code='missing_photo'), 400
+    label = request.form.get('label', '')
+    if label not in DISEASE_LABELS:
+        return jsonify(error='Unknown disease label.', code='bad_label'), 400
+    try:
+        confidence = float(request.form.get('confidence', ''))
+    except ValueError:
+        return jsonify(error='confidence must be a number from 0 to 1.', code='bad_confidence'), 400
+    if not 0 <= confidence <= 1:
+        return jsonify(error='confidence must be a number from 0 to 1.', code='bad_confidence'), 400
+    language = LANGUAGE_NAMES.get(request.form.get('language', 'en'), 'English')
+
+    try:
+        from PIL import Image
+        from image_guard import ImageGuard
+        raw_image = Image.open(io.BytesIO(photo.read()))
+        raw_image.load()
+    except Exception:
+        return jsonify(error='Could not read that image. Upload a JPG or PNG photo.',
+                       code='bad_image'), 400
+
+    # The browser model never sees the image guard, so run it here.
+    verdict = ImageGuard.validate(raw_image)
+    if not verdict.passed:
+        return jsonify(error=verdict.headline, code='invalid_image_quality',
+                       issues=verdict.issues, recommendations=verdict.recommendations), 400
+
+    crop, condition = _pretty_disease(label)
+    if confidence < CONF_THRESHOLDS.get('mid_confidence_low', 0.60):
+        # Too unsure to be worth a second opinion; the page already asks for a retake.
+        return jsonify(skipped='low_confidence', disease=f'{crop} {condition}',
+                       confidence=confidence)
+
+    # Send a small JPEG: same content for Gemini, far fewer bytes and tokens.
+    image = raw_image.convert('RGB')
+    image.thumbnail((1024, 1024))
+    buffer = io.BytesIO()
+    image.save(buffer, format='JPEG', quality=85)
+
+    prompt = (
+        f'A plant disease classifier looked at this leaf photo and said: {crop} — '
+        f'{condition}, with {round(confidence * 100)}% confidence. '
+        'supports_diagnosis: does the photo visually support that diagnosis? '
+        'Answer yes, no or unsure. Do not name a different disease. '
+        'severity: from the visible damage — none if the leaf is healthy, otherwise '
+        'low, moderate or severe. '
+        'steps: exactly 3 short, practical steps for a small farmer in India. '
+        'Never name a pesticide, fungicide, chemical or dose; for treatment, say to '
+        'confirm with the local agriculture office. '
+        'summary: one short sentence on what the farmer is looking at. '
+        f'Write summary and steps in {language}. Keep supports_diagnosis and severity '
+        'as the English values given.'
+    )
+    parts = [{'inline_data': {'mime_type': 'image/jpeg',
+                              'data': base64.b64encode(buffer.getvalue()).decode()}},
+             {'text': prompt}]
+    try:
+        model, text = _gemini_generate(parts, response_schema=DISEASE_ADVICE_SCHEMA)
+        advice = json.loads(text)
+    except GeminiError as err:
+        return _gemini_error_response(err)
+    except ValueError:
+        return jsonify(error='Could not understand the advice.', code='gemini_bad_json'), 502
+
+    return jsonify(disease=f'{crop} {condition}', confidence=confidence,
+                   severity=advice.get('severity'),
+                   gemini_agrees=advice.get('supports_diagnosis'),
+                   summary=advice.get('summary'),
+                   steps=(advice.get('steps') or [])[:3],
+                   meta={'source': 'live', 'model': model})
+
+
 @app.post('/api/chat')
 def chat():
     """Local port of api/chat.js so Mita also works outside Vercel."""
