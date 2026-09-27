@@ -705,6 +705,15 @@ const i18n = {
     manualHint: "I have my N, P, K & pH values",
     scanCard: "Scan Soil Health Card",
     scanHint: "Read N, P, K & pH from a photo",
+    satSource: "Estimate from location",
+    satSourceHint: "Satellite soil map for my area",
+    satNeedPlace:
+      "Add your location in the weather step first — then tap this again.",
+    satFetching: "Reading the satellite soil map for {place}…",
+    satDone:
+      "Satellite estimate for {place}: pH & nitrogen from the SoilGrids soil map; P & K are rough guesses. Check & adjust — a Soil Health Card is more accurate.",
+    satFailed:
+      "The satellite soil service didn't answer. Try again, or enter values manually.",
     nitrogen: "Nitrogen",
     nitrogenUnit: "N · kg/ha · 0–800",
     outOfRangeTitle: "Some values are out of range — please fix these:",
@@ -1230,6 +1239,15 @@ const i18n = {
     manualHint: "मेरे पास N, P, K और pH मान हैं",
     scanCard: "Soil Health Card स्कैन करें",
     scanHint: "फोटो से N, P, K और pH पढ़ें",
+    satSource: "स्थान से अनुमान लगाएं",
+    satSourceHint: "मेरे क्षेत्र का सैटेलाइट मिट्टी नक्शा",
+    satNeedPlace:
+      "पहले मौसम वाले चरण में अपना स्थान जोड़ें — फिर इसे दोबारा दबाएं।",
+    satFetching: "{place} के लिए सैटेलाइट मिट्टी नक्शा पढ़ा जा रहा है…",
+    satDone:
+      "{place} के लिए सैटेलाइट अनुमान: pH और नाइट्रोजन SoilGrids मिट्टी नक्शे से; P और K मोटे अनुमान हैं। जांचें और बदलें — Soil Health Card अधिक सटीक है।",
+    satFailed:
+      "सैटेलाइट मिट्टी सेवा से जवाब नहीं मिला। फिर से कोशिश करें या मान खुद भरें।",
     nitrogen: "नाइट्रोजन",
     phosphorus: "फॉस्फोरस",
     potassium: "पोटैशियम",
@@ -1607,6 +1625,15 @@ const i18n = {
     manualHint: "माझ्याकडे N, P, K आणि pH मूल्ये आहेत",
     scanCard: "Soil Health Card स्कॅन करा",
     scanHint: "फोटोमधून N, P, K आणि pH वाचा",
+    satSource: "स्थानावरून अंदाज घ्या",
+    satSourceHint: "माझ्या भागाचा सॅटेलाइट माती नकाशा",
+    satNeedPlace:
+      "आधी हवामान टप्प्यात तुमचे स्थान जोडा — मग हे पुन्हा दाबा.",
+    satFetching: "{place} साठी सॅटेलाइट माती नकाशा वाचत आहोत…",
+    satDone:
+      "{place} साठी सॅटेलाइट अंदाज: pH आणि नायट्रोजन SoilGrids माती नकाशातून; P आणि K ढोबळ अंदाज आहेत. तपासा आणि बदला — Soil Health Card अधिक अचूक आहे.",
+    satFailed:
+      "सॅटेलाइट माती सेवेकडून उत्तर मिळाले नाही. पुन्हा प्रयत्न करा किंवा मूल्ये स्वतः भरा.",
     nitrogen: "नायट्रोजन",
     phosphorus: "फॉस्फरस",
     potassium: "पोटॅशियम",
@@ -1932,6 +1959,15 @@ const i18n = {
     manualHint: "నా దగ్గర N, P, K మరియు pH విలువలు ఉన్నాయి",
     scanCard: "Soil Health Card స్కాన్ చేయండి",
     scanHint: "ఫోటో నుంచి N, P, K మరియు pH చదవండి",
+    satSource: "లొకేషన్ నుంచి అంచనా",
+    satSourceHint: "నా ప్రాంతం సాటిలైట్ మట్టి మ్యాప్",
+    satNeedPlace:
+      "ముందుగా వాతావరణ దశలో మీ లొకేషన్ జోడించండి — తరువాత దీన్ని మళ్లీ నొక్కండి.",
+    satFetching: "{place} కోసం సాటిలైట్ మట్టి మ్యాప్ చదువుతున్నాం…",
+    satDone:
+      "{place} కోసం సాటిలైట్ అంచనా: pH మరియు నైట్రోజన్ SoilGrids మట్టి మ్యాప్ నుంచి; P మరియు K సుమారు అంచనాలు. సరిచూసి మార్చండి — Soil Health Card మరింత ఖచ్చితం.",
+    satFailed:
+      "సాటిలైట్ మట్టి సేవ నుంచి స్పందన లేదు. మళ్లీ ప్రయత్నించండి లేదా విలువలను చేతితో నమోదు చేయండి.",
     nitrogen: "నైట్రోజన్",
     phosphorus: "ఫాస్ఫరస్",
     potassium: "పోటాషియం",
@@ -2967,6 +3003,9 @@ const ARCHIVE_URL = "https://archive-api.open-meteo.com/v1/archive";
 const REVERSE_URL = "https://api.bigdatacloud.net/data/reverse-geocode-client";
 const CLIMATE_TTL_MS = 3 * 60 * 60 * 1000;
 const GEO_TTL_MS = 30 * 24 * 60 * 60 * 1000;
+// ISRIC SoilGrids 250 m global soil rasters — keyless like Open-Meteo.
+const SOILGRIDS_URL = "https://rest.isric.org/soilgrids/v2.0/properties/query";
+const SOIL_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 
 function tbCacheGet(key, ttl) {
   try {
@@ -3181,6 +3220,73 @@ async function getClimateCached(place) {
   const hit = tbCacheGet(key, CLIMATE_TTL_MS);
   if (hit) return hit;
   const fresh = await fetchClimate(place);
+  tbCacheSet(key, fresh);
+  return fresh;
+}
+
+// SoilGrids only maps pH and TOTAL nitrogen; the form (and model) want
+// Soil-Health-Card-style AVAILABLE nutrients in kg/ha, and P & K have no
+// global raster at all. So: pH is a direct read, N assumes a ~2×10⁶ kg/ha
+// plough layer with ~5% of total N mineralising in a season, and P & K are
+// coarse proxies from organic carbon and CEC — every value stays editable
+// and the status line says so.
+async function querySoilPoint(lng, lat) {
+  const url =
+    `${SOILGRIDS_URL}?lon=${lng.toFixed(4)}&lat=${lat.toFixed(4)}` +
+    `&property=phh2o&property=nitrogen&property=soc&property=cec` +
+    `&depth=0-5cm&depth=5-15cm&value=mean`;
+  const response = await fetch(url);
+  if (!response.ok) throw Error(`SoilGrids failed: ${response.status}`);
+  const data = await response.json();
+  const reading = {};
+  (data?.properties?.layers || []).forEach((layer) => {
+    const means = (layer.depths || [])
+      .map((depth) => depth?.values?.mean)
+      .filter((value) => value !== null && value !== undefined);
+    if (means.length)
+      reading[layer.name] =
+        means.reduce((sum, value) => sum + value, 0) /
+        means.length /
+        (layer.unit_measure?.d_factor || 1);
+  });
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+  const soil = {};
+  if (reading.phh2o !== undefined) soil.ph = +reading.phh2o.toFixed(1);
+  if (reading.nitrogen !== undefined)
+    soil.nitrogen = clamp(Math.round(reading.nitrogen * 100), 5, 190);
+  if (reading.soc !== undefined)
+    soil.phosphorus = clamp(Math.round(8 + reading.soc * 2.5), 8, 80);
+  if (reading.cec !== undefined)
+    soil.potassium = clamp(Math.round(reading.cec * 10), 10, 220);
+  // pH and N are the direct reads — without either the pixel is masked
+  // (built-up/water) and the caller should try a neighbouring pixel.
+  if (soil.ph === undefined && soil.nitrogen === undefined) return null;
+  return soil;
+}
+
+async function fetchSoil(place) {
+  // Town-centre pixels are masked in SoilGrids, and villagers often pick the
+  // town. Step outward ~2 km at a time until farmland is hit (0.02° ≈ 2.2 km).
+  const offsets = [
+    [0, 0],
+    [0.02, 0],
+    [-0.02, 0],
+    [0, 0.02],
+    [0, -0.02],
+    [0.04, 0.04],
+  ];
+  for (const [dLng, dLat] of offsets) {
+    const soil = await querySoilPoint(place.lng + dLng, place.lat + dLat);
+    if (soil) return soil;
+  }
+  throw Error("SoilGrids has no soil data near this point");
+}
+
+async function getSoilCached(place) {
+  const key = `terraSoil:${place.lat.toFixed(2)},${place.lng.toFixed(2)}`;
+  const hit = tbCacheGet(key, SOIL_TTL_MS);
+  if (hit) return hit;
+  const fresh = await fetchSoil(place);
   tbCacheSet(key, fresh);
   return fresh;
 }
@@ -3492,6 +3598,8 @@ function setupPlanner() {
         .forEach((item) => item.classList.toggle("selected", item === card));
       const scanning = card.dataset.source === "card";
       form.classList.toggle("ocr-mode", scanning);
+      if (card.dataset.source === "satellite") estimateSoilFromLocation();
+      else setSatStatus("");
     }),
   );
   const weatherButton = document.querySelector("#weatherButton");
@@ -3630,6 +3738,43 @@ function setupPlanner() {
     weatherButton.innerHTML = t("forecastAdded");
     weatherButton.disabled = false;
     form.dataset.forecast = JSON.stringify(forecast || null);
+  }
+
+  const satStatus = document.querySelector("#soilSatStatus");
+  function setSatStatus(text) {
+    if (!satStatus) return;
+    satStatus.hidden = !text;
+    satStatus.textContent = text || "";
+  }
+  async function estimateSoilFromLocation() {
+    const place = tbCacheGet("terraPlace", GEO_TTL_MS);
+    if (!place) {
+      // No saved place yet — try GPS, which also fills the weather step.
+      if (!navigator.geolocation) return setSatStatus(t("satNeedPlace"));
+      setSatStatus(t("findingField"));
+      navigator.geolocation.getCurrentPosition(
+        async ({ coords }) => {
+          const found = await reverseGeocode(coords.latitude, coords.longitude);
+          await selectPlace(found);
+          estimateSoilFromLocation();
+        },
+        () => setSatStatus(t("satNeedPlace")),
+        { timeout: 10000, maximumAge: 300000 },
+      );
+      return;
+    }
+    setSatStatus(t("satFetching", { place: place.label }));
+    try {
+      const soil = await getSoilCached(place);
+      ["nitrogen", "phosphorus", "potassium", "ph"].forEach((name) => {
+        if (soil[name] !== undefined && form.elements[name])
+          form.elements[name].value = soil[name];
+      });
+      checkRanges();
+      setSatStatus(t("satDone", { place: place.label }));
+    } catch {
+      setSatStatus(t("satFailed"));
+    }
   }
 
   // A returning farmer keeps their place — prefill silently from cache.
