@@ -3976,7 +3976,7 @@ function setupPlanner() {
         JSON.stringify(history.slice(0, 20)),
       );
     }
-    location.href = "dashboard.html";
+    location.href = "krishi-dashboard.html";
   });
 }
 function forecastBars(field) {
