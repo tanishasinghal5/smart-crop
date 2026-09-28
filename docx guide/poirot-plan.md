@@ -163,6 +163,8 @@ Sign up the project *and* a service account. Pick the **non-commercial / academi
 Turn on: Cloud Run, Cloud Build, Artifact Registry, Secret Manager, Firestore, Identity Toolkit, Gemini (Generative Language), Geocoding, Places, Maps, Speech-to-Text, Text-to-Speech, Translation, BigQuery, Earth Engine.
 **Done when:** all show as enabled.
 
+> **Correction (2026-09-28):** "Places" must be the **Places API (New)** — `places.googleapis.com`. The old one (`places-backend.googleapis.com`) does not do the village search the app uses. Also add `places.googleapis.com` to the targets of `maps-server-key`.
+
 ### Task 6 — Set up Firebase and Firestore (09:30)
 Add Firebase to the **same** project. Create Firestore in **Native mode**, region **`asia-south1`** (same region as Cloud Run, so it is fast). Turn on Google and Phone sign-in.
 **Done when:** you can see an empty Firestore database.
@@ -170,6 +172,8 @@ Add Firebase to the **same** project. Create Firestore in **Native mode**, regio
 ### Task 7 — Make the service account (09:45)
 Create `run-backend@`. Give it these roles: `datastore.user`, `secretmanager.secretAccessor`, `bigquery.jobUser`, `bigquery.dataViewer`, `earthengine.writer`, `aiplatform.user`. Add it to the Earth Engine project too.
 **Done when:** the account exists with all six roles.
+
+> **Correction (2026-09-28):** it also needs a seventh role, **`serviceusage.serviceUsageConsumer`**. Without it, Earth Engine fails on Cloud Run even though `earthengine.writer` is there. Found when `/api/satellite/health` failed after the first deploy.
 
 ### Task 8 — Make two Maps keys (10:00)
 - `maps-server-key` — locked to specific APIs, for your server.

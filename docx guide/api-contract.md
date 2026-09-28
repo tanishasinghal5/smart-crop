@@ -1,10 +1,40 @@
-# Smart Crop — the frozen API list
+# Smart Crop — the API list
 
-**Status: FROZEN.** Build against this. Do not wait for the real data — every API below already answers with realistic fake data.
+**Owner:** Poirot (backend). **First frozen:** Day 1, 11:00 (`2026-09-23`). **Updated:** `2026-09-28`.
 
-**Owner:** Poirot (backend). **Frozen at:** Day 1, 11:00. **Version:** `2026-09-23`
+> **Read this first.** The Day-1 plan below promised fake data first and real data later. We changed course: **there is no fake data any more.** Every route either returns real data or an honest error. The table just below lists what is **live today**. Further down, each planned API is marked:
+> ✅ **Live** · ⚠️ **Live, but different from the plan** · ⏳ **Not built**
 
-Check the version any time with `GET /api/config`.
+---
+
+# Live today
+
+Every route here is checked by `python tests/smoke.py <url>` (add `--gemini` to also check Gemini).
+Live site: `https://smart-crop-286027085179.asia-south1.run.app`
+
+| Route | You send | You get back | Uses |
+|---|---|---|---|
+| `GET /api/places?q=anand&session=…` | the text typed, plus a session id | `{places: [{name, detail, label, placeId}]}` — suggestions only, no position | Google Places API (New) |
+| `GET /api/place?id=…&session=…` | a `placeId` from the list above | `{name, district, state, lat, lng, label, source}` | Google Places API (New) |
+| `GET /api/reverse-geocode?lat=&lng=` | a GPS position | the same place shape as above | Google Geocoding |
+| `POST /api/recommend` | JSON `{N, P, K, temperature, humidity, ph, rainfall}` — all 7 required | `{recommendations: [{crop, probability}] × 5, model}` | our trained model on Cloud Run |
+| `POST /api/soil-card` | form field `file` (JPG, PNG, WebP or PDF, up to 10 MB) | `{extracted: {N, P, K, ph: {value, unit, raw_text}}, requires_confirmation: true, warnings: [], meta}` | Gemini |
+| `POST /api/disease/advice` | form fields `photo`, `label`, `confidence` (0–1), `language` (`en`/`hi`/`mr`/`te`) | `{disease, confidence, severity, gemini_agrees, summary, steps: [3], meta}` | Gemini (after a photo-quality check) |
+| `POST /api/disease` | form field `photo` | `{predictions: [3], diagnosis_state, quality, model}` | backup only — needs TensorFlow, so it says "not available" on Cloud Run. The pages run the model **in the browser** instead. |
+| `POST /api/chat` | JSON `{question, history?, language?, context?, image_data?}` | `{answer, sources}` | Gemini |
+| `POST /api/satellite` | JSON `{latitude, longitude}` | `{ndvi, ndvi_status, observation_count, quality_flag, rainfall_30d, temperature, soil_moisture, window_days, buffer_m, meta}` | Earth Engine: Sentinel-2, CHIRPS, ERA5 |
+| `GET /api/satellite/health` | nothing | `{ok, project}` | Earth Engine |
+| `/api/auth/*` | see `server.py` — register, login, Google sign-in, phone, PIN, profile, delete, logout, `me` | the signed-in user | Firebase Auth + Firestore |
+
+**Two things every screen should handle:**
+- **Gemini can be busy or out of free calls.** You then get HTTP `503` (`gemini_busy`) or `429` (`gemini_quota`). Show the `error` text; never fall back to a made-up answer.
+- **`/api/satellite` is slow the first time** (10–30 seconds for a new place). After that it is saved for 24 hours and comes back instantly, with `meta.source: "cache"`.
+
+---
+
+# The Day-1 plan
+
+Kept for reference. Each section is marked with what really happened.
 
 ---
 
@@ -18,6 +48,8 @@ You do not need to ask. This is the escape hatch, so nobody has to work around t
 
 **3. Nothing is ever `null` when you expect a value.**
 If the real service is down, you get saved or fake data instead of an error. Check `meta.source` to see which you got.
+
+> ⚠️ **Changed.** We dropped fake data. A down service now gives an honest error (`{error, code}`), and a value we genuinely don't have is `null` — for example `ndvi` when clouds covered every photo.
 
 ---
 
@@ -44,6 +76,8 @@ Every successful reply has a `meta` block:
 
 **Harry:** please show a small badge when `source` is `mock` or `cache_stale`. This stops us accidentally demoing fake numbers as real ones.
 
+> ⚠️ **Partly done.** Only `/api/soil-card`, `/api/disease/advice` and `/api/satellite` send `meta`. `mock` and `cache_stale` never happen, because there is no fake data.
+
 ## Errors
 
 Errors always look like this:
@@ -63,6 +97,8 @@ Codes: `bad_request`, `not_signed_in`, `field_not_found`, `service_unavailable`,
 # The seven APIs
 
 ## `POST /api/farm`
+> ⏳ **Not built.** The dashboard keeps the farm in the browser for now.
+
 Save a field, get an id back. You need the `field_id` for the advisor.
 
 ```
@@ -85,6 +121,8 @@ Also available: `GET /api/farm` (list my fields), `GET /api/farm/<field_id>` (ge
 ---
 
 ## `POST /api/satellite`
+> ⚠️ **Live, different from the plan.** Built on Percy's `get_current_field_environment`. It sends `latitude` and `longitude` only (no `field_id`). `ndvi` is the **average of the clear photos in the last 30 days**, over 1 km around the point. Not there yet: `ndvi_trend`, `ndvi_date`, `ndvi_series`, `cloud_cover_pct`. Added: `observation_count`, `quality_flag`, `soil_moisture`, `window_days`, `buffer_m`. See **Live today** at the top for the real reply.
+
 How healthy the field looks from space.
 
 ```
@@ -109,6 +147,8 @@ This one can be slow the first time (satellite data takes a few seconds). After 
 ---
 
 ## `POST /api/recommend-crop`
+> ⏳ **Not built.** It needs Percy's crop table (`crop_agronomy.json`). Use `/api/recommend` — the dashboard and planner both do.
+
 Which crops to plant, with reasons.
 
 ```
@@ -153,6 +193,8 @@ out: { "recommendations": [
 ---
 
 ## `POST /api/recommend` — the old one
+> ✅ **Live.** All 7 inputs are required; the pages get temperature, humidity and this season's rain from Open-Meteo.
+
 **Unchanged. Still works. Not going away during the hackathon.**
 
 Same inputs and same reply as today (`{recommendations: [{crop, probability} × 5], model}`). If you are already using it, keep using it. Move to `/api/recommend-crop` only when you have time.
@@ -160,6 +202,8 @@ Same inputs and same reply as today (`{recommendations: [{crop, probability} × 
 ---
 
 ## `POST /api/disease`
+> ⚠️ **Different from the plan.** Katniss's model runs **in the browser** (`disease-model.tflite`), which is fast and free. The severity and advice come from a separate route, `POST /api/disease/advice` (Gemini) — see **Live today**. `/api/disease` itself is only a backup and returns the old `predictions` shape; it needs TensorFlow, so it is not available on Cloud Run.
+
 Read a leaf photo.
 
 Send as a file upload. **The field name can be `photo` (what we use today) or `image`. Both work.**
@@ -189,6 +233,8 @@ out: { "disease": "Tomato Late Blight",
 ---
 
 ## `POST /api/soil-card`
+> ✅ **Live** (Gemini). Small differences: no `confidence` per value and no `field_id`. The dashboard's Soil Health page does the four steps below.
+
 Read a Soil Health Card photo or PDF.
 
 ```
@@ -220,6 +266,8 @@ Never save these values straight from the reply.
 ---
 
 ## `POST /api/advisor`
+> ⚠️ **Replaced by `POST /api/chat`.** There is no stored `field_id` yet, so the page sends the farm's real data itself in `context` (farm, season, weather, soil, NDVI, top crops, last leaf scan). Only filled-in values are sent. The reply is `{answer, sources}`; there is no `context_used` yet.
+
 The farm chat. Ask a question, get an answer about *this* field.
 
 ```
@@ -247,21 +295,23 @@ Answers come back in the language you ask for — `en`, `hi`, `mr`, `te`.
 
 # Smaller APIs
 
-| API | What it does |
-|---|---|
-| `GET /api/places?q=` | Search for a village or town. Same reply shape the app already uses |
-| `GET /api/reverse-geocode?lat=&lng=` | Turn coordinates into a place name |
-| `GET /api/weather?lat=&lng=` | Current weather and 15-day forecast |
-| `GET /api/mandi?commodity=&state=&district=` | Market prices, live from data.gov.in |
-| `POST /api/voice/transcribe` | Send audio, get text |
-| `POST /api/voice/speak` | Send text, get audio back |
-| `GET /api/model-info` | Our accuracy numbers, for the demo |
-| `GET /api/config` | The contract version |
-| `GET /healthz` | Is the server alive |
+| API | What it does | Status |
+|---|---|---|
+| `GET /api/places?q=` | Search for a village or town | ⚠️ Live — suggestions only; get the position from `GET /api/place?id=` |
+| `GET /api/reverse-geocode?lat=&lng=` | Turn coordinates into a place name | ✅ Live |
+| `GET /api/weather?lat=&lng=` | Current weather and 15-day forecast | ⏳ Not built — the pages call Open-Meteo directly |
+| `GET /api/mandi?commodity=&state=&district=` | Market prices, live from data.gov.in | ⏳ On hold — data.gov.in key pending |
+| `POST /api/voice/transcribe` | Send audio, get text | ⏳ Not built |
+| `POST /api/voice/speak` | Send text, get audio back | ⏳ Not built |
+| `GET /api/model-info` | Our accuracy numbers, for the demo | ⏳ Not built |
+| `GET /api/config` | The contract version | ⏳ Not built |
+| `GET /healthz` | Is the server alive | ⏳ Not built — use `GET /api/auth/config` |
 
 ---
 
 # For Percy — satellite
+
+> ✅ **Done, with a different name.** Percy wrote `get_current_field_environment(latitude, longitude)` in `crop_model/earth_engine/feature_builder.py`. `/api/satellite` uses it. Still wanted: an NDVI series over time (for a trend chart), the photo date, and the `SCL` band for cloud masking instead of `QA60`.
 
 **Write one function. Nothing else.** No web code, no saving, no error handling beyond raising.
 
@@ -294,6 +344,8 @@ If Earth Engine access has not come through yet, **keep working anyway.** A work
 ---
 
 # For Katniss — disease
+
+> ✅ **Done differently.** The model runs in the browser (`disease-model.tflite`, loaded from `vendor/tflite/`). The confidence limits below are in place (0.80 / 0.60, from `CONF_THRESHOLDS`), and the photo-quality check (`image_guard.py`) runs on the server in `/api/disease/advice`. The 38 disease names are kept in three places that must match: `server.py`, `app.js` and `src/services/farmApi.js`.
 
 **Write one function.**
 
