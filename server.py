@@ -540,45 +540,61 @@ class GeminiError(Exception):
         self.status, self.code, self.details = status, code, details
 
 
+def _gemini_models():
+    """Main model first, then the backup. Each model has its own free daily
+    limit, so the backup also keeps answering once the main one runs out."""
+    main = os.getenv('GEMINI_MODEL', 'gemini-3.8-flash')
+    backup = os.getenv('GEMINI_FALLBACK_MODEL', 'gemini-3.7-flash')
+    return [main] + ([backup] if backup and backup != main else [])
+
+
 def _gemini_generate(parts, response_schema=None, timeout=60):
-    """Call Gemini once, retrying a single time if it is briefly busy.
-    Returns (model, text). With response_schema, the text is JSON."""
+    """Call Gemini. A busy model (500/503) is retried once, then the backup
+    model is tried; a model at its limit (429) goes straight to the backup,
+    because retrying it only wastes a call. Returns (model, text).
+    With response_schema, the text is JSON."""
     api_key = os.getenv('GEMINI_API_KEY')
     if not api_key:
         raise GeminiError('Gemini API key not configured.', 503, 'gemini_unconfigured')
-    model = os.getenv('GEMINI_MODEL', 'gemini-3.8-flash')
     payload = {'contents': [{'role': 'user', 'parts': parts}]}
     if response_schema:
         payload['generationConfig'] = {'responseMimeType': 'application/json',
                                        'responseSchema': response_schema}
-    url = f'https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent'
-    for attempt in (1, 2):
-        req = urllib.request.Request(
-            url, data=json.dumps(payload).encode(), method='POST',
-            # Key in a header rather than the URL, so it cannot leak into logs.
-            headers={'Content-Type': 'application/json', 'x-goog-api-key': api_key})
-        try:
-            with urllib.request.urlopen(req, timeout=timeout) as resp:
-                result = json.load(resp)
-            break
-        except urllib.error.HTTPError as exc:
-            if exc.code in (429, 500, 503) and attempt == 1:
-                time.sleep(1.5)
-                continue
-            if exc.code in (429, 503):
-                raise GeminiError('Gemini is busy right now. Please try again in a moment.',
-                                  503, 'gemini_busy', f'HTTP {exc.code}') from exc
-            raise GeminiError('Gemini service error', 502, 'gemini_error',
-                              f'HTTP {exc.code}') from exc
-        except (urllib.error.URLError, OSError) as exc:
-            raise GeminiError('Could not reach Gemini.', 502, 'gemini_unreachable', str(exc)) from exc
-    try:
-        # Skip "thought" parts that thinking models may return before the answer.
-        text = ''.join(p.get('text', '') for p in result['candidates'][0]['content']['parts']
-                       if not p.get('thought'))
-    except (KeyError, IndexError, TypeError) as exc:
-        raise GeminiError('Gemini returned no answer.', 502, 'gemini_empty') from exc
-    return model, text
+    failures = []  # (model, HTTP code) for each model that could not answer
+    for model in _gemini_models():
+        url = f'https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent'
+        for attempt in (1, 2):
+            req = urllib.request.Request(
+                url, data=json.dumps(payload).encode(), method='POST',
+                # Key in a header rather than the URL, so it cannot leak into logs.
+                headers={'Content-Type': 'application/json', 'x-goog-api-key': api_key})
+            try:
+                with urllib.request.urlopen(req, timeout=timeout) as resp:
+                    result = json.load(resp)
+            except urllib.error.HTTPError as exc:
+                if exc.code in (500, 503) and attempt == 1:
+                    time.sleep(1.5)
+                    continue
+                if exc.code in (429, 500, 503):
+                    failures.append((model, exc.code))
+                    break  # this model can't answer now: try the next one
+                raise GeminiError('Gemini service error', 502, 'gemini_error',
+                                  f'HTTP {exc.code} ({model})') from exc
+            except (urllib.error.URLError, OSError) as exc:
+                raise GeminiError('Could not reach Gemini.', 502, 'gemini_unreachable', str(exc)) from exc
+            try:
+                # Skip "thought" parts that thinking models may return before the answer.
+                text = ''.join(p.get('text', '') for p in result['candidates'][0]['content']['parts']
+                               if not p.get('thought'))
+            except (KeyError, IndexError, TypeError) as exc:
+                raise GeminiError('Gemini returned no answer.', 502, 'gemini_empty') from exc
+            return model, text
+    details = ', '.join(f'{model}: HTTP {code}' for model, code in failures)
+    if all(code == 429 for _, code in failures):
+        raise GeminiError('Gemini has reached today’s free limit. Please try again tomorrow.',
+                          429, 'gemini_quota', details)
+    raise GeminiError('Gemini is busy right now. Please try again in a moment.',
+                      503, 'gemini_busy', details)
 
 
 def _gemini_error_response(err):

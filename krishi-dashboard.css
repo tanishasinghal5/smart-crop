@@ -28,3 +28,5 @@
 .chat-error{background:#fbe6e1 !important;color:#8a3a28 !important}
 /* NDVI placeholder until Sentinel-2 is connected */
 .ndvi-soon{border:0;background:transparent;padding:24px 10px}
+/* Chat bubbles share the class 'user' with the sidebar's user box — undo its border and spacing */
+.message.user{border-top:0;margin-top:0;padding:0}
