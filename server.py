@@ -504,23 +504,27 @@ def disease():
 
 _ee = None
 _ee_error = None
+_ee_failed_at = 0.0
 _ee_lock = threading.Lock()
+EE_RETRY_AFTER = 300  # a failed connection is retried after 5 minutes, not never
 
 
 def _get_ee():
     """Connect to Earth Engine once per container, not once per request —
     ee.Initialize takes several seconds, which every farmer would otherwise pay."""
-    global _ee, _ee_error
+    global _ee, _ee_error, _ee_failed_at
     with _ee_lock:
-        if _ee is None and _ee_error is None:
+        if _ee is None and (_ee_error is None or time.time() - _ee_failed_at > EE_RETRY_AFTER):
             try:
                 from crop_model.earth_engine.client import initialize
                 _ee = initialize()
+                _ee_error = None
             except Exception as exc:  # noqa: BLE001 — surface any failure to the API
                 # client.py wraps the real error in a generic "run earthengine
                 # authenticate" message, which is misleading on a server.
                 cause = exc.__cause__ or exc
                 _ee_error = f'{type(cause).__name__}: {cause}'
+                _ee_failed_at = time.time()
         return _ee
 
 
@@ -532,6 +536,74 @@ def satellite_health():
         return jsonify(ok=False, error=_ee_error, code='earth_engine_unavailable'), 503
     return jsonify(ok=True, project=os.environ.get('EARTH_ENGINE_PROJECT_ID'),
                    test=ee.Number(1).add(1).getInfo())
+
+
+SATELLITE_TTL = 24 * 3600  # new Sentinel-2 photos arrive every few days at most
+_satellite_cache = {}
+_satellite_lock = threading.Lock()
+
+
+def _ndvi_status(ndvi):
+    if ndvi is None:
+        return None
+    return 'poor' if ndvi < 0.2 else 'moderate' if ndvi < 0.4 else 'good' if ndvi < 0.6 else 'very_good'
+
+
+def _round(value, digits):
+    return None if value is None else round(float(value), digits)
+
+
+@app.post('/api/satellite')
+def satellite():
+    """Field health from space for one farm: Sentinel-2 NDVI plus CHIRPS rain
+    and ERA5 temperature/soil moisture, from Percy's get_current_field_environment.
+    Cached 24 h per ~110 m, because one Earth Engine call takes 10-30 s."""
+    body = request.get_json(silent=True) or {}
+    try:
+        lat, lng = float(body['latitude']), float(body['longitude'])
+    except (KeyError, TypeError, ValueError):
+        return jsonify(error='latitude and longitude are required numbers.', code='bad_coordinates'), 400
+    if not (-90 <= lat <= 90 and -180 <= lng <= 180):
+        return jsonify(error='latitude and longitude are out of range.', code='bad_coordinates'), 400
+
+    key = f'{lat:.3f},{lng:.3f}'
+    with _satellite_lock:
+        hit = _satellite_cache.get(key)
+    if hit and hit[0] > time.time():
+        return jsonify({**hit[1], 'meta': {**hit[1]['meta'], 'source': 'cache'}})
+
+    ee = _get_ee()
+    if ee is None:
+        return jsonify(error='Satellite data is not available right now.', code='earth_engine_unavailable',
+                       details=_ee_error), 503
+    try:
+        from crop_model.earth_engine.feature_builder import get_current_field_environment
+        env = get_current_field_environment(lat, lng, ee_module=ee)
+    except Exception as exc:  # noqa: BLE001 — Earth Engine raises many kinds
+        app.logger.warning('Earth Engine request failed for %s: %s', key, exc)
+        return jsonify(error='Could not read satellite data right now. Please try again later.',
+                       code='earth_engine_error', details=f'{type(exc).__name__}: {exc}'), 502
+
+    ndvi = _round(env.get('current_ndvi'), 3)
+    result = {
+        'ndvi': ndvi,
+        'ndvi_status': _ndvi_status(ndvi),
+        'observation_count': env.get('ndvi_observation_count', 0),
+        'quality_flag': env.get('ndvi_quality_flag'),
+        'rainfall_30d': _round(env.get('recent_rainfall'), 1),
+        'temperature': _round(env.get('recent_temperature'), 1),
+        'soil_moisture': _round(env.get('soil_moisture'), 3),
+        'window_days': 30,
+        'buffer_m': 1000,
+        'meta': {'source': 'live', 'generated_at': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
+                 'datasets': ['COPERNICUS/S2_SR_HARMONIZED', 'UCSB-CHG/CHIRPS/DAILY',
+                              'ECMWF/ERA5_LAND/DAILY_AGGR']},
+    }
+    with _satellite_lock:
+        if len(_satellite_cache) > 2000:  # keep memory bounded
+            _satellite_cache.clear()
+        _satellite_cache[key] = (time.time() + SATELLITE_TTL, result)
+    return jsonify(result)
 
 
 class GeminiError(Exception):
