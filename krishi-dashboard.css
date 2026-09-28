@@ -26,3 +26,5 @@
 .message.ai ul{margin:4px 0 6px;padding-left:18px}
 .message.ai li{margin:2px 0}
 .chat-error{background:#fbe6e1 !important;color:#8a3a28 !important}
+/* NDVI placeholder until Sentinel-2 is connected */
+.ndvi-soon{border:0;background:transparent;padding:24px 10px}
