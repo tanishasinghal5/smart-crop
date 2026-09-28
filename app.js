@@ -792,6 +792,7 @@ const i18n = {
     placeNoMatch:
       "No match found. Try the nearest larger town or your district name.",
     placeOffline: "Offline — showing major districts only.",
+    placeLoadFailed: "Couldn't load that place — please try again.",
     fetchingWeather: "Fetching weather…",
     seasonRainSummary:
       "Today: {temperature}°C · {humidity}% humidity · {rainfall}mm rain this {season} season",
@@ -1296,6 +1297,7 @@ const i18n = {
     placeNoMatch:
       "कोई मेल नहीं मिला। पास के बड़े शहर या अपने ज़िले का नाम आज़माएँ।",
     placeOffline: "ऑफ़लाइन — केवल प्रमुख ज़िले दिखा रहे हैं।",
+    placeLoadFailed: "वह जगह लोड नहीं हो सकी — कृपया फिर से कोशिश करें।",
     fetchingWeather: "मौसम की जानकारी ला रहे हैं…",
     seasonRainSummary:
       "आज: {temperature}°C · {humidity}% नमी · इस {season} सीज़न में {rainfall}mm वर्षा",
@@ -1693,6 +1695,7 @@ const i18n = {
     placeNoMatch:
       "जुळणी सापडली नाही. जवळचे मोठे शहर किंवा जिल्ह्याचे नाव वापरून पाहा.",
     placeOffline: "ऑफलाइन — फक्त प्रमुख जिल्हे दाखवत आहोत.",
+    placeLoadFailed: "ते ठिकाण लोड होऊ शकले नाही — कृपया पुन्हा प्रयत्न करा.",
     fetchingWeather: "हवामान माहिती आणत आहोत…",
     seasonRainSummary:
       "आज: {temperature}°C · {humidity}% आर्द्रता · या {season} हंगामात {rainfall}mm पाऊस",
@@ -2039,6 +2042,7 @@ const i18n = {
     placeNoMatch:
       "సరిపోలిక దొరకలేదు. దగ్గరి పెద్ద పట్టణం లేదా మీ జిల్లా పేరు ప్రయత్నించండి.",
     placeOffline: "ఆఫ్‌లైన్ — ప్రధాన జిల్లాలు మాత్రమే చూపుతున్నాం.",
+    placeLoadFailed: "ఆ ప్రదేశం లోడ్ కాలేదు — దయచేసి మళ్లీ ప్రయత్నించండి.",
     fetchingWeather: "వాతావరణ సమాచారం తెస్తున్నాం…",
     seasonRainSummary:
       "నేడు: {temperature}°C · {humidity}% తేమ · ఈ {season} సీజన్‌లో {rainfall}mm వర్షం",
@@ -3124,14 +3128,19 @@ const OFFLINE_PLACES = [
   source: "offline",
 }));
 
-async function searchPlaces(query, limit = 8, signal) {
+// Suggestions only ({name, detail, label, placeId}) — coordinates come from
+// /api/place when one is picked. `session` groups the keystrokes and the pick
+// into one billed Google session.
+async function searchPlaces(query, limit = 8, signal, session = "") {
   const q = query.trim();
   if (q.length < 2) return [];
-  // v2 key: results cached under the old key came from Open-Meteo.
-  const cacheKey = `terraGeo2:${q.toLowerCase()}`;
+  // v3 key: v2 held Text Search results, which missed many towns.
+  const cacheKey = `terraGeo3:${q.toLowerCase()}`;
   const hit = tbCacheGet(cacheKey, GEO_TTL_MS);
   if (hit) return hit;
-  const url = `/api/places?q=${encodeURIComponent(q)}&limit=${limit}`;
+  const url =
+    `/api/places?q=${encodeURIComponent(q)}&limit=${limit}` +
+    (session ? `&session=${encodeURIComponent(session)}` : "");
   const response = await fetch(url, { signal });
   if (!response.ok) throw Error(`Place search failed: ${response.status}`);
   const data = await response.json();
@@ -3663,11 +3672,12 @@ function setupPlanner() {
       const title = document.createElement("b");
       title.textContent = place.name;
       const meta = document.createElement("small");
-      meta.textContent = [place.district, place.state]
-        .filter(Boolean)
-        .join(" · ");
+      meta.textContent =
+        [place.district, place.state].filter(Boolean).join(" · ") ||
+        place.detail ||
+        "";
       button.append(title, meta);
-      button.addEventListener("click", () => selectPlace(place));
+      button.addEventListener("click", () => pickPlace(place));
       item.append(button);
       placeResults.append(item);
     });
@@ -3675,10 +3685,34 @@ function setupPlanner() {
 
   let placeDebounce = null;
   let placeAbort = null;
+  let placeSession = null; // one per search: every keystroke plus the pick
+  const newPlaceSession = () =>
+    crypto.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+  // Autocomplete suggestions carry no coordinates: resolve the pick first.
+  // Offline places (and cached full places) already have them.
+  async function pickPlace(place) {
+    if (place.lat != null) return selectPlace(place);
+    const session = placeSession;
+    placeSession = null;
+    setPlaceStatus(t("placeSearching"));
+    try {
+      const response = await fetch(
+        `/api/place?id=${encodeURIComponent(place.placeId)}` +
+          (session ? `&session=${encodeURIComponent(session)}` : ""),
+      );
+      if (!response.ok) throw Error(`Place lookup failed: ${response.status}`);
+      await selectPlace(await response.json());
+    } catch {
+      setPlaceStatus(t("placeLoadFailed"));
+    }
+  }
+
   if (placeInput) {
     placeInput.addEventListener("input", () => {
       clearTimeout(placeDebounce);
       if (placeAbort) placeAbort.abort();
+      placeSession ||= newPlaceSession();
       const query = placeInput.value.trim();
       if (query.length < 2) {
         renderPlaceResults([]);
@@ -3689,7 +3723,7 @@ function setupPlanner() {
       placeDebounce = setTimeout(async () => {
         placeAbort = new AbortController();
         try {
-          const found = await searchPlaces(query, 8, placeAbort.signal);
+          const found = await searchPlaces(query, 8, placeAbort.signal, placeSession);
           renderPlaceResults(found);
           setPlaceStatus(found.length ? "" : t("placeNoMatch"));
         } catch (error) {
