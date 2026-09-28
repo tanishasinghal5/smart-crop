@@ -777,9 +777,14 @@ def disease_advice():
 # Results are returned in the shape app.js already uses for places:
 # {name, state, district, lat, lng, label, source}.
 
-PLACE_TYPES = {'locality', 'sublocality', 'sublocality_level_1', 'neighborhood',
-               'postal_town', 'administrative_area_level_2',
-               'administrative_area_level_3', 'administrative_area_level_4'}
+# Autocomplete searches all of India evenly for these place types. (Text
+# Search was tried first: it ranks businesses near the caller, so "Anand"
+# returned Pune restaurants rather than Anand, Gujarat.) Google allows 5.
+AUTOCOMPLETE_TYPES = ['locality', 'sublocality', 'administrative_area_level_2',
+                      'administrative_area_level_3', 'administrative_area_level_4']
+# A session token ties a farmer's keystrokes and their final pick into one
+# billed session; placeIds are Google's opaque ids.
+_SAFE_TOKEN = re.compile(r'[A-Za-z0-9_-]{1,128}')
 PLACES_TTL = 30 * 24 * 3600  # places don't move; also keeps Maps calls low
 _places_cache = {}
 _places_lock = threading.Lock()
@@ -837,46 +842,81 @@ def _place_shape(name, district, state, lat, lng, source):
 
 @app.get('/api/places')
 def places_search():
-    query = request.args.get('q', '').strip()
-    try:
-        limit = max(1, min(10, int(request.args.get('limit', 8))))
-    except ValueError:
-        limit = 8
+    """Suggestions while the farmer types. Names only — no coordinates; the
+    pick is resolved by /api/place. Returns {name, detail, label, placeId}."""
+    query = request.args.get('q', '').strip()[:100]
     if len(query) < 2:
         return jsonify(places=[])
-    cache_key = f'search:{query.lower()}:{limit}'
+    cache_key = f'autocomplete:{query.lower()}'
     cached = _places_cache_get(cache_key)
     if cached is not None:
         return jsonify(places=cached, meta={'source': 'cache'})
+    body = {'input': query, 'languageCode': 'en', 'includedRegionCodes': ['in'],
+            'includedPrimaryTypes': AUTOCOMPLETE_TYPES}
+    session = request.args.get('session', '')
+    if _SAFE_TOKEN.fullmatch(session):
+        body['sessionToken'] = session
     try:
         req = urllib.request.Request(
-            'https://places.googleapis.com/v1/places:searchText', method='POST',
-            data=json.dumps({'textQuery': query, 'regionCode': 'IN',
-                             'languageCode': 'en', 'pageSize': limit}).encode(),
-            headers={'Content-Type': 'application/json', 'X-Goog-Api-Key': _maps_key(),
-                     'X-Goog-FieldMask': 'places.displayName,places.location,'
-                                         'places.addressComponents,places.types'})
+            'https://places.googleapis.com/v1/places:autocomplete', method='POST',
+            data=json.dumps(body).encode(),
+            headers={'Content-Type': 'application/json', 'X-Goog-Api-Key': _maps_key()})
         data = _maps_fetch(req)
     except MapsError as err:
         return jsonify(error=str(err), code=err.code), err.status
 
     results = []
-    for place in data.get('places', []):
-        comps = place.get('addressComponents', [])
-        # Only real places in India — not shops, stations or temples named after them.
-        if _component(comps, 'country', 'shortText') != 'IN':
+    for suggestion in data.get('suggestions', []):
+        prediction = suggestion.get('placePrediction')
+        if not prediction or not prediction.get('placeId'):
             continue
-        if not PLACE_TYPES.intersection(place.get('types', [])):
-            continue
-        location = place.get('location') or {}
-        results.append(_place_shape(
-            name=(place.get('displayName') or {}).get('text', ''),
-            district=(_component(comps, 'administrative_area_level_3', 'longText')
-                      or _component(comps, 'administrative_area_level_2', 'longText')),
-            state=_component(comps, 'administrative_area_level_1', 'longText'),
-            lat=location.get('latitude'), lng=location.get('longitude'), source='search'))
+        fmt = prediction.get('structuredFormat', {})
+        name = fmt.get('mainText', {}).get('text', '')
+        detail = fmt.get('secondaryText', {}).get('text', '')
+        detail = detail[:-len(', India')] if detail.endswith(', India') else detail
+        results.append({'name': name, 'detail': detail,
+                        'label': ', '.join(p for p in (name, detail) if p),
+                        'placeId': prediction['placeId'], 'source': 'search'})
     _places_cache_set(cache_key, results)
     return jsonify(places=results, meta={'source': 'live'})
+
+
+@app.get('/api/place')
+def place_details():
+    """The place a farmer picked: coordinates, district and state, in the
+    shape the planner uses {name, state, district, lat, lng, label}."""
+    place_id = request.args.get('id', '')
+    if not _SAFE_TOKEN.fullmatch(place_id):
+        return jsonify(error='A valid place id is required.', code='bad_place_id'), 400
+    cache_key = f'place:{place_id}'
+    cached = _places_cache_get(cache_key)
+    if cached is not None:
+        return jsonify(cached)
+    params = {'languageCode': 'en'}
+    session = request.args.get('session', '')
+    if _SAFE_TOKEN.fullmatch(session):
+        params['sessionToken'] = session  # closes the billed autocomplete session
+    try:
+        req = urllib.request.Request(
+            f'https://places.googleapis.com/v1/places/{place_id}?'
+            + urllib.parse.urlencode(params),
+            headers={'X-Goog-Api-Key': _maps_key(),
+                     'X-Goog-FieldMask': 'displayName,location,addressComponents'})
+        place = _maps_fetch(req)
+    except MapsError as err:
+        return jsonify(error=str(err), code=err.code), err.status
+    comps = place.get('addressComponents', [])
+    location = place.get('location') or {}
+    if location.get('latitude') is None:
+        return jsonify(error='No location for this place.', code='no_location'), 404
+    result = _place_shape(
+        name=(place.get('displayName') or {}).get('text', ''),
+        district=(_component(comps, 'administrative_area_level_3', 'longText')
+                  or _component(comps, 'administrative_area_level_2', 'longText')),
+        state=_component(comps, 'administrative_area_level_1', 'longText'),
+        lat=location['latitude'], lng=location['longitude'], source='search')
+    _places_cache_set(cache_key, result)
+    return jsonify(result)
 
 
 @app.get('/api/reverse-geocode')
