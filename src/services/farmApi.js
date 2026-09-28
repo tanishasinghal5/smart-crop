@@ -144,6 +144,15 @@ export const farmApi = {
       fetchedAt: Date.now(),
     };
   },
+  // Field health from space — Sentinel-2 NDVI + CHIRPS rain + ERA5, via
+  // Earth Engine on our server (Percy's get_current_field_environment).
+  // The first call for a place takes 10-30 s; the server keeps it for 24 h.
+  async getSatellite(lat, lng) {
+    return api('/api/satellite', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ latitude: lat, longitude: lng }),
+    });
+  },
   // Top crops from the trained model on our server (bundle.pkl). No Gemini.
   async recommendCrops(inputs) {
     const data = await api('/api/recommend', {
