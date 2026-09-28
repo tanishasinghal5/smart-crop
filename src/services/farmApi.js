@@ -25,6 +25,27 @@ export const farmApi = {
   async reverseGeocode(lat, lng) {
     return api(`/api/reverse-geocode?lat=${encodeURIComponent(lat)}&lng=${encodeURIComponent(lng)}`);
   },
+  // 7-day weather — Open-Meteo, the same keyless service the planner page
+  // uses. It is a forecast; Earth Engine supplies measured past data instead
+  // and joins at the Field Health step.
+  async getWeather(lat, lng) {
+    const url = 'https://api.open-meteo.com/v1/forecast'
+      + `?latitude=${lat.toFixed(3)}&longitude=${lng.toFixed(3)}`
+      + '&current=temperature_2m,relative_humidity_2m,apparent_temperature'
+      + '&daily=precipitation_sum,temperature_2m_max,temperature_2m_min'
+      + '&forecast_days=7&timezone=auto';
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Weather failed (${response.status})`);
+    const data = await response.json();
+    const rain = (data.daily?.precipitation_sum || []).reduce((sum, n) => sum + (n || 0), 0);
+    return {
+      temperature: data.current?.temperature_2m ?? null,
+      feelsLike: data.current?.apparent_temperature ?? null,
+      humidity: data.current?.relative_humidity_2m ?? null,
+      rain7d: Math.round(rain),
+      fetchedAt: Date.now(),
+    };
+  },
   // Still mock — replaced in their own steps (disease: step 6, advisor: step 7).
   async analyseLeaf() { await wait(1200); return { status:'high', name:'Tomato Late Blight', confidence:91, symptoms:['Brown lesions on leaf edges','Irregular dark patches','Leaf discoloration'], action:'Remove severely affected leaves and avoid overhead irrigation. Your local extension officer can confirm the treatment plan.' }; },
   async askAdvisor(question, context) { await wait(900); if (/irrigat/i.test(question)) return 'Rainfall of about 42 mm is forecast within the next 7 days. Hold off on routine irrigation today, then check soil moisture after the rain. Your vegetation score is healthy, so there is no immediate water-stress signal.'; if (/soybean/i.test(question)) return 'Soybean is currently your strongest match at 86% suitability. Your pH of 6.7 and the expected rainfall both support it. Watch the heavy-rain forecast and ensure drainage is clear before sowing.'; return `For your ${context.farm.name} field, I’d start with your soil pH of ${context.soil.ph}, healthy NDVI of 0.63, and the incoming rainfall. Could you tell me a little more about the crop stage or the issue you’re seeing?`; }
