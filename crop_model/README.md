@@ -38,3 +38,25 @@ The existing model is `bundle.pkl`. Evaluation requires the original seven-featu
 python -m crop_model.train_baseline --dataset /path/to/original_agronomic_dataset.csv
 pytest -q
 ```
+
+## Recommendations
+
+The baseline prediction preserves the model's seven agronomic inputs:
+
+```python
+from crop_model.predict import predict_agronomic_crops
+predict_agronomic_crops(75, 45, 140, 29.92, 70, 6.6, 650, top_k=5)
+```
+
+Use the orchestration layer for a combined result:
+
+```python
+from crop_model.recommend import recommend_crops
+result = recommend_crops(
+    state="Maharashtra", district="Pune", season="Kharif",
+    N=75, P=45, K=140, ph=6.6, temperature=29.92,
+    humidity=70, rainfall=650, latitude=18.5204, longitude=73.8567,
+)
+```
+
+`rainfall` above is the rainfall definition used when the agronomic model was trained; it is not replaced with an Earth Engine 30- or 60-day value. Earth Engine values are contextual, and failures return recommendations with `data_quality.earth_engine` set to `unavailable`. No regional model is currently shipped, so the pipeline runs in agronomic-only mode with `regional_score: null`. Set `EARTH_ENGINE_PROJECT_ID` and authenticate with `earthengine authenticate` to enable live context.
