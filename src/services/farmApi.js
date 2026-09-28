@@ -1,6 +1,5 @@
 // Single integration boundary: every server call goes through here. The Flask
 // server serves this page, so paths are same-origin. UI does not hide failures.
-const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 // Calls the Flask server; on failure throws the server's own message.
 export async function api(path, options = {}) {
@@ -182,6 +181,13 @@ export const farmApi = {
     body.append('language', language);
     return api('/api/disease/advice', { method: 'POST', body });
   },
-  // Still mock — replaced in step 7.
-  async askAdvisor(question, context) { await wait(900); if (/irrigat/i.test(question)) return 'Rainfall of about 42 mm is forecast within the next 7 days. Hold off on routine irrigation today, then check soil moisture after the rain. Your vegetation score is healthy, so there is no immediate water-stress signal.'; if (/soybean/i.test(question)) return 'Soybean is currently your strongest match at 86% suitability. Your pH of 6.7 and the expected rainfall both support it. Watch the heavy-rain forecast and ensure drainage is clear before sowing.'; return `For your ${context.farm.name} field, I’d start with your soil pH of ${context.soil.ph}, healthy NDVI of 0.63, and the incoming rainfall. Could you tell me a little more about the crop stage or the issue you’re seeing?`; }
+  // Farm advisor — Gemini through /api/chat (the same route as the chat
+  // bubble). `context` holds only real farm data; `history` the last turns.
+  async askAdvisor(question, history, context) {
+    const data = await api('/api/chat', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question, history, context, language: 'English' }),
+    });
+    return data.answer;
+  },
 };
