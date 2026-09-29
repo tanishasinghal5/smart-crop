@@ -16,6 +16,7 @@ Run:  python server.py   (then open http://localhost:8080)
       browser-side detector still covers the feature.
 """
 import base64
+import hashlib
 import io
 import mimetypes
 import threading
@@ -184,6 +185,100 @@ def users():
             else:
                 _users = FirestoreUserStore(FIRESTORE_PROJECT)  # raises StoreUnavailable
         return _users
+
+
+# ---- Shared cache (plan Task 18) ---------------------------------------------
+# Layer 1 is this server's memory (instant). Layer 2 is Firestore cache/{id}
+# (~30 ms), shared by every copy of the server and kept across deploys, so a
+# satellite reading costs one 10-30 s Earth Engine call per day, not one per
+# restart. Expired entries are kept a while longer: when a service fails, the
+# last real value is sent marked 'cache_stale' instead of an error.
+_cache_db_client = None
+_cache_db_retry_at = 0.0
+_cache_db_lock = threading.Lock()
+
+
+def _cache_db():
+    """Firestore for the cache, or None (memory only) if it can't be reached."""
+    global _cache_db_client, _cache_db_retry_at
+    with _cache_db_lock:
+        if _cache_db_client is None and time.time() >= _cache_db_retry_at:
+            try:
+                from google.cloud import firestore
+                _cache_db_client = firestore.Client(project=FIRESTORE_PROJECT)
+            except Exception as exc:  # noqa: BLE001 — the memory layer still works
+                _cache_db_retry_at = time.time() + 300
+                print(f'Shared cache: Firestore unavailable, memory only for now: {exc}')
+        return _cache_db_client
+
+
+class SharedCache:
+    def __init__(self, namespace, ttl, keep_for=None, max_items=5000):
+        self.ns, self.ttl = namespace, ttl
+        self.keep_for = max(keep_for or ttl, ttl)  # how long expired copies stay usable as 'stale'
+        self._mem, self._lock, self._max = {}, threading.Lock(), max_items
+        self._failed_until = 0.0
+
+    def _doc(self, key):
+        db = _cache_db()
+        doc_id = hashlib.sha1(f'{self.ns}:{key}'.encode()).hexdigest()  # any key, safe as an id
+        return db.collection('cache').document(doc_id) if db else None
+
+    def _remember(self, key, entry):
+        with self._lock:
+            if len(self._mem) > self._max:  # keep memory bounded
+                self._mem.clear()
+            self._mem[key] = entry
+
+    def get(self, key):
+        """(value, saved_at, fresh) or None. `fresh` is False for a stale copy."""
+        with self._lock:
+            hit = self._mem.get(key)
+        if hit is None:
+            try:
+                doc = self._doc(key)
+                snap = doc.get(timeout=3) if doc else None
+                if snap is not None and snap.exists:
+                    data = snap.to_dict()
+                    hit = (data['saved_at'], json.loads(data['value']))
+                    self._remember(key, hit)
+            except Exception as exc:  # noqa: BLE001 — a cache miss, not an error
+                print(f'Shared cache read failed ({self.ns}): {exc}')
+        if hit is None:
+            return None
+        saved_at, value = hit
+        age = time.time() - saved_at
+        if age > self.keep_for:
+            return None
+        return value, saved_at, age <= self.ttl
+
+    def set(self, key, value):
+        saved_at = time.time()
+        self._remember(key, (saved_at, value))
+        # Written in the background so the farmer never waits for Firestore.
+        threading.Thread(target=self._write, args=(key, value, saved_at), daemon=True).start()
+
+    def _write(self, key, value, saved_at):
+        try:
+            doc = self._doc(key)
+            if doc:
+                doc.set({'ns': self.ns, 'key': key[:500], 'value': json.dumps(value),
+                         'saved_at': saved_at, 'expires_at': saved_at + self.keep_for})
+        except Exception as exc:  # noqa: BLE001 — memory still has it
+            print(f'Shared cache write failed ({self.ns}): {exc}')
+
+    # A failing service is not asked again for 5 minutes, so a demo that
+    # clicks around during an outage gets the saved copy at once.
+    def failed_recently(self):
+        return time.time() < self._failed_until
+
+    def mark_failed(self, seconds=300):
+        self._failed_until = time.time() + seconds
+
+
+def _cache_meta(meta, source, saved_at):
+    return {**(meta or {}), 'source': source, 'cache_age_s': int(time.time() - saved_at),
+            'saved_at': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime(saved_at))}
 
 
 @app.errorhandler(StoreUnavailable)
@@ -622,9 +717,9 @@ def satellite_health():
                    test=ee.Number(1).add(1).getInfo())
 
 
-SATELLITE_TTL = 24 * 3600  # new Sentinel-2 photos arrive every few days at most
-_satellite_cache = {}
-_satellite_lock = threading.Lock()
+# New Sentinel-2 photos arrive every few days at most. A week-old reading is
+# still sent (marked stale) if Earth Engine is down.
+SATELLITE_CACHE = SharedCache('satellite', ttl=24 * 3600, keep_for=7 * 24 * 3600, max_items=2000)
 
 
 def _ndvi_status(ndvi):
@@ -663,25 +758,35 @@ class SatelliteError(Exception):
 
 
 def _satellite_reading(lat, lng):
-    """The /api/satellite reply for a point — from the 24 h cache when possible.
-    Raises SatelliteError. Shared with /api/recommend-crop."""
+    """The /api/satellite reply for a point — from the shared cache when
+    possible, and the last saved reading (marked cache_stale) when Earth Engine
+    fails. Raises SatelliteError. Shared with /api/recommend-crop."""
     key = f'{lat:.3f},{lng:.3f}'
-    with _satellite_lock:
-        hit = _satellite_cache.get(key)
-    if hit and hit[0] > time.time():
-        return {**hit[1], 'meta': {**hit[1]['meta'], 'source': 'cache'}}
+    hit = SATELLITE_CACHE.get(key)
+    if hit and hit[2]:
+        return {**hit[0], 'meta': _cache_meta(hit[0].get('meta'), 'cache', hit[1])}
 
-    ee = _get_ee()
-    if ee is None:
-        raise SatelliteError('Satellite data is not available right now.', 503,
-                             'earth_engine_unavailable', _ee_error)
     try:
-        from crop_model.earth_engine.feature_builder import get_current_field_environment
-        env = get_current_field_environment(lat, lng, ee_module=ee)
-    except Exception as exc:  # noqa: BLE001 — Earth Engine raises many kinds
-        app.logger.warning('Earth Engine request failed for %s: %s', key, exc)
-        raise SatelliteError('Could not read satellite data right now. Please try again later.', 502,
-                             'earth_engine_error', f'{type(exc).__name__}: {exc}') from exc
+        if SATELLITE_CACHE.failed_recently():
+            raise SatelliteError('Satellite data is not available right now.', 503,
+                                 'earth_engine_recently_failed')
+        ee = _get_ee()
+        if ee is None:
+            raise SatelliteError('Satellite data is not available right now.', 503,
+                                 'earth_engine_unavailable', _ee_error)
+        try:
+            from crop_model.earth_engine.feature_builder import get_current_field_environment
+            env = get_current_field_environment(lat, lng, ee_module=ee)
+        except Exception as exc:  # noqa: BLE001 — Earth Engine raises many kinds
+            app.logger.warning('Earth Engine request failed for %s: %s', key, exc)
+            raise SatelliteError('Could not read satellite data right now. Please try again later.', 502,
+                                 'earth_engine_error', f'{type(exc).__name__}: {exc}') from exc
+    except SatelliteError as err:
+        if err.code != 'earth_engine_recently_failed':
+            SATELLITE_CACHE.mark_failed()
+        if hit:  # an older real reading beats an error — and says it is old
+            return {**hit[0], 'meta': _cache_meta(hit[0].get('meta'), 'cache_stale', hit[1])}
+        raise
 
     ndvi = _round(env.get('current_ndvi'), 3)
     result = {
@@ -698,10 +803,7 @@ def _satellite_reading(lat, lng):
                  'datasets': ['COPERNICUS/S2_SR_HARMONIZED', 'UCSB-CHG/CHIRPS/DAILY',
                               'ECMWF/ERA5_LAND/DAILY_AGGR']},
     }
-    with _satellite_lock:
-        if len(_satellite_cache) > 2000:  # keep memory bounded
-            _satellite_cache.clear()
-        _satellite_cache[key] = (time.time() + SATELLITE_TTL, result)
+    SATELLITE_CACHE.set(key, result)
     return result
 
 
@@ -730,9 +832,8 @@ def _get_guard():
         return _guard
 
 
-EXPLAIN_TTL = 3600  # same inputs → same explanation for an hour; saves Gemini calls
-_explain_cache = {}
-_explain_lock = threading.Lock()
+# Same inputs → same explanation for an hour; saves Gemini calls.
+EXPLAIN_CACHE = SharedCache('explain', ttl=3600, max_items=500)
 CONFIDENCE_WORDS = {'high': 'High', 'medium': 'Medium', 'low': 'Low'}
 
 
@@ -753,10 +854,9 @@ def _confidence_reasons(recs, data_quality, soil_source):
 def _explain_ranking(recs, inputs, level, language):
     """One Gemini call that explains the ranking — never changes it. Cached."""
     key = json.dumps([[r['crop'] for r in recs], inputs, level, language], sort_keys=True)
-    with _explain_lock:
-        hit = _explain_cache.get(key)
-    if hit and hit[0] > time.time():
-        return hit[1]
+    hit = EXPLAIN_CACHE.get(key)
+    if hit and hit[2]:
+        return hit[0]
     ranking = ', '.join(f'{i + 1}. {r["crop"]} ({round(r["final_score"] * 100)}%)' for i, r in enumerate(recs))
     prompt = (
         'You explain crop advice to a small farmer in India, in simple words. '
@@ -770,10 +870,7 @@ def _explain_ranking(recs, inputs, level, language):
     )
     _, text = _gemini_generate([{'text': prompt}])
     text = text.strip()
-    with _explain_lock:
-        if len(_explain_cache) > 500:
-            _explain_cache.clear()
-        _explain_cache[key] = (time.time() + EXPLAIN_TTL, text)
+    EXPLAIN_CACHE.set(key, text)
     return text
 
 
@@ -1131,22 +1228,18 @@ AUTOCOMPLETE_TYPES = ['locality', 'sublocality', 'administrative_area_level_2',
 # A session token ties a farmer's keystrokes and their final pick into one
 # billed session; placeIds are Google's opaque ids.
 _SAFE_TOKEN = re.compile(r'[A-Za-z0-9_-]{1,128}')
-PLACES_TTL = 30 * 24 * 3600  # places don't move; also keeps Maps calls low
-_places_cache = {}
-_places_lock = threading.Lock()
+# Places don't move: kept 30 days (also keeps Maps calls low), and up to 180
+# days as a stale fallback when Maps is down.
+PLACES_CACHE = SharedCache('places', ttl=30 * 24 * 3600, keep_for=180 * 24 * 3600)
 
 
-def _places_cache_get(key):
-    with _places_lock:
-        hit = _places_cache.get(key)
-        return hit[1] if hit and hit[0] > time.time() else None
+def _places_cache_get(key, allow_stale=False):
+    hit = PLACES_CACHE.get(key)
+    return hit[0] if hit and (hit[2] or allow_stale) else None
 
 
 def _places_cache_set(key, value):
-    with _places_lock:
-        if len(_places_cache) > 5000:  # keep memory bounded
-            _places_cache.clear()
-        _places_cache[key] = (time.time() + PLACES_TTL, value)
+    PLACES_CACHE.set(key, value)
 
 
 class MapsError(Exception):
@@ -1209,6 +1302,9 @@ def places_search():
             headers={'Content-Type': 'application/json', 'X-Goog-Api-Key': _maps_key()})
         data = _maps_fetch(req)
     except MapsError as err:
+        stale = _places_cache_get(cache_key, allow_stale=True)
+        if stale is not None:
+            return jsonify(places=stale, meta={'source': 'cache_stale'})
         return jsonify(error=str(err), code=err.code), err.status
 
     results = []
@@ -1250,6 +1346,9 @@ def place_details():
                      'X-Goog-FieldMask': 'displayName,location,addressComponents'})
         place = _maps_fetch(req)
     except MapsError as err:
+        stale = _places_cache_get(cache_key, allow_stale=True)
+        if stale is not None:
+            return jsonify({**stale, 'meta': {'source': 'cache_stale'}})
         return jsonify(error=str(err), code=err.code), err.status
     comps = place.get('addressComponents', [])
     location = place.get('location') or {}
@@ -1284,6 +1383,9 @@ def reverse_geocode():
                                          'key': _maps_key()}))
         data = _maps_fetch(urllib.request.Request(url))
     except MapsError as err:
+        stale = _places_cache_get(cache_key, allow_stale=True)
+        if stale is not None:
+            return jsonify({**stale, 'meta': {'source': 'cache_stale'}})
         return jsonify(error=str(err), code=err.code), err.status
     if data.get('status') != 'OK' or not data.get('results'):
         # ZERO_RESULTS (e.g. at sea) or REQUEST_DENIED (key restrictions).
