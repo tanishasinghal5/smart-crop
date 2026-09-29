@@ -1216,6 +1216,8 @@ _SAFE_TOKEN = re.compile(r'[A-Za-z0-9_-]{1,128}')
 # Places don't move: kept 30 days (also keeps Maps calls low), and up to 180
 # days as a stale fallback when Maps is down.
 PLACES_CACHE = SharedCache('places', ttl=30 * 24 * 3600, keep_for=180 * 24 * 3600)
+_nominatim_lock = threading.Lock()
+_nominatim_last_request = 0.0
 
 
 def _places_cache_get(key, allow_stale=False):
@@ -1264,6 +1266,69 @@ def _place_shape(name, district, state, lat, lng, source):
             'lat': lat, 'lng': lng, 'label': ', '.join(label_parts), 'source': source}
 
 
+def _nominatim_json(params):
+    """Keyless OSM geocoding fallback; pace requests per Nominatim policy."""
+    global _nominatim_last_request
+    with _nominatim_lock:
+        wait = 1.05 - (time.monotonic() - _nominatim_last_request)
+        if wait > 0:
+            time.sleep(wait)
+        _nominatim_last_request = time.monotonic()
+        url = 'https://nominatim.openstreetmap.org/' + params
+        req = urllib.request.Request(
+            url,
+            headers={'User-Agent': 'TerraByte-Smart-Crop/1.0 (https://github.com/tanishasinghal5/smart-crop)',
+                     'Accept': 'application/json'},
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=12) as response:
+                return json.load(response)
+        except (urllib.error.URLError, OSError, ValueError) as exc:
+            raise MapsError('Could not reach the OpenStreetMap location search.', 502,
+                            'geocoder_unreachable') from exc
+
+
+def _nominatim_address(address):
+    address = address or {}
+    district = (address.get('state_district') or address.get('county')
+                or address.get('city_district') or '')
+    name = (address.get('village') or address.get('town') or address.get('city')
+            or address.get('municipality') or address.get('hamlet')
+            or address.get('suburb') or address.get('neighbourhood')
+            or address.get('locality') or district or 'Your location')
+    return name, district, address.get('state', '')
+
+
+def _nominatim_search(query, limit):
+    params = urllib.parse.urlencode({
+        'q': query, 'countrycodes': 'in', 'format': 'jsonv2', 'addressdetails': 1,
+        'limit': max(1, min(int(limit), 8)), 'accept-language': 'en',
+    })
+    results = []
+    for item in _nominatim_json('search?' + params):
+        try:
+            lat, lng = float(item['lat']), float(item['lon'])
+        except (KeyError, TypeError, ValueError):
+            continue
+        name, district, state_name = _nominatim_address(item.get('address'))
+        if name == 'Your location':
+            name = (item.get('name') or item.get('display_name', '').split(',')[0] or name)
+        place = _place_shape(name, district, state_name, lat, lng, 'openstreetmap')
+        place['detail'] = ', '.join(part for part in (district, state_name) if part and part != name)
+        results.append(place)
+    return results
+
+
+def _nominatim_reverse(lat, lng):
+    params = urllib.parse.urlencode({
+        'lat': lat, 'lon': lng, 'format': 'jsonv2', 'addressdetails': 1,
+        'zoom': 14, 'accept-language': 'en',
+    })
+    item = _nominatim_json('reverse?' + params)
+    name, district, state_name = _nominatim_address(item.get('address'))
+    return _place_shape(name, district, state_name, lat, lng, 'openstreetmap')
+
+
 @app.get('/api/places')
 def places_search():
     """Suggestions while the farmer types. Names only — no coordinates; the
@@ -1290,7 +1355,12 @@ def places_search():
         stale = _places_cache_get(cache_key, allow_stale=True)
         if stale is not None:
             return jsonify(places=stale, meta={'source': 'cache_stale'})
-        return jsonify(error=str(err), code=err.code), err.status
+        try:
+            results = _nominatim_search(query, request.args.get('limit', 8))
+        except (MapsError, TypeError, ValueError) as fallback_error:
+            return jsonify(error=str(fallback_error), code=fallback_error.code if isinstance(fallback_error, MapsError) else 'bad_limit'), 502
+        _places_cache_set(cache_key, results)
+        return jsonify(places=results, meta={'source': 'openstreetmap_fallback', 'google_error': err.code})
 
     results = []
     for suggestion in data.get('suggestions', []):
@@ -1304,6 +1374,14 @@ def places_search():
         results.append({'name': name, 'detail': detail,
                         'label': ', '.join(p for p in (name, detail) if p),
                         'placeId': prediction['placeId'], 'source': 'search'})
+    if not results:
+        try:
+            results = _nominatim_search(query, request.args.get('limit', 8))
+        except (MapsError, TypeError, ValueError):
+            results = []
+        if results:
+            _places_cache_set(cache_key, results)
+            return jsonify(places=results, meta={'source': 'openstreetmap_fallback'})
     _places_cache_set(cache_key, results)
     return jsonify(places=results, meta={'source': 'live'})
 
@@ -1371,10 +1449,20 @@ def reverse_geocode():
         stale = _places_cache_get(cache_key, allow_stale=True)
         if stale is not None:
             return jsonify({**stale, 'meta': {'source': 'cache_stale'}})
-        return jsonify(error=str(err), code=err.code), err.status
+        try:
+            place = _nominatim_reverse(lat, lng)
+        except MapsError as fallback_error:
+            return jsonify(error=str(fallback_error), code=fallback_error.code), fallback_error.status
+        _places_cache_set(cache_key, place)
+        return jsonify(place)
     if data.get('status') != 'OK' or not data.get('results'):
         # ZERO_RESULTS (e.g. at sea) or REQUEST_DENIED (key restrictions).
-        return jsonify(error='No place found here.', code=f'maps_{data.get("status", "error").lower()}'), 404
+        try:
+            place = _nominatim_reverse(lat, lng)
+        except MapsError:
+            return jsonify(error='No place found here.', code=f'maps_{data.get("status", "error").lower()}'), 404
+        _places_cache_set(cache_key, place)
+        return jsonify(place)
 
     def first(kind):
         for result in data['results']:

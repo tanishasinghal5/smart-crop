@@ -791,7 +791,7 @@ const i18n = {
     placeSearching: "Searching…",
     placeNoMatch:
       "No match found. Try the nearest larger town or your district name.",
-    placeOffline: "Offline — showing major districts only.",
+    placeOffline: "Connection unavailable — showing saved place matches. Try the village name or nearest taluka.",
     placeLoadFailed: "Couldn't load that place — please try again.",
     fetchingWeather: "Fetching weather…",
     seasonRainSummary:
@@ -3086,6 +3086,18 @@ function tbCacheSet(key, value) {
 
 // Small offline set so search still works with no network.
 const OFFLINE_PLACES = [
+  ["Uruli Kanchan", "Maharashtra", 18.4939, 74.1370],
+  ["Saswad", "Maharashtra", 18.3430, 74.0310],
+  ["Baramati", "Maharashtra", 18.1517, 74.5777],
+  ["Daund", "Maharashtra", 18.4659, 74.5838],
+  ["Shirur", "Maharashtra", 18.8276, 74.3748],
+  ["Junnar", "Maharashtra", 19.2087, 73.8759],
+  ["Indapur", "Maharashtra", 18.1124, 75.0267],
+  ["Bhor", "Maharashtra", 18.1486, 73.8434],
+  ["Mulshi", "Maharashtra", 18.5140, 73.5060],
+  ["Velhe", "Maharashtra", 18.2930, 73.6460],
+  ["Talegaon Dabhade", "Maharashtra", 18.7350, 73.6750],
+  ["Rajgurunagar", "Maharashtra", 18.8540, 73.8890],
   ["Nashik", "Maharashtra", 19.997, 73.791],
   ["Pune", "Maharashtra", 18.52, 73.857],
   ["Nagpur", "Maharashtra", 21.146, 79.088],
@@ -3328,6 +3340,7 @@ async function getSoilCached(place) {
 function setupPlanner() {
   const form = document.querySelector("#fieldForm");
   if (!form) return;
+  form.setAttribute("autocomplete", "off");
   const manual = document.querySelector(".manual-readings");
   // ---------------------------------------------------------------------------
   // Browser-side mirror of input_guard.py v2 — layers 0-3, so a reading that
@@ -3642,10 +3655,15 @@ function setupPlanner() {
   const placeInput = document.querySelector("#placeInput");
   const placeResults = document.querySelector("#placeResults");
   const placeStatus = document.querySelector("#placeStatus");
+  const savedPlace = tbCacheGet("terraPlace", GEO_TTL_MS);
 
   weatherButton.addEventListener("click", () => {
     weatherButton.disabled = true;
     weatherButton.textContent = t("findingField");
+    if (savedPlace) {
+      selectPlace(savedPlace);
+      return;
+    }
     if (!navigator.geolocation)
       return fallbackWeather(t("locationUnavailable"));
     navigator.geolocation.getCurrentPosition(
@@ -3732,7 +3750,7 @@ function setupPlanner() {
           renderPlaceResults(local);
           setPlaceStatus(local.length ? t("placeOffline") : t("placeNoMatch"));
         }
-      }, 300);
+      }, 600);
     });
     document.addEventListener("click", (event) => {
       if (!event.target.closest("#placeSearch")) renderPlaceResults([]);
@@ -3836,9 +3854,15 @@ function setupPlanner() {
     }
   }
 
-  // A returning farmer keeps their place — prefill silently from cache.
-  const savedPlace = tbCacheGet("terraPlace", GEO_TTL_MS);
-  if (savedPlace) selectPlace(savedPlace);
+  // Keep a saved place visible, but never write weather/soil values into the
+  // form until the farmer explicitly chooses a location or estimate option.
+  if (savedPlace) {
+    weatherButton.innerHTML = "◎ Use saved location";
+    weatherLabel.textContent = `Saved location: ${savedPlace.label}`;
+    weatherLabel.removeAttribute("data-i18n");
+    weatherStatus.textContent = "Press ‘Use my location’ to load weather values into this form.";
+    weatherStatus.removeAttribute("data-i18n");
+  }
 
   const upload = document.querySelector("#healthCard");
   const sampleBtn = document.querySelector("#trySampleCard");

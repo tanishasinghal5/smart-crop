@@ -94,8 +94,11 @@ def places(base):
 def place(base):
     _, data, _ = call(base, '/api/places?q=anand&limit=8')
     hit = next(p for p in data['places'] if 'Gujarat' in p.get('label', ''))
-    status, data, _ = call(base, '/api/place?id=' + urllib.parse.quote(hit['placeId']))
-    assert status == 200, error_text(status, data)
+    if hit.get('lat') is not None and hit.get('lng') is not None:
+        data = hit
+    else:
+        status, data, _ = call(base, '/api/place?id=' + urllib.parse.quote(hit['placeId']))
+        assert status == 200, error_text(status, data)
     assert abs(data['lat'] - ANAND[0]) < 0.2 and abs(data['lng'] - ANAND[1]) < 0.2, \
         f'wrong position {data.get("lat")}, {data.get("lng")}'
     return f'{data.get("district")}, {data.get("state")} ({data["lat"]:.3f}, {data["lng"]:.3f})'
