@@ -5476,25 +5476,8 @@ function setupAuthNav() {
       }
     });
 }
-// PlantVillage class order — must stay in sync with DISEASE_LABELS in server.py.
-const DISEASE_LABELS = [
-  "Apple___Apple_scab", "Apple___Black_rot", "Apple___Cedar_apple_rust",
-  "Apple___healthy", "Blueberry___healthy",
-  "Cherry_(including_sour)___Powdery_mildew", "Cherry_(including_sour)___healthy",
-  "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot", "Corn_(maize)___Common_rust_",
-  "Corn_(maize)___Northern_Leaf_Blight", "Corn_(maize)___healthy",
-  "Grape___Black_rot", "Grape___Esca_(Black_Measles)",
-  "Grape___Leaf_blight_(Isariopsis_Leaf_Spot)", "Grape___healthy",
-  "Orange___Haunglongbing_(Citrus_greening)", "Peach___Bacterial_spot",
-  "Peach___healthy", "Pepper,_bell___Bacterial_spot", "Pepper,_bell___healthy",
-  "Potato___Early_blight", "Potato___Late_blight", "Potato___healthy",
-  "Raspberry___healthy", "Soybean___healthy", "Squash___Powdery_mildew",
-  "Strawberry___Leaf_scorch", "Strawberry___healthy", "Tomato___Bacterial_spot",
-  "Tomato___Early_blight", "Tomato___Late_blight", "Tomato___Leaf_Mold",
-  "Tomato___Septoria_leaf_spot", "Tomato___Spider_mites Two-spotted_spider_mite",
-  "Tomato___Target_Spot", "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
-  "Tomato___Tomato_mosaic_virus", "Tomato___healthy",
-];
+// PlantVillage class order comes from disease-labels.json — the one copy,
+// shared with server.py and the dashboard. It is loaded with the model.
 function prettyDisease(label) {
   const clean = (part) => part.replace(/_/g, " ").replace(/\s+/g, " ").trim();
   const [crop, condition = ""] = label.split("___");
@@ -5515,10 +5498,18 @@ function getDiseaseModel() {
           script.onerror = reject;
           document.head.appendChild(script);
         });
+      const labelsReq = fetch("disease-labels.json").then((r) => {
+        if (!r.ok) throw Error(`Disease labels failed: ${r.status}`);
+        return r.json();
+      });
       if (!window.tf) await load(TFLITE_DIR + "tf.min.js");
       if (!window.tflite) await load(TFLITE_DIR + "tf-tflite.min.js");
       tflite.setWasmPath(TFLITE_DIR);
-      return tflite.loadTFLiteModel("disease-model.tflite");
+      const [model, labels] = await Promise.all([
+        tflite.loadTFLiteModel("disease-model.tflite"),
+        labelsReq,
+      ]);
+      return { model, labels };
     })().catch((error) => {
       diseaseModelPromise = null;
       throw error;
@@ -5526,7 +5517,7 @@ function getDiseaseModel() {
   return diseaseModelPromise;
 }
 async function detectDiseaseInBrowser(file) {
-  const model = await getDiseaseModel();
+  const { model, labels } = await getDiseaseModel();
   const bitmap = await createImageBitmap(file);
   const canvas = document.createElement("canvas");
   canvas.width = canvas.height = 224;
@@ -5538,11 +5529,14 @@ async function detectDiseaseInBrowser(file) {
   const probabilities = await output.data();
   pixels.dispose();
   output.dispose();
+  // A list that doesn't match the model would put wrong names on leaves.
+  if (probabilities.length !== labels.length)
+    throw Error(`Model has ${probabilities.length} classes but ${labels.length} labels`);
   return Array.from(probabilities.keys())
     .sort((a, b) => probabilities[b] - probabilities[a])
     .slice(0, 3)
     .map((i) => {
-      const label = DISEASE_LABELS[i] || `class_${i}`;
+      const label = labels[i];
       const { crop, condition } = prettyDisease(label);
       return {
         label,

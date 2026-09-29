@@ -18,7 +18,8 @@ import urllib.request
 
 PAGES = ['index.html', 'planner.html', 'krishi-dashboard.html', 'disease.html',
          'login.html', 'profile.html', 'dashboard.html']
-MODEL_FILES = ['disease-model.tflite', 'vendor/tflite/tf.min.js', 'vendor/tflite/tf-tflite.min.js']
+MODEL_FILES = ['disease-model.tflite', 'disease-labels.json',
+               'vendor/tflite/tf.min.js', 'vendor/tflite/tf-tflite.min.js']
 ANAND = (22.554, 72.951)
 # Sample soil and weather numbers the crop model accepts.
 CROP_INPUT = {'N': 90, 'P': 43, 'K': 254.66, 'ph': 7.2,
@@ -171,7 +172,9 @@ def satellite(base):
 def model_files(base):
     bad = [f for f in MODEL_FILES if call(base, '/' + f, timeout=120)[0] != 200]
     assert not bad, f'not loading: {", ".join(bad)}'
-    return f'{len(MODEL_FILES)}/{len(MODEL_FILES)}'
+    _, labels, _ = call(base, '/disease-labels.json')
+    assert isinstance(labels, list) and len(labels) == 38, 'disease-labels.json must list 38 names'
+    return f'{len(MODEL_FILES)}/{len(MODEL_FILES)}, 38 disease names'
 
 
 @check('Gemini (advisor / chat)')
