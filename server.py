@@ -391,6 +391,88 @@ def auth_me():
     return jsonify(user=_user_json(row))
 
 
+# ---- The signed-in farmer's farm (plan Task 19) ------------------------------
+# One farm per account, so the dashboard shows the same farm on every device.
+# Only known fields are kept, with checked types and lengths.
+FARM_TEXT = {'name': 120, 'district': 80, 'state': 80, 'crop': 120}
+SOIL_KEYS = ('n', 'p', 'k', 'ph')
+
+
+def _number_or_blank(value, low, high):
+    if value in ('', None):
+        return ''
+    number = float(value)  # ValueError / TypeError → 400
+    if not (low <= number <= high):
+        raise ValueError
+    return number
+
+
+def _clean_farm(farm):
+    clean = {k: str(farm.get(k) or '')[:limit] for k, limit in FARM_TEXT.items()}
+    lat, lng = farm.get('lat'), farm.get('lng')
+    clean['lat'] = None if lat is None else float(lat)
+    clean['lng'] = None if lng is None else float(lng)
+    if clean['lat'] is not None and not -90 <= clean['lat'] <= 90:
+        raise ValueError
+    if clean['lng'] is not None and not -180 <= clean['lng'] <= 180:
+        raise ValueError
+    clean['area'] = _number_or_blank(farm.get('area'), 0, 100000)
+    return clean
+
+
+def _clean_soil(soil):
+    clean = {k: _number_or_blank(soil.get(k), 0, 14 if k == 'ph' else 100000) for k in SOIL_KEYS}
+    clean['source'] = str(soil.get('source') or '')[:80]
+    return clean
+
+
+def _signed_in_or_401():
+    row = _current_user()
+    if row is None:
+        return None, (jsonify(error='Log in to keep your farm on all your devices.',
+                              code='not_signed_in'), 401)
+    return row, None
+
+
+@app.get('/api/farm')
+def farm_get():
+    row, refusal = _signed_in_or_401()
+    if refusal:
+        return refusal
+    saved = users().get_farm(row['id']) or {}
+    return jsonify(farm=saved.get('farm'), soil=saved.get('soil'), updated_at=saved.get('updated_at'))
+
+
+@app.post('/api/farm')
+def farm_save():
+    """Body: {farm?: {...}, soil?: {...}}. A section that is sent replaces the
+    saved one; a section left out is kept."""
+    row, refusal = _signed_in_or_401()
+    if refusal:
+        return refusal
+    body = request.get_json(silent=True) or {}
+    saved = users().get_farm(row['id']) or {}
+    try:
+        if isinstance(body.get('farm'), dict):
+            saved['farm'] = _clean_farm(body['farm'])
+        if isinstance(body.get('soil'), dict):
+            saved['soil'] = _clean_soil(body['soil'])
+    except (TypeError, ValueError):
+        return jsonify(error='Some farm or soil values are not valid numbers.', code='bad_request'), 400
+    saved.pop('updated_at', None)
+    saved = users().set_farm(row['id'], saved)
+    return jsonify(farm=saved.get('farm'), soil=saved.get('soil'), updated_at=saved['updated_at'])
+
+
+@app.delete('/api/farm')
+def farm_delete():
+    row, refusal = _signed_in_or_401()
+    if refusal:
+        return refusal
+    users().delete_farm(row['id'])
+    return jsonify(ok=True)
+
+
 @app.post('/api/recommend')
 def recommend():
     payload = request.get_json(silent=True) or {}

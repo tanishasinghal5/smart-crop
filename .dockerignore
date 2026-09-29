@@ -9,7 +9,7 @@ docx guide/
 krishi_sahayak/backend/
 crop_production.csv/
 merge_conflicts*.txt
-input_guard*.py
+input_guard (1).py
 fix_conflicts.py
 LocationClimate.tsx
 *.mp4

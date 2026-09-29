@@ -94,6 +94,14 @@ async function detectDiseaseInBrowser(file) {
 export const farmApi = {
   // The signed-in user, or null when nobody is signed in.
   async currentUser() { try { return (await api('/api/auth/me')).user; } catch { return null; } },
+  // The signed-in farmer's saved farm and soil ({farm, soil, updated_at}),
+  // kept in Firestore so every device shows the same farm.
+  async getFarm() { return api('/api/farm'); },
+  async saveFarm(body) {
+    return api('/api/farm', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+    });
+  },
   // Village search — Google Places through the Flask server. The session token
   // makes the typing and the final pick count as one billed Google session.
   async searchPlaces(q, session, signal) {
