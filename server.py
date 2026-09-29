@@ -1,9 +1,11 @@
 """TerraByte local server.
 
-Serves the static frontend and APIs:
+Serves the static frontend and APIs (full list: docx guide/api-contract.md):
   POST /api/recommend    — ML crop recommendation from bundle.pkl
   POST /api/disease      — leaf disease detection from crop_disease_mobilenetv2.keras
-  POST /api/chat         — Mita farm advisor (needs OPENAI_API_KEY + OPENAI_MODEL)
+  POST /api/disease/advice, /api/soil-card, /api/chat — Gemini (needs GEMINI_API_KEY)
+  GET  /api/places, /api/place, /api/reverse-geocode — Google Maps (needs MAPS_SERVER_KEY)
+  POST /api/satellite    — Sentinel-2/CHIRPS/ERA5 via Earth Engine (needs EARTH_ENGINE_PROJECT_ID)
   /api/auth/*            — register/login with phone+username+PIN, Google Sign-In
 
 Run:  python server.py   (then open http://localhost:8080)

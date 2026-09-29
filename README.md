@@ -41,16 +41,19 @@ smart-crop/
 ├── growth-engine.js             Season planning and crop economics
 ├── growth-planner-data.js       Crop profiles and planning data
 ├── mandi-prices-data.js         Indicative market price data
+├── krishi-dashboard.html        Farmer dashboard (src/main.js, src/services/farmApi.js)
 ├── input_guard.py               Training-distribution and input validation logic
 ├── server.py                    Flask server and primary API
+├── user_store.py                User accounts in Firestore (SQLite fallback)
 ├── bundle.pkl                   Serialized crop recommendation model
 ├── crop_disease_mobilenetv2.keras Server-side disease model
 ├── disease-model.tflite         Browser-side disease model
-├── krishi_sahayak/              Optional Gemini + Chroma RAG assistant
-│   ├── backend/main.py          FastAPI chat, upload, and weather endpoints
-│   └── frontend/                Standalone assistant UI
+├── crop_model/                  Percy's crop pipeline and Earth Engine helpers
+├── krishi_sahayak/frontend/     The 🌱 chat widget (answers via /api/chat)
+├── tests/smoke.py               One-command check of the live site
 ├── src/features/crop-calendar/ React crop-calendar component implementation
-└── render.yaml                  Render deployment configuration
+├── Dockerfile                   Cloud Run image
+└── render.yaml                  Old Render deployment configuration
 ```
 
 The primary production path is the vanilla HTML/CSS/JavaScript app served by `server.py`. The React files under `src/features/crop-calendar` are a reusable component implementation and are not built by the current root project because there is no root `package.json` or frontend bundler configuration.
@@ -60,8 +63,8 @@ The primary production path is the vanilla HTML/CSS/JavaScript app served by `se
 - Python 3.10 or newer is recommended.
 - A modern browser with JavaScript enabled.
 - Approximately 200 MB or more of memory for the loaded ML models.
-- Optional: an OpenAI API key and model name for the Flask/Vercel farm assistant.
-- Optional: a Google OAuth client ID for Google sign-in.
+- A Gemini API key for the soil card reader, disease advice and farm chat.
+- Optional: a Google Maps server key (village search), Earth Engine access (Field Health) and a Google OAuth client ID (Google sign-in). See `.env.example`.
 - Optional: TensorFlow/Keras if server-side disease inference is required. Browser-side TFLite inference is the normal fallback.
 
 ## Local setup
@@ -97,15 +100,19 @@ Open [http://localhost:8080](http://localhost:8080). The server serves the stati
 
 ### Optional environment variables
 
-| Variable | Used by | Purpose |
-| --- | --- | --- |
-| `SECRET_KEY` | Flask | Signs sessions. Set this in every deployed environment. |
-| `OPENAI_API_KEY` | Flask and `api/chat.js` | Enables the Kisan AI/Mita assistant. Keep it server-side. |
-| `OPENAI_MODEL` | Flask and `api/chat.js` | OpenAI Responses API model name. |
-| `GOOGLE_CLIENT_ID` | Flask | Enables Google sign-in. |
-| `PIN_LENGTH` | Flask | PIN length; defaults to `4`. |
-| `AUTH_DB_PATH` | Flask | Optional SQLite database path; defaults to `data/users.db`. |
-| `PORT` | Flask/hosting | Listening port; defaults to `8080`. |
+`.env.example` lists every setting with a short explanation. The main ones:
+
+| Variable | Purpose |
+| --- | --- |
+| `SECRET_KEY` | Signs sessions. Set this in every deployed environment. |
+| `GEMINI_API_KEY` | Soil card, disease advice and farm chat (Gemini). |
+| `GEMINI_MODEL`, `GEMINI_FALLBACK_MODEL` | Main and backup Gemini models. |
+| `MAPS_SERVER_KEY` | Village search and GPS to village name (Google Maps). |
+| `EARTH_ENGINE_PROJECT_ID` | Field Health satellite data (Earth Engine). |
+| `GOOGLE_CLIENT_ID` | Enables Google sign-in. |
+| `AUTH_STORE` | `firestore` (default) or `sqlite`. |
+| `PIN_LENGTH` | PIN length; defaults to `4`. |
+| `PORT` | Listening port; defaults to `8080`. |
 
 ## How the primary stack works
 
@@ -144,14 +151,9 @@ The model returns the five highest-probability crops from its 25-class label set
 
 The disease page uses `disease-model.tflite` and the files under `vendor/tflite/` for client-side inference. The browser path does not require TensorFlow on the server. The Flask `/api/disease` endpoint lazily loads `crop_disease_mobilenetv2.keras`, resizes an uploaded image to 224 x 224, and returns the top three predictions. If Keras cannot load, the endpoint returns `503` while the browser detector can still be used.
 
-### Farm assistant options
+### Farm assistant
 
-There are two assistant integrations:
-
-1. **Primary app assistant:** `server.py` and `api/chat.js` call the OpenAI Responses API using `OPENAI_API_KEY` and `OPENAI_MODEL`.
-2. **Krishi Sahayak RAG assistant:** `krishi_sahayak/backend/main.py` uses Gemini, LangChain, and ChromaDB. It can ingest PDF/TXT knowledge files and answer questions from the stored documents.
-
-The floating assistant widget loads `krishi_sahayak/frontend/index.html`. To use its RAG backend, configure `krishi_sahayak/backend/.env` with `GEMINI_API_KEY` and run the separate FastAPI service described below.
+The floating 🌱 chat widget (`krishi_sahayak/frontend/`) and the dashboard's AI Advisor both call `POST /api/chat` in `server.py`, which answers with Gemini. If the main model is busy or out of free calls, the server tries `GEMINI_FALLBACK_MODEL`. There is no separate chat server.
 
 ## API reference
 
@@ -162,7 +164,11 @@ The Flask service in `server.py` exposes:
 | `GET` | `/` | Serves `index.html`. |
 | `POST` | `/api/recommend` | Returns top crop recommendations from numeric field inputs. |
 | `POST` | `/api/disease` | Accepts multipart field `photo`; returns top disease predictions. |
-| `POST` | `/api/chat` | Sends a question, context, language, and recent history to the configured AI model. |
+| `POST` | `/api/chat` | Answers a farm question with Gemini, using the context, language and recent history sent. |
+| `POST` | `/api/soil-card` | Reads a Soil Health Card photo or PDF with Gemini. |
+| `POST` | `/api/disease/advice` | Gemini second opinion, severity and steps for a leaf diagnosis. |
+| `GET` | `/api/places`, `/api/place`, `/api/reverse-geocode` | Village search and GPS to village name (Google Maps). |
+| `POST` | `/api/satellite` | Sentinel-2 NDVI, CHIRPS rain and ERA5 for a farm (Earth Engine). |
 | `GET` | `/api/auth/config` | Returns PIN configuration and available Google client configuration. |
 | `POST` | `/api/auth/register` | Creates a phone + username + PIN account. |
 | `POST` | `/api/auth/login` | Logs in with phone, username, and PIN. |
@@ -182,57 +188,24 @@ curl -X POST http://localhost:8080/api/recommend \
   -d '{"N":90,"P":42,"K":38,"temperature":27,"humidity":65,"ph":6.5,"rainfall":164}'
 ```
 
-The optional RAG backend exposes:
-
-| Method | Route | Description |
-| --- | --- | --- |
-| `POST` | `/api/chat` | Answers a question with Gemini and retrieved ChromaDB context. |
-| `POST` | `/api/upload` | Ingests a PDF or TXT file into the ChromaDB collection. |
-| `GET` | `/api/weather?lat=&lon=` | Returns the current placeholder weather response. |
-
-## Running Krishi Sahayak separately
-
-The RAG assistant has its own Python environment and dependency list:
-
-```bash
-cd krishi_sahayak/backend
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env
-# Set GEMINI_API_KEY in .env
-uvicorn main:app --reload --port 8001
-```
-
-Serve its standalone frontend from another terminal:
-
-```bash
-cd krishi_sahayak/frontend
-python3 -m http.server 5500
-```
-
-Open [http://localhost:5500/index.html](http://localhost:5500/index.html). Docker Compose is also available from `krishi_sahayak/` and starts the FastAPI backend on port `8001` plus an Nginx frontend on port `80`.
-
 ## Deployment
 
-`render.yaml` describes the hosted Flask deployment:
+The live site runs on **Google Cloud Run** (region `asia-south1`), built from the `Dockerfile`. From the project folder:
 
 ```bash
-pip install -r requirements.txt
-gunicorn server:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 120
+gcloud run deploy smart-crop --source . --region=asia-south1 --allow-unauthenticated --service-account=run-backend@smart-crop-hack.iam.gserviceaccount.com --memory=2Gi --cpu=2
 ```
 
-The single worker is intentional because each process loads the recommendation model and may load the disease model. Configure `SECRET_KEY`, `OPENAI_API_KEY`, `OPENAI_MODEL`, and, if needed, `GOOGLE_CLIENT_ID` in the hosting provider’s secret environment settings. The SQLite auth database is local to the service filesystem; use a persistent disk or replace it with a managed database for production accounts.
+The keys come from Secret Manager; accounts are stored in Firestore, so they survive deploys. After a deploy, check the site with `python tests/smoke.py <url>`. `render.yaml` is the older Render setup and is no longer used.
 
 ## Development notes and limitations
 
 - There is currently no root frontend build or package manager configuration; edit the HTML, CSS, and JavaScript directly.
-- No automated test suite is included. Validate changes manually by starting `server.py` and checking planner, dashboard, disease, login, and assistant flows.
+- `tests/smoke.py` checks every live route in about a minute (`--gemini` also checks Gemini). Still click through the planner, dashboard, disease, login and chat flows after UI changes.
 - The frontend may use external Google Fonts and Open-Meteo, so fully offline use is limited even though local model assets are bundled.
 - The default Flask session secret is intentionally insecure and must not be used in production.
 - The Flask server blocks direct requests for sensitive model, environment, Python, database, and pickle files.
 - Disease and crop predictions should be treated as probabilistic guidance. Image quality, crop variety, regional conditions, and model training coverage affect results.
-- The RAG weather endpoint currently returns fixed demo values rather than querying a live weather provider.
 
 ## License
 
