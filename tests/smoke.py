@@ -124,6 +124,19 @@ def recommend_bad(base):
     return data.get('error')
 
 
+@check('Crop confidence is honest')
+def confidence(base):
+    # Deliberately silly soil: the model alone still says "88%", so this proves
+    # the confidence check is real and not decoration (plan Task 36, test 6).
+    silly = {'N': 5, 'P': 5, 'K': 5, 'ph': 4.1, 'temperature': 29, 'humidity': 40,
+             'rainfall': 20, 'soil_source': 'typed'}
+    status, data, _ = call(base, '/api/recommend-crop', silly)
+    assert status == 200, error_text(status, data)
+    assert data.get('confidence_level') == 'low', f'silly inputs gave {data.get("confidence_level")!r}, not low'
+    assert data.get('action_required') == 'soil_test', f'action_required was {data.get("action_required")!r}'
+    return f'silly inputs -> low, soil_test ({len(data.get("recommendations", []))} crops still shown)'
+
+
 @check('Earth Engine connected')
 def ee_health(base):
     status, data, _ = call(base, '/api/satellite/health', timeout=90)
@@ -168,7 +181,7 @@ def main():
     base = args[0].rstrip('/')
     print(f'Smoke test: {base}\n')
     for run in (pages, auth_config, places, place, reverse, recommend, recommend_bad,
-                ee_health, satellite, model_files):
+                confidence, ee_health, satellite, model_files):
         run(base)
     if '--gemini' in sys.argv:
         gemini(base)
