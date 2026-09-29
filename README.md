@@ -198,6 +198,10 @@ gcloud run deploy smart-crop --source . --region=asia-south1 --allow-unauthentic
 
 The keys come from Secret Manager; accounts are stored in Firestore, so they survive deploys. After a deploy, check the site with `python tests/smoke.py <url>`. `render.yaml` is the older Render setup and is no longer used.
 
+### Earth Engine setup
+
+Field Health needs an Earth Engine-enabled Google Cloud project and credentials. For local development, set `EARTH_ENGINE_PROJECT_ID` in `.env` (or set `GOOGLE_CLOUD_PROJECT`) and run `earthengine authenticate` once. The deployed service must set `EARTH_ENGINE_PROJECT_ID` and use a service account registered for Earth Engine; local CLI credentials are not available in Cloud Run. Verify access at `/api/satellite/health` before testing a farm reading.
+
 ## Development notes and limitations
 
 - There is currently no root frontend build or package manager configuration; edit the HTML, CSS, and JavaScript directly.
