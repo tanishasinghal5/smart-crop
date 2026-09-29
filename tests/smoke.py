@@ -137,6 +137,15 @@ def confidence(base):
     return f'silly inputs -> low, soil_test ({len(data.get("recommendations", []))} crops still shown)'
 
 
+@check('Saved farm needs login')
+def farm_login(base):
+    status, data, _ = call(base, '/api/farm')
+    assert status == 401, f'expected HTTP 401 for a guest, got {status}'
+    status, _, _ = call(base, '/api/farm', {'farm': {'lat': 1, 'lng': 2}})
+    assert status == 401, f'a guest could save a farm (HTTP {status})'
+    return 'guests are refused, as expected'
+
+
 @check('Earth Engine connected')
 def ee_health(base):
     status, data, _ = call(base, '/api/satellite/health', timeout=90)
@@ -181,7 +190,7 @@ def main():
     base = args[0].rstrip('/')
     print(f'Smoke test: {base}\n')
     for run in (pages, auth_config, places, place, reverse, recommend, recommend_bad,
-                confidence, ee_health, satellite, model_files):
+                confidence, farm_login, ee_health, satellite, model_files):
         run(base)
     if '--gemini' in sys.argv:
         gemini(base)
