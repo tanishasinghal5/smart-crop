@@ -191,11 +191,30 @@ export const farmApi = {
   },
   // Farm advisor — Gemini through /api/chat (the same route as the chat
   // bubble). `context` holds only real farm data; `history` the last turns.
-  async askAdvisor(question, history, context) {
+  async askAdvisor(question, history, context, language = 'English') {
     const data = await api('/api/chat', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question, history, context, language: 'English' }),
+      body: JSON.stringify({ question, history, context, language }),
     });
     return data.answer;
+  },
+  // Voice — Google Cloud Speech-to-Text / Text-to-Speech through our server.
+  // `lang` is en / hi / mr / te.
+  async transcribe(blob, lang) {
+    const body = new FormData();
+    body.append('audio', blob, blob.type.includes('ogg') ? 'question.ogg' : 'question.webm');
+    body.append('language', lang);
+    return (await api('/api/voice/transcribe', { method: 'POST', body })).text;
+  },
+  async speak(text, lang) { // -> an MP3 Blob
+    const response = await fetch('/api/voice/speak', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, language: lang }),
+    });
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}));
+      throw Object.assign(new Error(data.error || `Could not read aloud (${response.status})`), { status: response.status });
+    }
+    return response.blob();
   },
 };

@@ -32,7 +32,7 @@ import warnings
 import joblib
 import numpy as np
 import pandas as pd
-from flask import Flask, jsonify, request, send_from_directory, session
+from flask import Flask, Response, jsonify, request, send_from_directory, session
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from user_store import (DuplicateError, FirestoreUserStore, SqliteUserStore,
@@ -1443,6 +1443,117 @@ def chat():
     if not answer.strip():
         return jsonify(error='Kisan AI is temporarily unavailable'), 502
     return jsonify(answer=answer.strip(), sources=[])
+
+
+# ---- Voice: Cloud Speech-to-Text and Text-to-Speech (plan Task 32) ----------
+# Called over REST with the server's own Google credentials (the run-backend
+# service account on Cloud Run, your gcloud login locally) — no API key.
+VOICE_LANGS = {'en': 'en-IN', 'hi': 'hi-IN', 'mr': 'mr-IN', 'te': 'te-IN'}
+VOICE_MAX_BYTES = 2 * 1024 * 1024  # about a minute of Opus audio — the limit of one quick request
+VOICE_MAX_CHARS = 1500             # Text-to-Speech takes 5000 bytes; Indian scripts use 3 per letter
+_google_session = None
+_google_session_lock = threading.Lock()
+
+
+class VoiceError(Exception):
+    def __init__(self, message, status, code, details=None):
+        super().__init__(message)
+        self.status, self.code, self.details = status, code, details
+
+
+def _google_post(url, payload):
+    global _google_session
+    try:
+        with _google_session_lock:
+            if _google_session is None:
+                import google.auth
+                from google.auth.transport.requests import AuthorizedSession
+                creds, _ = google.auth.default(scopes=['https://www.googleapis.com/auth/cloud-platform'])
+                _google_session = AuthorizedSession(creds)
+    except Exception as exc:  # noqa: BLE001 — no credentials on this machine
+        raise VoiceError('Voice is not set up on this server.', 503, 'voice_unconfigured', str(exc)) from exc
+    try:
+        # The project is named so user logins (local) bill the right project.
+        resp = _google_session.post(url, json=payload, timeout=30,
+                                    headers={'x-goog-user-project': FIRESTORE_PROJECT})
+    except Exception as exc:  # noqa: BLE001 — network trouble
+        raise VoiceError('Could not reach Google voice services.', 502, 'voice_unreachable', str(exc)) from exc
+    if resp.status_code == 403:
+        raise VoiceError('This server is not allowed to use Google voice services yet.', 503,
+                         'voice_permission', resp.text[:300])
+    if resp.status_code >= 400:
+        raise VoiceError('Google voice service error.', 502, f'voice_http_{resp.status_code}', resp.text[:300])
+    return resp.json()
+
+
+def _opus_rate(data):
+    """The sample rate written in the recording's OpusHead header. Speech-to-Text
+    hears nothing at all if it is told the wrong one (Chrome records 48 kHz;
+    other recorders may use 24 or 16 kHz)."""
+    at = data.find(b'OpusHead')
+    if at >= 0 and len(data) >= at + 16:
+        rate = int.from_bytes(data[at + 12:at + 16], 'little')
+        if rate in (8000, 12000, 16000, 24000, 48000):
+            return rate
+    return 48000
+
+
+@app.errorhandler(VoiceError)
+def _voice_error(err):
+    return jsonify(error=str(err), code=err.code, details=err.details), err.status
+
+
+@app.post('/api/voice/transcribe')
+def voice_transcribe():
+    """A short recording (form field `audio`, WebM/Ogg Opus from the browser)
+    plus `language` (en/hi/mr/te) -> {text}."""
+    audio = request.files.get('audio')
+    if audio is None:
+        return jsonify(error='Attach the recording as the "audio" form field.', code='missing_audio'), 400
+    data = audio.read()
+    if not data:
+        return jsonify(error='The recording is empty.', code='empty_audio'), 400
+    if len(data) > VOICE_MAX_BYTES:
+        return jsonify(error='Please keep the question under a minute.', code='audio_too_long'), 400
+    mime = (audio.mimetype or '').lower()
+    if 'webm' in mime:
+        encoding = 'WEBM_OPUS'
+    elif 'ogg' in mime:
+        encoding = 'OGG_OPUS'
+    else:
+        return jsonify(error='This browser records in a format we cannot read yet. Please use Chrome or Edge.',
+                       code='unsupported_audio'), 400
+    language = VOICE_LANGS.get(request.form.get('language', 'en'), 'en-IN')
+    result = _google_post('https://speech.googleapis.com/v1/speech:recognize', {
+        'config': {'encoding': encoding, 'sampleRateHertz': _opus_rate(data), 'languageCode': language,
+                   'enableAutomaticPunctuation': True},
+        'audio': {'content': base64.b64encode(data).decode()},
+    })
+    text = ' '.join(r['alternatives'][0]['transcript'] for r in result.get('results', [])
+                    if r.get('alternatives')).strip()
+    if not text:
+        return jsonify(error='Could not hear any words. Please try again, closer to the microphone.',
+                       code='no_speech'), 422
+    return jsonify(text=text, language=language, meta={'source': 'live'})
+
+
+@app.post('/api/voice/speak')
+def voice_speak():
+    """JSON {text, language} -> an MP3 of the text read aloud."""
+    body = request.get_json(silent=True) or {}
+    text = body.get('text') if isinstance(body.get('text'), str) else ''
+    # Read the words, not the formatting marks Gemini adds.
+    text = re.sub(r'\*\*|__|`', '', text)
+    text = re.sub(r'^\s*[-*•]\s+', '', text, flags=re.M).strip()[:VOICE_MAX_CHARS]
+    if not text:
+        return jsonify(error='Nothing to read aloud.', code='missing_text'), 400
+    language = VOICE_LANGS.get(body.get('language', 'en'), 'en-IN')
+    result = _google_post('https://texttospeech.googleapis.com/v1/text:synthesize', {
+        'input': {'text': text},
+        'voice': {'languageCode': language, 'ssmlGender': 'FEMALE'},
+        'audioConfig': {'audioEncoding': 'MP3', 'speakingRate': 0.95},
+    })
+    return Response(base64.b64decode(result['audioContent']), mimetype='audio/mpeg')
 
 
 if __name__ == '__main__':

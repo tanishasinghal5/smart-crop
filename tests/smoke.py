@@ -168,6 +168,14 @@ def satellite(base):
             f'{first["meta"]["source"]} in {secs1:.1f} s; 2nd call cache in {secs2:.1f} s')
 
 
+@check('Voice (Text-to-Speech)')
+def voice(base):
+    status, audio, secs = call(base, '/api/voice/speak', {'text': 'नमस्ते किसान', 'language': 'hi'})
+    assert status == 200, error_text(status, audio if isinstance(audio, dict) else {})
+    assert isinstance(audio, bytes) and len(audio) > 1000, 'no audio came back'
+    return f'Hindi MP3, {len(audio) // 1024} KB in {secs:.1f} s'
+
+
 @check('Disease model files')
 def model_files(base):
     bad = [f for f in MODEL_FILES if call(base, '/' + f, timeout=120)[0] != 200]
@@ -193,7 +201,7 @@ def main():
     base = args[0].rstrip('/')
     print(f'Smoke test: {base}\n')
     for run in (pages, auth_config, places, place, reverse, recommend, recommend_bad,
-                confidence, farm_login, ee_health, satellite, model_files):
+                confidence, farm_login, ee_health, satellite, voice, model_files):
         run(base)
     if '--gemini' in sys.argv:
         gemini(base)
