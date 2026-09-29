@@ -14,6 +14,8 @@ const state = {
   soil: load('krishiSoil', EMPTY_SOIL), selectedCrop: 0,
   diseaseBusy: false, diseaseAdvice: null, diseaseError: '',
   soilTab: 'manual', soilDraft: null, soilBusy: false, soilNotes: [], soilError: '', soilFileName: '',
+  lang: (() => { try { return localStorage.getItem('krishiLang') || 'en'; } catch { return 'en'; } })(),
+  recording: false, speaking: null,
   disease: null, uploadName: '', messages: [] // the welcome line is drawn by advisor(), not stored here
 };
 const hasFarm = () => state.farm.lat != null && state.farm.lng != null;
@@ -203,7 +205,7 @@ function disease(){return `<div class="intro compact"><div><p class="eyebrow">DI
 function diseaseLevel(p){return p>=0.8?{cls:'',text:'LIKELY'}:p>=0.6?{cls:'possible',text:'POSSIBLE — CHECK THE OTHER MATCHES'}:{cls:'unsure',text:'NOT SURE — PLEASE RETAKE THE PHOTO'};}
 function diseaseResult(predictions){const top=predictions[0],pct=Math.round(top.probability*100),lvl=diseaseLevel(top.probability);const name=top.healthy?`${top.crop} — looks healthy`:`${top.crop} ${top.condition}`;return `<section class="panel disease-result"><p class="eyebrow">ANALYSIS RESULT</p><span class="confidence ${lvl.cls}">${lvl.text}</span><h2>${esc(name)}</h2><div class="confidence-row"><strong>${pct}%</strong><span>model confidence</span><div class="progress"><i style="width:${pct}%"></i></div></div>${predictions.length>1?`<h3>Other possible matches</h3><ul>${predictions.slice(1).map(p=>`<li>${esc(p.healthy?`${p.crop} — healthy`:`${p.crop} ${p.condition}`)} · ${Math.round(p.probability*100)}%</li>`).join('')}</ul>`:''}${adviceBox(top)}<p class="diagnosis-note">This is a decision-support result, not a definitive diagnosis. If symptoms spread, consult a local agriculture officer.</p></section>`}
 function adviceBox(top){const a=state.diseaseAdvice;const box=(body)=>`<div class="action-box"><span>SECOND OPINION · GEMINI</span>${body}</div>`;if(top.probability<0.6) return box('<p>The model is not sure about this photo, so no advice is given. Photograph one affected leaf in daylight, filling the frame.</p>');if(a==='loading') return box('<p>Checking the photo and getting advice…</p>');if(!a) return '';if(a.error) return box(`<p>⚠ ${esc(a.error)}</p>`);if(a.skipped) return '';const severity={none:'None',low:'Low',moderate:'Moderate',severe:'Severe'}[a.severity];const agree=a.gemini_agrees==='no'?`<p>⚠ Gemini does not think this photo shows ${esc(top.condition)}. Check the other matches, or ask your local agriculture office.</p>`:a.gemini_agrees==='unsure'?'<p>⚠ Gemini could not confirm this from the photo.</p>':'';return box(`${agree}${severity?`<p><strong>Severity:</strong> ${severity}</p>`:''}${a.summary?`<p>${esc(a.summary)}</p>`:''}${a.steps?.length?`<p><strong>What to do:</strong></p><ul>${a.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ul>`:''}`);}
-function advisor(){const w=wx(),top=state.crops?.list?.[0];const chips=[`⌖ ${esc(hasFarm()?farmName():'No farm set')}`,`◈ pH ${esc(state.soil.ph||'—')}`,w?`☔ ${w.rain7d} mm this week`:''].filter(Boolean);const suggestions=['Should I irrigate this week?',top?`Is ${cropName(top.crop)} a good choice now?`:'Which crop suits my field this season?','How can I improve my soil?'];const first=state.user?`, ${userName().split(/\s+/)[0]}`:'';const welcome=`Namaste${first}! Ask me anything about your farm — crops, soil, water, pests or weather.${hasFarm()?'':' Set your farm location for advice about your own field.'}`;const bubble=m=>`<div class="message ${m.role}">${m.role==='ai'?'<div class="mini-avatar">✦</div>':''}<div class="${m.error?'chat-error':''}">${m.role==='ai'&&!m.error?mdLite(m.text):esc(m.text)}</div></div>`;return `<div class="advisor-head"><div><p class="eyebrow">YOUR FIELD-SMART ASSISTANT</p><h1>Ask anything about <em>your farm.</em></h1><p class="lede">Answers from Gemini, using your saved farm, soil, weather and crop data.</p></div><div class="advisor-context">${chips.map(c=>`<span>${c}</span>`).join('')}</div></div><section class="chat panel"><div class="chat-top"><div class="advisor-avatar">✦</div><div><strong>Krishi AI Advisor</strong><span><i></i> ${hasFarm()?'Using your farm data':'No farm set — general advice'}</span></div><button class="text-button" id="clear-chat">Clear chat</button></div><div class="messages">${bubble({role:'ai',text:welcome})}${state.messages.map(bubble).join('')}${state.loading?'<div class="message ai"><div class="mini-avatar">✦</div><div class="typing"><i></i><i></i><i></i></div></div>':''}</div><div class="suggestions"><span>Try asking</span>${suggestions.map(q=>`<button class="suggestion" data-question="${esc(q)}">${esc(q)}</button>`).join('')}</div><form class="chat-input" id="chat-form"><input id="chat-text" placeholder="Ask about your field…" autocomplete="off"/><button class="send" aria-label="Send">↑</button></form></section>`}
+function advisor(){const w=wx(),top=state.crops?.list?.[0];const chips=[`⌖ ${esc(hasFarm()?farmName():'No farm set')}`,`◈ pH ${esc(state.soil.ph||'—')}`,w?`☔ ${w.rain7d} mm this week`:''].filter(Boolean);const suggestions=['Should I irrigate this week?',top?`Is ${cropName(top.crop)} a good choice now?`:'Which crop suits my field this season?','How can I improve my soil?'];const first=state.user?`, ${userName().split(/\s+/)[0]}`:'';const welcome=`Namaste${first}! Ask me anything about your farm — crops, soil, water, pests or weather.${hasFarm()?'':' Set your farm location for advice about your own field.'}`;const bubble=(m,i)=>`<div class="message ${m.role}">${m.role==='ai'?'<div class="mini-avatar">✦</div>':''}<div class="${m.error?'chat-error':''}">${m.role==='ai'&&!m.error?mdLite(m.text):esc(m.text)}${i!=null&&m.role==='ai'&&!m.error?`<button class="speak" data-speak="${i}" title="${state.speaking===i?'Stop':'Read aloud'}">${state.speaking===i?'■ Stop':'🔊 Listen'}</button>`:''}</div></div>`;return `<div class="advisor-head"><div><p class="eyebrow">YOUR FIELD-SMART ASSISTANT</p><h1>Ask anything about <em>your farm.</em></h1><p class="lede">Answers from Gemini, using your saved farm, soil, weather and crop data.</p></div><div class="advisor-context">${chips.map(c=>`<span>${c}</span>`).join('')}</div></div><section class="chat panel"><div class="chat-top"><div class="advisor-avatar">✦</div><div><strong>Krishi AI Advisor</strong><span><i></i> ${hasFarm()?'Using your farm data':'No farm set — general advice'}</span></div><select id="advisor-lang" class="lang-select" aria-label="Answer language">${Object.entries(LANGS).map(([k,[label]])=>`<option value="${k}" ${state.lang===k?'selected':''}>${label}</option>`).join('')}</select><button class="text-button" id="clear-chat">Clear chat</button></div><div class="messages">${bubble({role:'ai',text:welcome})}${state.messages.map((m,i)=>bubble(m,i)).join('')}${state.loading?'<div class="message ai"><div class="mini-avatar">✦</div><div class="typing"><i></i><i></i><i></i></div></div>':''}</div><div class="suggestions"><span>Try asking</span>${suggestions.map(q=>`<button class="suggestion" data-question="${esc(q)}">${esc(q)}</button>`).join('')}</div><form class="chat-input" id="chat-form"><button type="button" class="mic ${state.recording?'recording':''}" id="mic" title="${state.recording?'Stop and send':'Speak your question'}">${state.recording?'■':'🎤'}</button><input id="chat-text" placeholder="${state.recording?'Listening… tap ■ when you finish':'Ask about your field… or tap 🎤 to speak'}" autocomplete="off"/><button class="send" aria-label="Send">↑</button></form></section>`}
 // Gemini answers use **bold** and bullet lines. Escape first, then turn only
 // those two patterns into HTML — nothing from the answer runs as code.
 function mdLite(text){let out='',list=false;for(const raw of esc(text).split('\n')){const line=raw.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');const item=line.match(/^\s*[-*•]\s+(.*)/);if(item){if(!list){out+='<ul>';list=true;}out+=`<li>${item[1]}</li>`;}else{if(list){out+='</ul>';list=false;}if(line.trim())out+=`<p>${line}</p>`;}}return out+(list?'</ul>':'');}
@@ -352,14 +354,58 @@ async function analyseLeaf() {
 function bind(){document.querySelectorAll('[data-page]').forEach(x=>x.onclick=()=>{state.page=x.dataset.page; if(x.dataset.crop) state.selectedCrop=+x.dataset.crop; render()});document.querySelectorAll('[data-crop]').forEach(x=>x.onclick=()=>{state.selectedCrop=+x.dataset.crop; render()});
  document.querySelector('#save-farm')?.addEventListener('click',()=>{state.farm.crop=document.querySelector('#crop-input').value.trim();state.farm.area=document.querySelector('#area-input').value;store('krishiFarm',state.farm);syncToAccount();toast('Farm context saved');}); document.querySelector('#locate')?.addEventListener('click',useGps);document.querySelector('#search-place')?.addEventListener('click',pickFirstPlace);document.querySelector('#place-search')?.addEventListener('input',e=>runPlaceSearch(e.target.value));document.querySelector('#place-search')?.addEventListener('keydown',e=>{if(e.key==='Enter')pickFirstPlace();});document.querySelector('#polygon')?.addEventListener('click',()=>toast('Not available yet'));
  document.querySelector('#save-soil')?.addEventListener('click',()=>{['n','p','k','ph'].forEach(k=>state.soil[k]=document.querySelector(`#soil-${k}`).value);state.soil.source=state.soilDraft?'from your soil card, checked by you':'typed by you';state.soilDraft=null;state.soilNotes=[];store('krishiSoil',state.soil);syncToAccount();toast('Soil values saved');loadCrops();});document.querySelector('#retry-weather')?.addEventListener('click',()=>loadWeather(true));document.querySelector('#retry-crops')?.addEventListener('click',()=>{cropsFor='';loadCrops();});document.querySelector('#explain-crops')?.addEventListener('click',explainCrops);document.querySelector('#manual-tab')?.addEventListener('click',()=>{state.soilTab='manual';render();});document.querySelector('#upload-tab')?.addEventListener('click',()=>{state.soilTab='upload';render();});document.querySelector('#soil-file')?.addEventListener('change',e=>{soilCardFile=e.target.files[0]||null;state.soilFileName=soilCardFile?.name||'';state.soilError='';render();});document.querySelector('#read-card')?.addEventListener('click',readSoilCard);document.querySelector('#refresh-health')?.addEventListener('click',()=>{loadWeather(true);loadSatellite(true);});document.querySelector('#retry-sat')?.addEventListener('click',()=>loadSatellite(true));
- document.querySelector('#leaf-file')?.addEventListener('change',e=>chooseLeaf(e.target.files[0]));document.querySelector('#analyse')?.addEventListener('click',analyseLeaf);document.querySelector('#chat-form')?.addEventListener('submit',sendQuestion);document.querySelectorAll('[data-question]').forEach(x=>x.onclick=()=>sendQuestion(null,x.dataset.question));document.querySelector('#clear-chat')?.addEventListener('click',()=>{if(state.loading)return;state.messages=[];render();});}
+ document.querySelector('#leaf-file')?.addEventListener('change',e=>chooseLeaf(e.target.files[0]));document.querySelector('#analyse')?.addEventListener('click',analyseLeaf);document.querySelector('#chat-form')?.addEventListener('submit',sendQuestion);document.querySelectorAll('[data-question]').forEach(x=>x.onclick=()=>sendQuestion(null,x.dataset.question));document.querySelector('#clear-chat')?.addEventListener('click',()=>{if(state.loading)return;stopSpeaking();state.messages=[];render();});document.querySelector('#mic')?.addEventListener('click',toggleMic);document.querySelectorAll('[data-speak]').forEach(x=>x.onclick=()=>speakMessage(+x.dataset.speak));document.querySelector('#advisor-lang')?.addEventListener('change',e=>{state.lang=e.target.value;try{localStorage.setItem('krishiLang',state.lang);}catch{}render();});}
 async function sendQuestion(e,q){e?.preventDefault();const input=document.querySelector('#chat-text');const text=(q||input?.value||'').trim();if(!text||state.loading)return;
  // Last 6 real turns (errors left out) so follow-up questions make sense.
  const history=state.messages.filter(m=>!m.error).slice(-6).map(m=>({role:m.role==='ai'?'assistant':'user',content:m.text}));
  state.messages.push({role:'user',text});state.loading=true;render();
- try{state.messages.push({role:'ai',text:await farmApi.askAdvisor(text,history,advisorContext())});}
+ try{const lang=state.lang;state.messages.push({role:'ai',lang,text:await farmApi.askAdvisor(text,history,advisorContext(),LANGS[lang][1])});}
  catch(err){state.messages.push({role:'ai',error:true,text:err.status===429?'The advisor has reached today’s free limit — please try again tomorrow.':`Sorry, I could not answer right now. ${err.message}`});}
  state.loading=false;render();document.querySelector('.messages')?.scrollTo({top:99999,behavior:'smooth'});}
+// --- Voice (Google Cloud Speech-to-Text / Text-to-Speech via our server).
+// Tap 🎤 to start, tap ■ to stop; it also stops by itself after 30 seconds.
+// The spoken question is sent like a typed one, in the chosen language.
+const LANGS = { en: ['English', 'English'], hi: ['हिन्दी', 'Hindi'], mr: ['मराठी', 'Marathi'], te: ['తెలుగు', 'Telugu'] };
+let recorder = null, recordTimer = 0, playing = null;
+async function toggleMic() {
+  if (state.recording) { recorder?.stop(); return; }
+  if (state.loading) return;
+  if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) return toast('This browser cannot record — please type your question.');
+  const type = ['audio/webm;codecs=opus', 'audio/ogg;codecs=opus'].find(t => MediaRecorder.isTypeSupported(t));
+  if (!type) return toast('This browser records in a format we cannot read yet. Please use Chrome or Edge.');
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+  catch { return toast('Please allow the microphone to ask by voice.'); }
+  const chunks = [];
+  recorder = new MediaRecorder(stream, { mimeType: type });
+  recorder.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+  recorder.onstop = async () => {
+    clearTimeout(recordTimer); stream.getTracks().forEach(t => t.stop());
+    recorder = null; state.recording = false;
+    const blob = new Blob(chunks, { type });
+    if (blob.size < 2000) { render(); return toast('That was too short — tap 🎤 and speak your question.'); }
+    state.loading = true; render();
+    try { const text = await farmApi.transcribe(blob, state.lang); state.loading = false; sendQuestion(null, text); }
+    catch (err) { state.loading = false; render(); toast(err.message); }
+  };
+  recorder.start(); state.recording = true; render();
+  recordTimer = setTimeout(() => { if (recorder?.state === 'recording') recorder.stop(); }, 30000);
+}
+function stopSpeaking() { if (playing) { playing.pause(); playing = null; } state.speaking = null; }
+async function speakMessage(i) {
+  const wasThis = state.speaking === i;
+  stopSpeaking(); render();
+  if (wasThis) return; // the button doubles as Stop
+  const m = state.messages[i];
+  if (!m) return;
+  state.speaking = i; render();
+  try {
+    const url = URL.createObjectURL(await farmApi.speak(m.text, m.lang || state.lang));
+    playing = new Audio(url);
+    playing.onended = () => { URL.revokeObjectURL(url); playing = null; state.speaking = null; render(); };
+    await playing.play();
+  } catch (err) { stopSpeaking(); render(); toast(err.message); }
+}
 function toast(text){state.toast=text;render();setTimeout(()=>{state.toast='';render()},2600)}
 render();
 loadWeather();
