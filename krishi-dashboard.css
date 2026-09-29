@@ -30,3 +30,11 @@
 .ndvi-soon{border:0;background:transparent;padding:24px 10px}
 /* Chat bubbles share the class 'user' with the sidebar's user box — undo its border and spacing */
 .message.user{border-top:0;margin-top:0;padding:0}
+/* Crop advice confidence */
+.confidence-box{padding:18px 22px;margin-bottom:18px;border-left:4px solid #5a9561}
+.confidence-box.medium{border-left-color:#c28a31}
+.confidence-box.low{border-left-color:#b5452f;background:#fdf3f0}
+.confidence-box h2{font:600 20px Fraunces,serif;margin:2px 0 8px}
+.confidence-box ul{font-size:12px;line-height:1.6;color:#536259;margin:6px 0 0;padding-left:18px}
+.confidence-action{font-size:13px;font-weight:600;color:#8a3a28;margin:4px 0 8px}
+#explain-crops{margin:10px 0}
