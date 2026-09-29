@@ -6,7 +6,11 @@ behaviour and is the emergency fallback (AUTH_STORE=sqlite).
 
 Both return users as plain dicts with the same keys:
 id, phone, username, pin_hash, google_sub, email, created_at
+
+Each account can also keep one farm (get_farm / set_farm / delete_farm):
+{farm: {...}, soil: {...}, updated_at}. Firestore keeps it in fields/{user_id}.
 """
+import json
 import os
 import sqlite3
 import time
@@ -97,6 +101,32 @@ class SqliteUserStore:
     def delete(self, user_id):
         with self._connect() as conn:
             conn.execute('DELETE FROM users WHERE id = ?', (user_id,))
+            self._farms(conn).execute('DELETE FROM farms WHERE user_id = ?', (str(user_id),))
+
+    # One farm per account: {farm, soil, updated_at}, stored as JSON.
+    def _farms(self, conn):
+        conn.execute('CREATE TABLE IF NOT EXISTS farms (user_id TEXT PRIMARY KEY, '
+                     'data TEXT NOT NULL, updated_at TEXT NOT NULL)')
+        return conn
+
+    def get_farm(self, user_id):
+        with self._connect() as conn:
+            row = self._farms(conn).execute('SELECT data FROM farms WHERE user_id = ?',
+                                            (str(user_id),)).fetchone()
+        return json.loads(row['data']) if row else None
+
+    def set_farm(self, user_id, data):
+        data = {**data, 'updated_at': _now()}
+        with self._connect() as conn:
+            self._farms(conn).execute(
+                'INSERT INTO farms (user_id, data, updated_at) VALUES (?, ?, ?) '
+                'ON CONFLICT(user_id) DO UPDATE SET data = excluded.data, updated_at = excluded.updated_at',
+                (str(user_id), json.dumps(data), data['updated_at']))
+        return data
+
+    def delete_farm(self, user_id):
+        with self._connect() as conn:
+            self._farms(conn).execute('DELETE FROM farms WHERE user_id = ?', (str(user_id),))
 
 
 class FirestoreUserStore:
@@ -189,8 +219,25 @@ class FirestoreUserStore:
         def run(txn):
             current = ref.get(transaction=txn).to_dict() or {}
             txn.delete(ref)
+            txn.delete(self._farm_ref(user_id))  # the account's farm goes with it
             for field in UNIQUE_INDEXES:
                 if current.get(field):
                     txn.delete(self._index(field, current[field]))  # frees the phone for reuse
 
         run(self._db.transaction())
+
+    # One farm per account in fields/{user_id}: {farm, soil, updated_at}.
+    def _farm_ref(self, user_id):
+        return self._db.collection('fields').document(str(user_id))
+
+    def get_farm(self, user_id):
+        snap = self._farm_ref(user_id).get()
+        return snap.to_dict() if snap.exists else None
+
+    def set_farm(self, user_id, data):
+        data = {**data, 'updated_at': _now()}
+        self._farm_ref(user_id).set(data)
+        return data
+
+    def delete_farm(self, user_id):
+        self._farm_ref(user_id).delete()
