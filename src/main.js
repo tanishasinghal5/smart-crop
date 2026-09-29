@@ -8,16 +8,34 @@ const load = (key, fallback) => { try { return { ...fallback, ...JSON.parse(loca
 const store = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch {} };
 const EMPTY_FARM = { name: '', district: '', state: '', lat: null, lng: null, area: '', crop: '' };
 const EMPTY_SOIL = { n: '', p: '', k: '', ph: '', source: '' };
+const legacyField = (() => { try { return JSON.parse(localStorage.getItem('terraField') || '{}'); } catch { return {}; } })();
+const legacyPlace = (() => { try { return JSON.parse(localStorage.getItem('terraPlace') || '{}'); } catch { return {}; } })();
+const legacyFarm = {
+  ...EMPTY_FARM,
+  name: legacyPlace.name || legacyPlace.label || '',
+  district: legacyPlace.district || '', state: legacyPlace.state || '',
+  lat: legacyPlace.lat ?? legacyPlace.latitude ?? null,
+  lng: legacyPlace.lng ?? legacyPlace.longitude ?? null,
+};
+const initialFarm = load('krishiFarm', legacyFarm);
+for (const key of ['name', 'district', 'state', 'lat', 'lng'])
+  if (initialFarm[key] === '' || initialFarm[key] == null) initialFarm[key] = legacyFarm[key];
+const initialSoil = load('krishiSoil', EMPTY_SOIL);
+for (const [key, oldKey] of [['n', 'nitrogen'], ['p', 'phosphorus'], ['k', 'potassium'], ['ph', 'ph']])
+  if (initialSoil[key] === '' || initialSoil[key] == null) initialSoil[key] = legacyField[oldKey] ?? legacyField[oldKey.toUpperCase()] ?? '';
+if (!initialSoil.source && ['n', 'p', 'k', 'ph'].some(key => initialSoil[key] !== '')) initialSoil.source = 'from your saved field plan';
 const state = {
-  page: 'dashboard', loading: false, toast: '', user: null, weather: null, crops: null, satellite: null,
-  farm: load('krishiFarm', EMPTY_FARM),
-  soil: load('krishiSoil', EMPTY_SOIL), selectedCrop: 0,
+  page: 'dashboard', pageStack: [], loading: false, toast: '', user: null, weather: null, crops: null, satellite: null,
+  farm: initialFarm,
+  soil: initialSoil, selectedCrop: 0,
   diseaseBusy: false, diseaseAdvice: null, diseaseError: '',
   soilTab: 'manual', soilDraft: null, soilBusy: false, soilNotes: [], soilError: '', soilFileName: '',
   lang: (() => { try { return localStorage.getItem('krishiLang') || 'en'; } catch { return 'en'; } })(),
   recording: false, speaking: null,
   disease: null, uploadName: '', messages: [] // the welcome line is drawn by advisor(), not stored here
 };
+if (['n', 'p', 'k', 'ph'].some(key => state.soil[key] !== '')) store('krishiSoil', state.soil);
+if (state.farm.lat != null && state.farm.lng != null) store('krishiFarm', state.farm);
 const hasFarm = () => state.farm.lat != null && state.farm.lng != null;
 const farmName = () => hasFarm() ? (state.farm.name || `${state.farm.lat.toFixed(3)}, ${state.farm.lng.toFixed(3)}`) : 'No farm set yet';
 const farmLine = () => hasFarm() ? farmName() + (state.farm.area ? ` · ${state.farm.area} acres` : '') : 'No farm set yet';
@@ -127,8 +145,19 @@ let farmMap = null;
 let farmMarker = null;
 function render() {
   if (farmMap) { farmMap.remove(); farmMap = null; farmMarker = null; }
-  app.innerHTML = `<aside class="sidebar"><a class="brand" data-page="dashboard"><span class="brand-mark">✦</span><span>krishi<span>ai</span></span></a><div class="farm-chip"><span class="pin">⌖</span><div><small>YOUR FARM</small><strong>${esc(farmName())}</strong></div></div><nav>${nav.map(([id,label])=>`<button class="nav-item ${state.page===id?'active':''}" data-page="${id}"><i>${icons[id]}</i>${label}</button>`).join('')}</nav><div class="sidebar-bottom"><a class="nav-item" href="index.html" style="text-decoration:none"><i>←</i>Back to home</a><button class="help">? Help centre</button><div class="user"><div class="avatar">${esc(initials())}</div><div><strong>${esc(userName())}</strong><small>${state.user ? 'Signed in' : '<a href="login.html" style="color:#d8e987">LOG IN</a>'}</small></div><span>⌄</span></div></div></aside><main><header><button class="mobile-menu" id="menu">☰</button><div class="crumb"><span>${nav.find(n=>n[0]===state.page)?.[1]}</span><small>${esc(farmLine())}</small></div><div class="header-actions"><button class="icon-button">${icons.bell}<b></b></button><a class="profile" href="${state.user ? 'profile.html' : 'login.html'}" title="${state.user ? esc(userName()) : 'Log in'}" style="text-decoration:none">${esc(initials())}</a></div></header><section class="content">${page()}</section></main><div class="toast ${state.toast?'show':''}">${esc(state.toast)}</div>`;
+  app.innerHTML = `<aside class="sidebar"><a class="brand" data-page="dashboard"><span class="brand-mark">✦</span><span>krishi<span>ai</span></span></a><div class="farm-chip"><span class="pin">⌖</span><div><small>YOUR FARM</small><strong>${esc(farmName())}</strong></div></div><nav>${nav.map(([id,label])=>`<button class="nav-item ${state.page===id?'active':''}" data-page="${id}"><i>${icons[id]}</i>${label}</button>`).join('')}</nav><div class="sidebar-bottom"><a class="nav-item" href="index.html" style="text-decoration:none"><i>←</i>Back to home</a><button class="help">? Help centre</button><div class="user"><div class="avatar">${esc(initials())}</div><div><strong>${esc(userName())}</strong><small>${state.user ? 'Signed in' : '<a href="login.html" style="color:#d8e987">LOG IN</a>'}</small></div><span>⌄</span></div></div></aside><main><header><button class="mobile-menu" id="menu">☰</button><div class="page-nav">${state.page !== 'dashboard' ? '<button class="back-button" id="page-back">← Back</button>' : ''}<div class="crumb"><span>${nav.find(n=>n[0]===state.page)?.[1]}</span><small>${esc(farmLine())}</small></div></div><div class="header-actions"><button class="icon-button">${icons.bell}<b></b></button><a class="profile" href="${state.user ? 'profile.html' : 'login.html'}" title="${state.user ? esc(userName()) : 'Log in'}" style="text-decoration:none">${esc(initials())}</a></div></header><section class="content">${page()}</section></main><div class="toast ${state.toast?'show':''}">${esc(state.toast)}</div>`;
   bind();
+}
+
+function navigateTo(page) {
+  if (page === state.page) return;
+  state.pageStack.push(state.page);
+  state.page = page;
+  render();
+}
+function navigateBack() {
+  state.page = state.pageStack.pop() || 'dashboard';
+  render();
 }
 
 function page(){ return ({dashboard, farm, soil, crops, health, disease, advisor})[state.page](); }
@@ -246,7 +275,7 @@ function runPlaceSearch(text) {
       placeResults = []; showPlaceResults([]);
       setPlaceStatus('Could not search right now — check your connection.');
     }
-  }, 300);
+  }, 600);
 }
 function pickFirstPlace() { if (placeResults.length) pickPlace(placeResults[0]); }
 async function pickPlace(place) {
@@ -272,7 +301,11 @@ async function loadAccountFarm() {
   if (saved.farm?.lat != null) {
     const moved = saved.farm.lat !== state.farm.lat || saved.farm.lng !== state.farm.lng;
     state.farm = { ...EMPTY_FARM, ...saved.farm };
-    if (saved.soil) state.soil = { ...EMPTY_SOIL, ...saved.soil };
+    if (saved.soil) {
+      state.soil = { ...state.soil, ...saved.soil };
+      for (const [key, oldKey] of [['n', 'N'], ['p', 'P'], ['k', 'K'], ['ph', 'ph']])
+        if (state.soil[key] === '' || state.soil[key] == null) state.soil[key] = legacyField[oldKey === 'ph' ? 'ph' : oldKey.toLowerCase()] ?? '';
+    }
     store('krishiFarm', state.farm); store('krishiSoil', state.soil);
     render();
     if (moved) { cropsFor = ''; loadWeather(); loadSatellite(); } else loadCrops();
@@ -398,7 +431,7 @@ async function analyseLeaf() {
   if (run === leafRun) render();
 }
 
-function bind(){initializeFarmMap();document.querySelectorAll('[data-page]').forEach(x=>x.onclick=()=>{state.page=x.dataset.page; if(x.dataset.crop) state.selectedCrop=+x.dataset.crop; render()});document.querySelectorAll('[data-crop]').forEach(x=>x.onclick=()=>{state.selectedCrop=+x.dataset.crop; render()});
+function bind(){initializeFarmMap();document.querySelector('#page-back')?.addEventListener('click',navigateBack);document.querySelectorAll('[data-page]').forEach(x=>x.onclick=()=>{if(x.dataset.crop) state.selectedCrop=+x.dataset.crop; navigateTo(x.dataset.page)});document.querySelectorAll('[data-crop]').forEach(x=>x.onclick=()=>{state.selectedCrop=+x.dataset.crop; render()});
  document.querySelector('#save-farm')?.addEventListener('click',()=>{state.farm.crop=document.querySelector('#crop-input').value.trim();state.farm.area=document.querySelector('#area-input').value;store('krishiFarm',state.farm);syncToAccount();toast('Farm context saved');}); document.querySelector('#locate')?.addEventListener('click',useGps);document.querySelector('#map-center')?.addEventListener('click',()=>{if(hasFarm())farmMap?.setView([state.farm.lat,state.farm.lng],16,{animate:true});else farmMap?.setView([22.9734,78.6569],5,{animate:true});});document.querySelector('#search-place')?.addEventListener('click',pickFirstPlace);document.querySelector('#place-search')?.addEventListener('input',e=>runPlaceSearch(e.target.value));document.querySelector('#place-search')?.addEventListener('keydown',e=>{if(e.key==='Enter')pickFirstPlace();});
  document.querySelector('#save-soil')?.addEventListener('click',()=>{['n','p','k','ph'].forEach(k=>state.soil[k]=document.querySelector(`#soil-${k}`).value);state.soil.source=state.soilDraft?'from your soil card, checked by you':'typed by you';state.soilDraft=null;state.soilNotes=[];store('krishiSoil',state.soil);syncToAccount();toast('Soil values saved');loadCrops();});document.querySelector('#retry-weather')?.addEventListener('click',()=>loadWeather(true));document.querySelector('#retry-crops')?.addEventListener('click',()=>{cropsFor='';loadCrops();});document.querySelector('#explain-crops')?.addEventListener('click',explainCrops);document.querySelector('#manual-tab')?.addEventListener('click',()=>{state.soilTab='manual';render();});document.querySelector('#upload-tab')?.addEventListener('click',()=>{state.soilTab='upload';render();});document.querySelector('#soil-file')?.addEventListener('change',e=>{soilCardFile=e.target.files[0]||null;state.soilFileName=soilCardFile?.name||'';state.soilError='';render();});document.querySelector('#read-card')?.addEventListener('click',readSoilCard);document.querySelector('#refresh-health')?.addEventListener('click',()=>{loadWeather(true);loadSatellite(true);});document.querySelector('#retry-sat')?.addEventListener('click',()=>loadSatellite(true));
  document.querySelector('#leaf-file')?.addEventListener('change',e=>chooseLeaf(e.target.files[0]));document.querySelector('#analyse')?.addEventListener('click',analyseLeaf);document.querySelector('#chat-form')?.addEventListener('submit',sendQuestion);document.querySelectorAll('[data-question]').forEach(x=>x.onclick=()=>sendQuestion(null,x.dataset.question));document.querySelector('#clear-chat')?.addEventListener('click',()=>{if(state.loading)return;stopSpeaking();state.messages=[];render();});document.querySelector('#mic')?.addEventListener('click',toggleMic);document.querySelectorAll('[data-speak]').forEach(x=>x.onclick=()=>speakMessage(+x.dataset.speak));document.querySelector('#advisor-lang')?.addEventListener('change',e=>{state.lang=e.target.value;try{localStorage.setItem('krishiLang',state.lang);}catch{}render();});}
