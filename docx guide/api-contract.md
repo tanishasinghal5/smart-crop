@@ -345,7 +345,7 @@ If Earth Engine access has not come through yet, **keep working anyway.** A work
 
 # For Katniss — disease
 
-> ✅ **Done differently.** The model runs in the browser (`disease-model.tflite`, loaded from `vendor/tflite/`). The confidence limits below are in place (0.80 / 0.60, from `CONF_THRESHOLDS`), and the photo-quality check (`image_guard.py`) runs on the server in `/api/disease/advice`. The 38 disease names are kept in three places that must match: `server.py`, `app.js` and `src/services/farmApi.js`.
+> ✅ **Done differently.** The model runs in the browser (`disease-model.tflite`, loaded from `vendor/tflite/`). The confidence limits below are in place (0.80 / 0.60, from `CONF_THRESHOLDS`), and the photo-quality check (`image_guard.py`) runs on the server in `/api/disease/advice`. The 38 disease names live in one file, `disease-labels.json`, which the server and both pages load.
 
 **Write one function.**
 
