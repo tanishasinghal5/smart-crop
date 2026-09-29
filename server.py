@@ -568,23 +568,38 @@ def satellite():
     if not (-90 <= lat <= 90 and -180 <= lng <= 180):
         return jsonify(error='latitude and longitude are out of range.', code='bad_coordinates'), 400
 
+    try:
+        return jsonify(_satellite_reading(lat, lng))
+    except SatelliteError as err:
+        return jsonify(error=str(err), code=err.code, details=err.details), err.status
+
+
+class SatelliteError(Exception):
+    def __init__(self, message, status, code, details=None):
+        super().__init__(message)
+        self.status, self.code, self.details = status, code, details
+
+
+def _satellite_reading(lat, lng):
+    """The /api/satellite reply for a point — from the 24 h cache when possible.
+    Raises SatelliteError. Shared with /api/recommend-crop."""
     key = f'{lat:.3f},{lng:.3f}'
     with _satellite_lock:
         hit = _satellite_cache.get(key)
     if hit and hit[0] > time.time():
-        return jsonify({**hit[1], 'meta': {**hit[1]['meta'], 'source': 'cache'}})
+        return {**hit[1], 'meta': {**hit[1]['meta'], 'source': 'cache'}}
 
     ee = _get_ee()
     if ee is None:
-        return jsonify(error='Satellite data is not available right now.', code='earth_engine_unavailable',
-                       details=_ee_error), 503
+        raise SatelliteError('Satellite data is not available right now.', 503,
+                             'earth_engine_unavailable', _ee_error)
     try:
         from crop_model.earth_engine.feature_builder import get_current_field_environment
         env = get_current_field_environment(lat, lng, ee_module=ee)
     except Exception as exc:  # noqa: BLE001 — Earth Engine raises many kinds
         app.logger.warning('Earth Engine request failed for %s: %s', key, exc)
-        return jsonify(error='Could not read satellite data right now. Please try again later.',
-                       code='earth_engine_error', details=f'{type(exc).__name__}: {exc}'), 502
+        raise SatelliteError('Could not read satellite data right now. Please try again later.', 502,
+                             'earth_engine_error', f'{type(exc).__name__}: {exc}') from exc
 
     ndvi = _round(env.get('current_ndvi'), 3)
     result = {
@@ -605,7 +620,166 @@ def satellite():
         if len(_satellite_cache) > 2000:  # keep memory bounded
             _satellite_cache.clear()
         _satellite_cache[key] = (time.time() + SATELLITE_TTL, result)
-    return jsonify(result)
+    return result
+
+
+# ---- Crop advice with confidence (plan Task 27) -----------------------------
+# The crop model is sure of itself even on inputs it never saw in training
+# (pH 4.1, N 5, 20 mm rain -> "mothbeans 88%"). input_guard checks the inputs
+# against the training data (guard.pkl, fitted from
+# crop_recommendation_extended.csv) and pulls the confidence down when they
+# fall outside it.
+GUARD_PATH = os.path.join(BASE_DIR, 'guard.pkl')
+_guard = None
+_guard_error = None
+_guard_lock = threading.Lock()
+
+
+def _get_guard():
+    global _guard, _guard_error
+    with _guard_lock:
+        if _guard is None and _guard_error is None:
+            try:
+                from input_guard import InputGuard
+                _guard = InputGuard.load(GUARD_PATH)
+            except Exception as exc:  # noqa: BLE001 — advice still works, just without this check
+                _guard_error = f'{type(exc).__name__}: {exc}'
+                app.logger.warning('Input guard unavailable: %s', _guard_error)
+        return _guard
+
+
+EXPLAIN_TTL = 3600  # same inputs → same explanation for an hour; saves Gemini calls
+_explain_cache = {}
+_explain_lock = threading.Lock()
+CONFIDENCE_WORDS = {'high': 'High', 'medium': 'Medium', 'low': 'Low'}
+
+
+def _confidence_reasons(recs, data_quality, soil_source):
+    top = recs[0]['final_score'] if recs else 0.0
+    gap = top - recs[1]['final_score'] if len(recs) > 1 else top
+    reasons = [f'Top crop scores {round(top * 100)}%, '
+               f'{round(gap * 100)} points ahead of the next one.']
+    if data_quality.get('regional_model') != 'available':
+        reasons.append('No regional model for your district yet, so confidence is lowered one step.')
+    if data_quality.get('earth_engine') != 'available':
+        reasons.append('Satellite data for your farm was not available, so confidence is lowered one step.')
+    if soil_source != 'card':
+        reasons.append('Soil values were typed by hand, not read from a Soil Health Card.')
+    return reasons
+
+
+def _explain_ranking(recs, inputs, level, language):
+    """One Gemini call that explains the ranking — never changes it. Cached."""
+    key = json.dumps([[r['crop'] for r in recs], inputs, level, language], sort_keys=True)
+    with _explain_lock:
+        hit = _explain_cache.get(key)
+    if hit and hit[0] > time.time():
+        return hit[1]
+    ranking = ', '.join(f'{i + 1}. {r["crop"]} ({round(r["final_score"] * 100)}%)' for i, r in enumerate(recs))
+    prompt = (
+        'You explain crop advice to a small farmer in India, in simple words. '
+        f'Our crop model ranked: {ranking}. Confidence: {level}. '
+        f'It used these field values: {json.dumps(inputs)} '
+        '(N, P, K in kg/ha; temperature in °C; humidity in %; rainfall = mm this season). '
+        'In at most 3 short sentences, say why the first crop suits these values. '
+        'Do not change the order, do not suggest any other crop, and use only the numbers given. '
+        f'If confidence is low, say first that a soil test would make the advice more reliable. '
+        f'Reply only in {language}.'
+    )
+    _, text = _gemini_generate([{'text': prompt}])
+    text = text.strip()
+    with _explain_lock:
+        if len(_explain_cache) > 500:
+            _explain_cache.clear()
+        _explain_cache[key] = (time.time() + EXPLAIN_TTL, text)
+    return text
+
+
+@app.post('/api/recommend-crop')
+def recommend_crop():
+    """Top 3 crops with an honest confidence level. Scores and confidence come
+    from Percy's crop_model.recommend.recommend_crops (bundle.pkl + Earth Engine
+    context); Gemini only explains the ranking, and only when asked (explain)."""
+    body = request.get_json(silent=True) or {}
+    lat, lng = body.get('latitude'), body.get('longitude')
+    try:
+        lat, lng = (float(lat), float(lng)) if lat is not None and lng is not None else (None, None)
+    except (TypeError, ValueError):
+        return jsonify(error='latitude and longitude must be numbers.', code='bad_coordinates'), 400
+
+    # The satellite reading the page already asked for is normally cached, so
+    # this is instant; without a position the model runs without it.
+    environment = {}
+    if lat is not None:
+        try:
+            sat = _satellite_reading(lat, lng)
+            if sat.get('ndvi') is not None or sat.get('rainfall_30d') is not None:
+                environment = {'current_ndvi': sat.get('ndvi'), 'ndvi_quality': sat.get('quality_flag'),
+                               'recent_rainfall': sat.get('rainfall_30d'),
+                               'recent_temperature': sat.get('temperature')}
+        except SatelliteError:
+            pass  # recommend_crops lowers the confidence and says why
+
+    from crop_model.recommend import recommend_crops
+    try:
+        result = recommend_crops(
+            body.get('state'), body.get('district'), body.get('season'),
+            body.get('N'), body.get('P'), body.get('K'), body.get('ph'),
+            body.get('temperature'), body.get('humidity'), body.get('rainfall'),
+            latitude=lat, longitude=lng, top_k=5, environment=environment)
+    except ValueError as exc:
+        return jsonify(error=str(exc), code='bad_request'), 400
+
+    recs = result['recommendations'][:3]
+    level = recs[0]['confidence'] if recs else 'low'
+    soil_source = body.get('soil_source')
+    inputs = {k: body.get(k) for k in ('N', 'P', 'K', 'ph', 'temperature', 'humidity', 'rainfall')}
+    reasons = _confidence_reasons(result['recommendations'], result['data_quality'], soil_source)
+
+    # Are these inputs like the ones the model learned from? Outside → low;
+    # unusual → one step down. The reasons say which value and why.
+    guard, input_check = _get_guard(), None
+    if guard is not None:
+        verdict = guard.check({k: float(v) for k, v in inputs.items()})
+        input_check = {'status': verdict.status, 'headline': verdict.headline, 'reasons': verdict.reasons}
+        if verdict.status == 'reject':
+            level = 'low'
+            reasons.insert(0, f'{verdict.headline} ' + ' '.join(verdict.reasons))
+        elif verdict.status == 'caution':
+            level = {'high': 'medium', 'medium': 'low'}.get(level, 'low')
+            reasons.insert(0, f'{verdict.headline} ' + ' '.join(verdict.reasons))
+    else:
+        reasons.append('The input check is not available, so unusual readings are not caught.')
+
+    if level == 'low':
+        action = 'soil_test' if soil_source != 'card' else 'expert_review'
+    else:
+        action = None
+    reply = {
+        'recommendations': [{'crop': r['crop'], 'rank': i + 1, 'score': round(r['final_score'], 4),
+                             'agronomic_score': r['agronomic_score'], 'regional_score': r['regional_score']}
+                            for i, r in enumerate(recs)],
+        'confidence_level': level,
+        'confidence_reasons': reasons,
+        'input_check': input_check,
+        'action_required': action,
+        'explanation': None,
+        'explanation_language': None,
+        'inputs_used': inputs,
+        'environment': result['environment'],
+        'data_quality': result['data_quality'],
+        'meta': {'source': 'live', 'model': 'bundle.pkl',
+                 'generated_at': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())},
+    }
+    if body.get('explain') and recs:
+        language = LANGUAGE_NAMES.get(body.get('language', 'en'), 'English')
+        try:
+            reply['explanation'] = _explain_ranking(recs, inputs, level, language)
+            reply['explanation_language'] = body.get('language', 'en')
+        except GeminiError as err:
+            # The ranking stands without Gemini; the page shows why there is no explanation.
+            reply['explanation_error'] = {'error': str(err), 'code': err.code, 'status': err.status}
+    return jsonify(reply)
 
 
 class GeminiError(Exception):

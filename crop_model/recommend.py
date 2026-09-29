@@ -125,11 +125,19 @@ def _environment(state, district, season, latitude, longitude, polygon, use_live
 def recommend_crops(
     state, district, season, N, P, K, ph, temperature, humidity, rainfall,
     latitude=None, longitude=None, polygon=None, top_k=5, use_live_environment=True,
+    environment=None,
 ):
-    """Return JSON-compatible crop recommendations and contextual evidence."""
+    """Return JSON-compatible crop recommendations and contextual evidence.
+
+    `environment`: an Earth Engine reading the caller already has (same keys as
+    get_current_field_environment). Skips a second 10-30 s fetch; an empty dict
+    means "not available". Leave it None to fetch here as before."""
     values = _validate_inputs(N, P, K, ph, temperature, humidity, rainfall, latitude, longitude, top_k)
     predictions = predict_agronomic_crops(**values, top_k=top_k)
-    environment, ee_status = _environment(state, district, season, latitude, longitude, polygon, use_live_environment)
+    if environment is not None:
+        ee_status = "available" if environment else "unavailable"
+    else:
+        environment, ee_status = _environment(state, district, season, latitude, longitude, polygon, use_live_environment)
     model, _ = _regional_model()
     regional = _regional_scores(model, [item["crop"] for item in predictions], environment)
     regional_available = regional is not None

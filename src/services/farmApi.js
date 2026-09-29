@@ -153,12 +153,13 @@ export const farmApi = {
       body: JSON.stringify({ latitude: lat, longitude: lng }),
     });
   },
-  // Top crops from the trained model on our server (bundle.pkl). No Gemini.
-  async recommendCrops(inputs) {
-    const data = await api('/api/recommend', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(inputs),
+  // Top 3 crops with an honest confidence level (/api/recommend-crop): the
+  // trained model + Percy's scoring + a check that the inputs look like the
+  // training data. `explain: true` adds Gemini's plain-words explanation.
+  async recommendCrops(body) {
+    return api('/api/recommend-crop', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
     });
-    return data.recommendations || [];
   },
   // Reads a Soil Health Card photo/PDF — Gemini on our server. The reply is a
   // draft (requires_confirmation): the farmer checks the values, then saves.
