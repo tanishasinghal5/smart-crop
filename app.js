@@ -584,7 +584,7 @@ const i18n = {
     diseaseSickAdvice: "This looks like {condition}. Remove badly affected leaves, avoid overhead watering, and confirm treatment with your local agri office before spraying.",
     diseaseLowConfidence: "Not fully sure about this one — try a closer photo of a single leaf in good daylight.",
     askMitaAboutIt: "Ask Mita about it →",
-    diseasePrivacy: "Your photo stays on this device for now. Results are guidance, not a replacement for local agricultural advice.",
+    diseasePrivacy: "When configured, your photo is sent to Gemini through our server for a supplementary explanation. The specialist classifier remains responsible for the diagnosis.",
     plan: "Plan a field",
     dashboard: "Dashboard",
     ask: "Ask KrishiSahayak",
@@ -1109,7 +1109,7 @@ const i18n = {
     diseaseSickAdvice: "यह {condition} जैसा दिखता है। ज़्यादा प्रभावित पत्ते हटाएं, ऊपर से पानी देने से बचें, और छिड़काव से पहले स्थानीय कृषि कार्यालय से उपचार की पुष्टि करें।",
     diseaseLowConfidence: "इस पर पूरा भरोसा नहीं है — अच्छी रोशनी में एक पत्ते की पास से फोटो लेकर फिर कोशिश करें।",
     askMitaAboutIt: "मीता से इस बारे में पूछें →",
-    diseasePrivacy: "आपकी फोटो अभी इसी डिवाइस पर रहती है। परिणाम केवल मार्गदर्शन हैं, स्थानीय कृषि सलाह का विकल्प नहीं।",
+    diseasePrivacy: "सेटअप होने पर आपकी फोटो अतिरिक्त व्याख्या के लिए हमारे सर्वर से Gemini को भेजी जाती है। निदान की जिम्मेदारी विशेषज्ञ क्लासिफायर की रहती है।",
     plan: "खेत की योजना",
     dashboard: "डैशबोर्ड",
     ask: "मीता से पूछें",
@@ -1487,7 +1487,7 @@ const i18n = {
     diseaseSickAdvice: "हे {condition} सारखे दिसते. जास्त प्रभावित पाने काढा, वरून पाणी देणे टाळा आणि फवारणीपूर्वी स्थानिक कृषी कार्यालयाकडून उपचाराची खात्री करा.",
     diseaseLowConfidence: "याबद्दल पूर्ण खात्री नाही — चांगल्या उजेडात एका पानाचा जवळून फोटो घेऊन पुन्हा प्रयत्न करा.",
     askMitaAboutIt: "मिताला याबद्दल विचारा →",
-    diseasePrivacy: "तुमचा फोटो सध्या याच डिव्हाइसवर राहतो. निकाल फक्त मार्गदर्शन आहेत, स्थानिक कृषी सल्ल्याचा पर्याय नाहीत.",
+    diseasePrivacy: "सेटअप असल्यास तुमचा फोटो पूरक स्पष्टीकरणासाठी आमच्या सर्व्हरद्वारे Gemini कडे पाठवला जातो. निदानाची जबाबदारी विशेषज्ञ क्लासिफायरकडेच राहते.",
     plan: "शेत योजना",
     dashboard: "डॅशबोर्ड",
     ask: "मिताला विचारा",
@@ -1814,7 +1814,7 @@ const i18n = {
     diseaseSickAdvice: "ఇది {condition} లా కనిపిస్తుంది. ఎక్కువగా దెబ్బతిన్న ఆకులను తీసివేయండి, పైనుంచి నీళ్లు పోయడం తగ్గించండి, పిచికారీకి ముందు స్థానిక వ్యవసాయ కార్యాలయంతో చికిత్సను నిర్ధారించుకోండి.",
     diseaseLowConfidence: "దీనిపై పూర్తి నమ్మకం లేదు — మంచి వెలుతురులో ఒక ఆకును దగ్గరగా తీసి మళ్లీ ప్రయత్నించండి.",
     askMitaAboutIt: "దీని గురించి మీతాను అడగండి →",
-    diseasePrivacy: "మీ ఫోటో ప్రస్తుతానికి ఈ పరికరంలోనే ఉంటుంది. ఫలితాలు మార్గదర్శకం మాత్రమే, స్థానిక వ్యవసాయ సలహాకు ప్రత్యామ్నాయం కాదు.",
+    diseasePrivacy: "సెటప్ చేసినప్పుడు మీ ఫోటో అదనపు వివరణ కోసం మా సర్వర్ ద్వారా Geminiకి పంపబడుతుంది. నిర్ధారణ బాధ్యత ప్రత్యేక క్లాసిఫైయర్‌దే.",
     plan: "పొలం ప్లాన్",
     dashboard: "డ్యాష్‌బోర్డ్",
     ask: "మీతాను అడగండి",
@@ -5280,7 +5280,28 @@ async function detectDiseaseOnServer(file) {
   const data = await response.json().catch(() => ({}));
   if (!response.ok || !data.predictions?.length)
     throw new Error(data.error || "request failed");
-  return data.predictions;
+  return { predictions: data.predictions, source: "Server specialist classifier" };
+}
+async function detectDiseaseWithGemini(file, classifierPredictions) {
+  const image = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result).split(",")[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+  const response = await fetch("/api/disease/gemini", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      image,
+      mimeType: file.type || "image/jpeg",
+      classifierPredictions: classifierPredictions.slice(0, 3),
+    }),
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || !data.explanation)
+    throw new Error(data.error || "Gemini image analysis failed");
+  return data;
 }
 function setupDiseasePage() {
   const input = document.querySelector("#leafPhoto");
@@ -5319,13 +5340,24 @@ function setupDiseasePage() {
     checkButton.disabled = true;
     showMessage(t("diseaseAnalyzing"));
     try {
-      let predictions;
+      let result;
       try {
-        predictions = await detectDiseaseInBrowser(file);
+        result = {
+          predictions: await detectDiseaseInBrowser(file),
+          source: "On-device specialist classifier",
+        };
       } catch {
-        predictions = await detectDiseaseOnServer(file);
+        result = await detectDiseaseOnServer(file);
       }
-      renderDiseaseResult(resultBox, predictions);
+      renderDiseaseResult(resultBox, result.predictions, result);
+      try {
+        const supplement = await detectDiseaseWithGemini(file, result.predictions);
+        result.explanation = supplement.explanation;
+        renderDiseaseResult(resultBox, result.predictions, result);
+      } catch {
+        // Gemini only adds context. The specialist classifier result remains usable
+        // when Gemini is unconfigured, unavailable, or over its free-tier limit.
+      }
       resultBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
     } catch {
       showMessage(t("diseaseError"));
@@ -5334,7 +5366,7 @@ function setupDiseasePage() {
     }
   });
 }
-function renderDiseaseResult(resultBox, predictions) {
+function renderDiseaseResult(resultBox, predictions, result = {}) {
   const diseaseName = (prediction) =>
     `${prediction.crop} — ${prediction.healthy ? t("diseaseHealthyLabel") : prediction.condition}`;
   const top = predictions[0];
@@ -5356,6 +5388,23 @@ function renderDiseaseResult(resultBox, predictions) {
   meter.append(fill);
   resultBox.append(heading, meter);
 
+  if (result.source) {
+    const source = document.createElement("p");
+    source.className = "disease-alts";
+    source.textContent = `Analysis: ${result.source}`;
+    resultBox.append(source);
+  }
+  if (result.explanation) {
+    const supplement = document.createElement("section");
+    supplement.className = "disease-supplement";
+    const label = document.createElement("b");
+    label.textContent = "Gemini explanation (supplementary)";
+    const explanation = document.createElement("p");
+    explanation.textContent = result.explanation;
+    supplement.append(label, explanation);
+    resultBox.append(supplement);
+  }
+
   const alternates = predictions.slice(1).filter((p) => p.probability >= 0.05);
   if (alternates.length) {
     const alts = document.createElement("p");
@@ -5371,17 +5420,14 @@ function renderDiseaseResult(resultBox, predictions) {
   const advice = document.createElement("p");
   advice.className = "disease-advice";
   if (top.probability >= 0.80) {
-  // High confidence
-  advice.textContent = top.healthy
-    ? t("diseaseHealthyAdvice")
-    : t("diseaseSickAdvice", { condition: top.condition });
-} else if (top.probability >= 0.60) {
-  // Medium confidence
-  advice.textContent = t("diseasePossibleAdvice", { condition: top.condition });
-} else {
-  // Low confidence
-  advice.textContent = t("diseaseUnreliableAdvice");
-}
+    advice.textContent = top.healthy
+      ? t("diseaseHealthyAdvice")
+      : t("diseaseSickAdvice", { condition: top.condition });
+  } else if (top.probability >= 0.60) {
+    advice.textContent = t("diseasePossibleAdvice", { condition: top.condition });
+  } else {
+    advice.textContent = t("diseaseUnreliableAdvice");
+  }
   resultBox.append(advice);
   resultBox.classList.add("visible");
 }

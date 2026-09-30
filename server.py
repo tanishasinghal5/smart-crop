@@ -20,6 +20,7 @@ import os
 import re
 import sqlite3
 import urllib.request
+import base64
 import warnings
 
 import joblib
@@ -132,6 +133,7 @@ def _pretty_disease(label):
     return crop, condition
 
 app = Flask(__name__, static_folder=BASE_DIR, static_url_path='')
+app.config['MAX_CONTENT_LENGTH'] = 14 * 1024 * 1024
 if CORS:
     CORS(app)
 
@@ -490,6 +492,77 @@ def gemini():
     except Exception:
         answer = result.get('text', '')
     return jsonify(answer=answer)
+
+
+@app.post('/api/disease/gemini')
+def gemini_disease():
+    """Explain the specialist classifier's result using Gemini vision.
+
+    Gemini is deliberately explanation-only: this endpoint never returns
+    predictions and cannot alter the classifier's diagnosis or ranking.
+    """
+    api_key = os.getenv('GEMINI_API_KEY')
+    if not api_key:
+        return jsonify(error='Gemini API key not configured.', code='gemini_unconfigured'), 503
+    body = request.get_json(silent=True) or {}
+    image_data = body.get('image')
+    mime_type = body.get('mimeType', 'image/jpeg')
+    classifier_predictions = body.get('classifierPredictions')
+    if mime_type not in ('image/jpeg', 'image/png', 'image/webp') or not isinstance(image_data, str):
+        return jsonify(error='Send a JPG, PNG, or WebP image.', code='invalid_image'), 400
+    if not isinstance(classifier_predictions, list) or not classifier_predictions:
+        return jsonify(error='Classifier predictions are required.', code='missing_classifier_result'), 400
+    try:
+        image_bytes = base64.b64decode(image_data, validate=True)
+    except (ValueError, base64.binascii.Error):
+        return jsonify(error='The image data is invalid.', code='invalid_image'), 400
+    if not image_bytes or len(image_bytes) > 10 * 1024 * 1024:
+        return jsonify(error='Image must be smaller than 10 MB.', code='image_size'), 413
+
+    safe_predictions = []
+    for prediction in classifier_predictions[:3]:
+        if not isinstance(prediction, dict):
+            continue
+        safe_predictions.append({
+            'crop': str(prediction.get('crop') or 'Unknown')[:80],
+            'condition': str(prediction.get('condition') or 'Unknown')[:120],
+            'probability': max(0.0, min(1.0, float(prediction.get('probability', 0)))),
+        })
+    if not safe_predictions:
+        return jsonify(error='Classifier predictions are invalid.', code='invalid_classifier_result'), 400
+
+    prompt = '''You are an explanation layer for a crop disease application. A specialist
+image classifier has already produced the result below. Explain that result in plain, concise
+language for a farmer. You may explain what the classifier's top label generally means and
+how to interpret its score. Do not make your own diagnosis, name alternative diseases, change
+the crop or condition, rerank suggestions, or claim certainty. Do not assert symptoms are
+visible unless you can clearly point to them in the photo; if uncertain, say the photo alone
+cannot confirm them. Do not prescribe pesticides or dosages. Mention that field confirmation
+by a local agricultural expert is appropriate before treatment. Return ONLY JSON with one
+field: {"explanation":"supplementary explanation, at most 100 words"}.
+
+Specialist classifier result (authoritative; preserve exactly):
+''' + json.dumps(safe_predictions, ensure_ascii=False)
+    payload = {'contents': [{'role': 'user', 'parts': [
+        {'text': prompt},
+        {'inline_data': {'mime_type': mime_type, 'data': image_data}},
+    ]}], 'generationConfig': {'responseMimeType': 'application/json', 'temperature': 0.2}}
+    model_name = os.getenv('GEMINI_VISION_MODEL', 'gemini-2.5-flash')
+    url = f'https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}'
+    req = urllib.request.Request(url, data=json.dumps(payload).encode(),
+                                 headers={'Content-Type': 'application/json'}, method='POST')
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            result = json.load(resp)
+        raw = result['candidates'][0]['content']['parts'][0]['text']
+        supplement = json.loads(raw)
+        explanation = str(supplement.get('explanation') or '').strip()[:800]
+        if not explanation:
+            return jsonify(error='Gemini returned no explanation.', code='empty_explanation'), 502
+        return jsonify(explanation=explanation, model=model_name, source='Gemini')
+    except Exception as exc:
+        return jsonify(error='Gemini could not analyze this image.', code='gemini_vision_error',
+                       details=str(exc)[:300]), 502
 
 @app.post('/api/chat')
 def chat():

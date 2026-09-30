@@ -60,6 +60,9 @@
 .disease-top.healthy+.disease-meter b{background:#709562}
 .disease-alts{margin:10px 0 0;font:500 10px "DM Mono",monospace;color:var(--muted)}
 .disease-advice{margin:10px 0 0;font-size:12px;line-height:1.6}
+.disease-supplement{margin:14px 0 4px;padding:12px 14px;border-left:2px solid var(--forest);background:var(--paper)}
+.disease-supplement b{font:500 10px "DM Mono",monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.disease-supplement p{margin:6px 0 0;font-size:12px;line-height:1.6}
 .dark .disease-top b{color:#e0a183}
 .dark .disease-top.healthy b{color:#a8cf9a}
 .dark .disease-meter{background:rgba(0,0,0,.3)}
